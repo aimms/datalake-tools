@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ExportSettings>
+	<ExcludedFile>api-init</ExcludedFile>
+	<ExcludedFile>backup</ExcludedFile>
+	<ExcludedFile>data</ExcludedFile>
+	<ExcludedFile>ds</ExcludedFile>
+	<ExcludedFile>ds1</ExcludedFile>
+	<ExcludedFile>libs</ExcludedFile>
+	<ExcludedFile>log</ExcludedFile>
+	<ExcludedFile>PROTemp</ExcludedFile>
+	<ExcludedFile>sc-navigator</ExcludedFile>
+	<ExcludedFile>sc-navigator-demo</ExcludedFile>
+	<ExcludedFile>TestDataset</ExcludedFile>
+	<ExcludedFile>TestDatasetOut</ExcludedFile>
+	<ExcludedFile>AllDatasets.parquet</ExcludedFile>
+	<ExcludedFile>AzureDatalake.json</ExcludedFile>
+	<ExcludedFile>blob.json</ExcludedFile>
+	<ExcludedFile>response-AllDatasets.parquet</ExcludedFile>
+	<ExcludedFile>response-call-8</ExcludedFile>
+	<ExcludedFile>tracing-call-8</ExcludedFile>
+	<ExcludedFile>_Local_Libs_</ExcludedFile>
+</ExportSettings>

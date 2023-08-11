@@ -1,0 +1,501 @@
+{
+  "version": "4.67.0",
+  "application": {
+    "aimms.widget.type": {
+      "literal": "application"
+    },
+    "browsername": {
+      "aimms": {
+        "contents": [
+          "webui::ClientBrowserName"
+        ]
+      }
+    },
+    "browsertimezone": {
+      "aimms": {
+        "contents": [
+          "webui::BrowserTimeZone"
+        ]
+      }
+    },
+    "ignoredst": {
+      "aimms": {
+        "contents": [
+          "webui::IgnoreDST"
+        ]
+      }
+    },
+    "theme.classic": {
+      "literal": "NOT_ALLOWED"
+    },
+    "timezone": {
+      "aimms": {
+        "contents": [
+          "webui::DisplayTimeZone"
+        ]
+      }
+    },
+    "timezone.dst.readonly": {
+      "aimms": {
+        "contents": [
+          "webui::DefaultDSTSettingForDisplayTimeZone"
+        ]
+      }
+    }
+  },
+  "pages/home": {
+    "aimms.widget.type": {
+      "literal": "pagev2-grid"
+    },
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "Account Data",
+          "gridArea": "area-c",
+          "dndId": "area-cAccount Data0"
+        },
+        {
+          "widgetUri": "File Systems",
+          "gridArea": "area-b",
+          "dndId": "area-bFile Systems1"
+        },
+        {
+          "widgetUri": "File Paths",
+          "gridArea": "area-d",
+          "dndId": "area-dFile Paths2"
+        },
+        {
+          "widgetUri": "Download Directory",
+          "gridArea": "area-e",
+          "dndId": "area-eDownload Directory3"
+        },
+        {
+          "widgetUri": "List File Systems",
+          "gridArea": "area-a",
+          "dndId": "area-aList File Systems4"
+        },
+        {
+          "widgetUri": "Create File System",
+          "gridArea": "area-a",
+          "dndId": "area-aCreate File System5"
+        },
+        {
+          "widgetUri": "Delete File System",
+          "gridArea": "area-a",
+          "dndId": "area-aDelete File System6"
+        },
+        {
+          "widgetUri": "List Files",
+          "gridArea": "area-a",
+          "dndId": "area-aList Files7"
+        },
+        {
+          "widgetUri": "Upload Files",
+          "gridArea": "area-a",
+          "dndId": "area-aUpload Files8"
+        },
+        {
+          "widgetUri": "Download Files",
+          "gridArea": "area-a",
+          "dndId": "area-aDownload Files9"
+        },
+        {
+          "widgetUri": "Delete Path",
+          "gridArea": "area-a",
+          "dndId": "area-aDelete Path10"
+        },
+        {
+          "widgetUri": "Delete Directory",
+          "gridArea": "area-a",
+          "dndId": "Unassigned widgetsDelete Directory"
+        }
+      ]
+    },
+    "layoutId": {
+      "literal": "Layout6"
+    },
+    "widgets": {
+      "literal": [
+        {
+          "uri": "Account Data",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "File Paths",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Create File System",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Delete File System",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "List Files",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "File Systems",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Download Directory",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "List File Systems",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Download Files",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Upload Files",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Delete Path",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Delete Directory",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
+    }
+  },
+  "widgets/Account Data": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "dex::dls::StorageAccount",
+          "dex::dls::StorageAccessKey"
+        ]
+      }
+    },
+    "name": {
+      "literal": "Account Data"
+    }
+  },
+  "widgets/Create File System": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "CreateFileSystem"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "Create File System"
+    },
+    "title": {
+      "literal": "Create File System"
+    }
+  },
+  "widgets/Delete Directory": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "DeleteDirectory"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "Delete Directory"
+    },
+    "title": {
+      "literal": "Delete Directory"
+    }
+  },
+  "widgets/Delete File System": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "DeleteFileSystem"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "Delete File System"
+    },
+    "title": {
+      "literal": "Delete File System"
+    }
+  },
+  "widgets/Delete Path": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "DeletePath"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "Delete Path"
+    },
+    "title": {
+      "literal": "Delete Path"
+    }
+  },
+  "widgets/Download Directory": {
+    "aimms.widget.type": {
+      "literal": "table"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "_FileName"
+        ]
+      }
+    },
+    "contents.partition": {
+      "literal": {
+        "rowHeader": [
+          "f"
+        ],
+        "colHeader": [
+          "<IDENTIFIER-SET>"
+        ],
+        "aggregated": []
+      }
+    },
+    "custom.column.widths": {
+      "literal": [
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "_FileName"
+          },
+          "width": 148.51
+        }
+      ]
+    },
+    "name": {
+      "literal": "Download Directory"
+    }
+  },
+  "widgets/Download Files": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "DownloadFiles"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "Download Files"
+    },
+    "title": {
+      "literal": "Download Files"
+    }
+  },
+  "widgets/File Paths": {
+    "aimms.widget.type": {
+      "literal": "table"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "FilePath",
+          "FileSize",
+          "isDirectory"
+        ]
+      }
+    },
+    "contents.numdecimals": {
+      "literal": 0
+    },
+    "contents.partition": {
+      "literal": {
+        "rowHeader": [
+          "p"
+        ],
+        "colHeader": [
+          "<IDENTIFIER-SET>"
+        ],
+        "aggregated": []
+      }
+    },
+    "contents.sorting": {
+      "literal": [
+        {
+          "partIndex": 0,
+          "partOffsets": [
+            -1,
+            2
+          ],
+          "mode": "setorder"
+        }
+      ]
+    },
+    "custom.column.widths": {
+      "literal": [
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "FileSize"
+          },
+          "width": 23.21
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "FilePath"
+          },
+          "width": 97.44
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "isDirectory"
+          },
+          "width": 13.5
+        }
+      ]
+    },
+    "name": {
+      "literal": "File Paths"
+    }
+  },
+  "widgets/File Systems": {
+    "aimms.widget.type": {
+      "literal": "table"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "FileSystems"
+        ]
+      }
+    },
+    "contents.numdecimals": {
+      "literal": 0
+    },
+    "contents.partition": {
+      "literal": {
+        "rowHeader": [
+          "FileSystems_i"
+        ],
+        "colHeader": [
+          "<IDENTIFIER-SET>"
+        ],
+        "aggregated": []
+      }
+    },
+    "custom.column.widths": {
+      "literal": [
+        {
+          "type": "rowHeader",
+          "colKey": "FileSystems_i",
+          "width": 30.34
+        }
+      ]
+    },
+    "name": {
+      "literal": "File Systems"
+    }
+  },
+  "widgets/List File Systems": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "ListFileSystems"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "List File Systems"
+    },
+    "title": {
+      "literal": "List File Systems"
+    }
+  },
+  "widgets/List Files": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "ListFiles"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "List Files"
+    },
+    "title": {
+      "literal": "List Files"
+    }
+  },
+  "widgets/Upload Files": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "UploadFiles"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "Upload Files"
+    },
+    "title": {
+      "literal": "Upload Files"
+    }
+  }
+}

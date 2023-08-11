@@ -1,0 +1,2 @@
+﻿dex::dls::StorageAccessKey := "CLUv9YtgHHE4NZu+r5AhmZfmaAustkpC2IaZSI/DhpNCb+HuZ+PeNnJ6Jslq9cq9yaZTKYUjqg2S+AStJnLbkg==" ;
+dex::dls::StorageAccount := "aimmsdatalaketest" ;

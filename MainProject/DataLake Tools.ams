@@ -1,0 +1,167 @@
+## ams_version=1.0
+
+Model Main_DataLakeExample {
+	Set FileSystems;
+	Set Paths {
+		SubsetOf: Integers;
+		Index: p;
+	}
+	StringParameter FilePath {
+		IndexDomain: p;
+	}
+	Parameter FileSize {
+		IndexDomain: p;
+	}
+	Parameter isDirectory {
+		IndexDomain: p;
+	}
+	StringParameter testFS;
+	Set Files {
+		SubsetOf: Integers;
+		Index: f;
+	}
+	StringParameter _FileName {
+		IndexDomain: f;
+	}
+	ElementParameter err {
+		Range: errh::PendingErrors;
+	}
+	Procedure MainInitialization {
+		Comment: "Add initialization statements here that do NOT require any library being initialized already.";
+	}
+	Procedure PostMainInitialization {
+		Comment: {
+			"Add initialization statements here that require that the libraries are already initialized properly,
+			or add statements that require the Data Management module to be initialized."
+		}
+	}
+	Procedure MainExecution {
+		Body: {
+			!adl::CurrentDatasetName := "Test Dataset3" ;
+			!adl::CurrentDatasetDescription := "This is a test dataset to test the upload and download procedures" ;
+			!adl::DatasetTables := data { Table1, Table2, Table3, Table4, Table5, Table6, Table7, Table8 } ;
+			!adl::TableFile(adl::tbl) := data 
+			!    { Table1 : "Table1.txt",  Table2 : "Table2.txt",  Table3 : "Table3.txt",  Table4 : "Table4.txt",  Table5 : "Table5.txt",
+			!      Table6 : "Table6.txt",  Table7 : "Table7.txt",  Table8 : "Table8.txt" } ;
+			!
+			!adl::UploadDataset("TestDataset");
+			!adl::DownloadDataset(adl::DatasetBaseURL('Test Dataset'), "TestDatasetOut");
+			!
+		}
+	}
+	Procedure PreMainTermination {
+		Body: {
+			return DataManagementExit();
+		}
+		Comment: {
+			"Add termination statements here that require all libraries to be still alive.
+			Return 1 if you allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence."
+		}
+	}
+	Procedure MainTermination {
+		Body: {
+			return 1;
+		}
+		Comment: {
+			"Add termination statements here that do not require all libraries to be still alive.
+			Return 1 to allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence.
+			It is recommended to only use the procedure PreMainTermination to cancel the termination sequence and let this procedure always return 1."
+		}
+	}
+	Procedure SetProxyServer {
+		Body: {
+			dex::client::DetermineProxyServer;
+		}
+	}
+	Procedure GeneratedLibrary {
+		Body: {
+			dex::schema::libprj::LibraryRootFolder := "libs";
+			dex::schema::libprj::ApiInitiFolder := "api-init";
+			
+			dex::schema::GenerateClientFromOpenAPISpec("AzureDatalake.json", "Azure_Data_Lake1", "adl1", 1, 2);
+			dex::schema::GenerateClientFromOpenAPISpec("blob.json", "Blob_Storage", "blob", 1, 2);
+		}
+	}
+	Procedure ListFileSystems {
+		Body: {
+			dex::dls::ListFileSystems(FileSystems);
+		}
+	}
+	Procedure CreateFileSystem {
+		Body: {
+			dex::schema::CreateUUID(testFS);
+			testFS := "fs-" + testFS;
+			
+			dex::dls::CreateFileSystem(testFS);
+			dex::dls::ListFileSystems(FileSystems);
+		}
+	}
+	Procedure DeleteFileSystem {
+		Body: {
+			dex::dls::DeleteFileSystem(testFS);
+			dex::dls::ListFileSystems(FileSystems);
+		}
+	}
+	Procedure ListFiles {
+		Body: {
+			dex::dls::ListFiles(testFS, "", Paths, FilePath, FileSize, isDirectory, 1);
+			block
+				DirectoryGetFiles("DLSData1", "*.*", _FileName, recursive: 1);
+			onerror err do
+				errh::MarkAsHandled(err);
+			endblock;
+		}
+	}
+	Procedure UploadFiles {
+		Body: {
+			dex::dls::UploadFiles(testFS, "DLSData", "sc-navigator", 1);
+			dex::dls::ListFiles(testFS, "", Paths, FilePath, FileSize, isDirectory, 1);
+		}
+	}
+	Procedure DownloadFiles {
+		Body: {
+			dex::dls::DownloadFiles(testFS, "sc-navigator", "DLSData1", 1);
+			block
+				DirectoryGetFiles("DLSData1", "*.*", _FileName, recursive: 1);
+			onerror err do
+				errh::MarkAsHandled(err);
+			endblock;
+		}
+	}
+	Procedure DeletePath {
+		Body: {
+			dex::dls::DeletePath(testFS,"sc-navigator");
+			dex::dls::ListFiles(testFS, "", Paths, FilePath, FileSize, isDirectory, 1);
+		}
+	}
+	Procedure DeleteDirectory {
+		Body: {
+			DirectoryDelete("DLSData1");
+			block
+				empty _FileName;
+				DirectoryGetFiles("DLSData1", "*.*", _FileName, recursive: 1);
+			onerror err do
+				errh::MarkAsHandled(err);
+			endblock;
+		}
+	}
+	Section Quantities_and_Units {
+		Comment: {
+			"This section contains all the units and quantities that are added automatically by AIMMS.
+			It is recommended to declare all your quantities here."
+		}
+		Quantity SI_Time_Duration {
+			BaseUnit: s;
+			Conversions: minute->s : #-># * 60;
+			Comment: {
+				"Expresses the value for the duration of periods.
+				
+				The unit s has been added automatically because it is a required unit for AimmsWebUI.
+				
+				The unit minute has been added automatically because it is a required unit for AimmsWebUI."
+			}
+		}
+	}
+}

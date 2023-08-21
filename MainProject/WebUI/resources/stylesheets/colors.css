@@ -1,0 +1,24 @@
+:root {
+  --secondaryLight: #00E700;
+  --secondary: #00D400;
+  --secondaryDark: #009B00;
+  --primaryDark: #000081;
+  --primary: #004BFF;
+  --primaryLight: #C0F9FF;
+
+  --bg_app-logo: 15px 50% / 40px 30px no-repeat url(/app-resources/resources/images/aimms_icon.png);
+  --spacing_app-logo_width: 55px;
+
+  --color_border-divider_themed: var(--primaryDark);
+  --color_text_edit-select-link: var(--primaryDark);
+  --color_text_edit-select-link_hover: var(--primary);
+  --color_bg_edit-select-link_inverted: var(--secondary);
+  --color_bg_button_primary: var(--secondary);
+  --color_bg_button_primary_hover: var(--secondaryLight);
+  --color_text_button_secondary: var(--secondary);
+  --border_button_secondary: 1px solid var(--secondary);
+  --color_text_button_secondary_hover: var(--primary);
+  --border_button_secondary_hover: 1px solid var(--primary);
+  --color_bg_widget-header: var(--primary);
+  --border_widget-header: 3px solid var(--primaryDark);
+}

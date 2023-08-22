@@ -1,38 +1,105 @@
 ## ams_version=1.0
 
-Model Main_DataLakeExample {
-	Section Section_1 {
-		Set FileSystems;
-		Set Paths {
+Model Main_DataLake_Tools {
+	Section File_System_Toolkit {
+		Set s_fileSystems {
+			Index: i_file_sys;
+			Parameter: ep_fileSystem;
+		}
+		StringParameter sp_fileSystemUUID {
+			IndexDomain: i_file_sys;
+			webui::FlagsIdentifier: sp_def_readonly;
+		}
+		Procedure pr_listFileSystems {
+			Body: {
+				dex::dls::ListFileSystems(s_fileSystems);
+			}
+		}
+		Procedure pr_createFileSystem {
+			Arguments: (sp_in_dialogAnswer);
+			Body: {
+				if sp_in_dialogAnswer = "OK" then
+				    dex::schema::CreateUUID(sp_loc_UUID);
+				
+				    dex::dls::CreateFileSystem(sp_newNameForFileSystem);
+				    dex::dls::ListFileSystems(s_fileSystems);
+				
+				    ep_fileSystem := StringToElement(s_fileSystems, sp_newNameForFileSystem, 0);
+				    sp_fileSystemUUID(ep_fileSystem) := sp_loc_UUID;
+				
+				elseif sp_in_dialogAnswer = "Cancel" then
+				    s_loc_actions := {'OK'};
+				
+				    webui::RequestPerformWebUIDialog(
+				        title   :  "Create File System", 
+				        message :  "This operation was canceled.", 
+				        actions :  s_loc_actions, 
+				        onDone  :  'webui::NoOp1');
+				endif;
+			}
+			StringParameter sp_in_dialogAnswer {
+				Property: Input;
+			}
+			Set s_loc_actions;
+			StringParameter sp_loc_UUID;
+		}
+		Procedure pr_deleteFileSystem {
+			Arguments: (sp_in_dialogAnswer);
+			Body: {
+				if sp_in_dialogAnswer = "I am sure!" then
+				
+				    sp_loc_fileSystemToDelete := ep_fileSystem;
+				    dex::dls::DeleteFileSystem(sp_loc_fileSystemToDelete);
+				    dex::dls::ListFileSystems(s_fileSystems);
+				
+				elseif sp_in_dialogAnswer = "Cancel" then
+				    s_loc_actions := {'OK'};
+				
+				    webui::RequestPerformWebUIDialog(
+				        title   :  "Delete File System", 
+				        message :  "This operation was canceled.", 
+				        actions :  s_loc_actions, 
+				        onDone  :  'webui::NoOp1');
+				endif;
+			}
+			StringParameter sp_in_dialogAnswer {
+				Property: Input;
+			}
+			Set s_loc_actions;
+			StringParameter sp_loc_fileSystemToDelete;
+		}
+	}
+	Section DataLake_Tools {
+		Set s_paths {
 			SubsetOf: Integers;
-			Index: p;
+			Index: i_path;
 		}
-		StringParameter FilePath {
-			IndexDomain: p;
-		}
-		Parameter FileSize {
-			IndexDomain: p;
-		}
-		Parameter isDirectory {
-			IndexDomain: p;
-		}
-		StringParameter testFS;
-		Set Files {
+		Set s_files {
 			SubsetOf: Integers;
-			Index: f;
+			Index: i_file;
+		}
+		StringParameter sp_filePath {
+			IndexDomain: i_path;
+			webui::FlagsIdentifier: sp_def_readonly;
+		}
+		Parameter p_fileSize {
+			IndexDomain: i_path;
+			webui::FlagsIdentifier: sp_def_readonly;
+		}
+		Parameter p_isDirectory {
+			IndexDomain: i_path;
+			webui::FlagsIdentifier: sp_def_readonly;
 		}
 		StringParameter _FileName {
-			IndexDomain: f;
+			IndexDomain: i_file;
 		}
-		ElementParameter err {
-			Range: errh::PendingErrors;
-		}
-		Procedure SetProxyServer {
+		StringParameter AdditionalQueryParameters;
+		Procedure pr_setProxyServer {
 			Body: {
 				dex::client::DetermineProxyServer;
 			}
 		}
-		Procedure GeneratedLibrary {
+		Procedure pr_generatedLibrary {
 			Body: {
 				dex::schema::libprj::LibraryRootFolder := "libs";
 				dex::schema::libprj::ApiInitiFolder := "api-init";
@@ -41,71 +108,63 @@ Model Main_DataLakeExample {
 				dex::schema::GenerateClientFromOpenAPISpec("blob.json", "Blob_Storage", "blob", 1, 2);
 			}
 		}
-		Procedure ListFileSystems {
+		Procedure pr_listFiles {
 			Body: {
-				dex::dls::ListFileSystems(FileSystems);
-			}
-		}
-		Procedure CreateFileSystem {
-			Body: {
-				dex::schema::CreateUUID(testFS);
-				testFS := "fs-" + testFS;
-				
-				dex::dls::CreateFileSystem(testFS);
-				dex::dls::ListFileSystems(FileSystems);
-			}
-		}
-		Procedure DeleteFileSystem {
-			Body: {
-				dex::dls::DeleteFileSystem(testFS);
-				dex::dls::ListFileSystems(FileSystems);
-			}
-		}
-		Procedure ListFiles {
-			Body: {
-				dex::dls::ListFiles(testFS, "", Paths, FilePath, FileSize, isDirectory, 1);
+				dex::dls::ListFiles(sp_newNameForFileSystem, "", s_paths, sp_filePath, p_fileSize, p_isDirectory, 1);
 				block
 					DirectoryGetFiles("DLSData1", "*.*", _FileName, recursive: 1);
 				onerror err do
 					errh::MarkAsHandled(err);
 				endblock;
 			}
-		}
-		Procedure UploadFiles {
-			Body: {
-				dex::dls::UploadFiles(testFS, "DLSData", "sc-navigator", 1);
-				dex::dls::ListFiles(testFS, "", Paths, FilePath, FileSize, isDirectory, 1);
+			ElementParameter err {
+				Range: errh::PendingErrors;
 			}
 		}
-		Procedure DownloadFiles {
+		Procedure pr_uploadFiles {
 			Body: {
-				dex::dls::DownloadFiles(testFS, "sc-navigator", "DLSData1", 1);
+				dex::dls::UploadFiles(sp_newNameForFileSystem, "DLSData", "sc-navigator", 1);
+				dex::dls::ListFiles(sp_newNameForFileSystem, "", s_paths, sp_filePath, p_fileSize, p_isDirectory, 1);
+			}
+		}
+		Procedure pr_downloadFiles {
+			Body: {
+				dex::dls::DownloadFiles(sp_newNameForFileSystem, "sc-navigator", "DLSData1", 1);
 				block
 					DirectoryGetFiles("DLSData1", "*.*", _FileName, recursive: 1);
 				onerror err do
 					errh::MarkAsHandled(err);
 				endblock;
 			}
-		}
-		Procedure DeletePath {
-			Body: {
-				dex::dls::DeletePath(testFS,"sc-navigator");
-				dex::dls::ListFiles(testFS, "", Paths, FilePath, FileSize, isDirectory, 1);
+			ElementParameter err {
+				Range: errh::PendingErrors;
 			}
 		}
-		Procedure DeleteDirectory {
+		Procedure pr_deletePath {
 			Body: {
-				DirectoryDelete("DLSData1");
-				block
-					empty _FileName;
-					DirectoryGetFiles("DLSData1", "*.*", _FileName, recursive: 1);
-				onerror err do
-					errh::MarkAsHandled(err);
-				endblock;
+				dex::dls::DeletePath(sp_newNameForFileSystem,"sc-navigator");
+				dex::dls::ListFiles(sp_newNameForFileSystem, "", s_paths, sp_filePath, p_fileSize, p_isDirectory, 1);
+			}
+		}
+		Procedure Procedure_1 {
+			Body: {
+				dex::client::az::AccountSASQueryString(
+					accessKey     :  dex::dls::StorageAccessKey, 
+					accountName   :  dex::dls::StorageAccount, 
+					services      :  "bf", 
+					resourceTypes :  "o", 
+					permissions   :  "crw", 
+					expiryDate    :  dex::client::az::ExpiryDateFromNow(600[s]), 
+					ip            :  "", 
+					queryString   :  AdditionalQueryParameters
+					);
 			}
 		}
 	}
 	Section UI_Declarations {
+		StringParameter sp_def_readonly {
+			Definition: "read-only";
+		}
 		Section Workflow {
 			StringParameter sp_def_myWorkflowSteps {
 				IndexDomain: (webui::indexWorkflowOrder,webui::indexNoOfPages,webui::indexWorkflowPageSpec);
@@ -114,11 +173,11 @@ Model Main_DataLakeExample {
 					{ ( 1, 1, displayText       ) : "Welcome"                ,  ( 1, 1, icon              ) : "aimms-happy"            ,
 					  ( 1, 1, pageId            ) : "home"                   ,  ( 1, 1, tooltip           ) : "Welcome to the Toolkit!",
 					  ( 1, 1, workflowPageState ) : "active"                 ,  ( 1, 1, pageDataState     ) : "Incomplete"             ,
-					  ( 1, 2, displayText       ) : "Configuring"            ,  ( 1, 2, icon              ) : "aimms-stack-text"       ,
-					  ( 1, 2, pageId            ) : "configuring"            ,  ( 1, 2, workflowPageState ) : "active"                 ,
+					  ( 1, 2, displayText       ) : "New SAS Token"          ,  ( 1, 2, icon              ) : "aimms-stack-plus"       ,
+					  ( 1, 2, pageId            ) : "new_sas_token"          ,  ( 1, 2, workflowPageState ) : "active"                 ,
 					  ( 1, 2, pageDataState     ) : "incomplete"             ,  ( 1, 2, redirectPageId    ) : "home"                   ,
-					  ( 1, 3, displayText       ) : "New SAS Token"          ,  ( 1, 3, icon              ) : "aimms-stack-plus"       ,
-					  ( 1, 3, pageId            ) : "new_sas_token"          ,  ( 1, 3, workflowPageState ) : "active"                 ,
+					  ( 1, 3, displayText       ) : "Configuring ADLS"       ,  ( 1, 3, icon              ) : "aimms-stack-text"       ,
+					  ( 1, 3, pageId            ) : "configuring"            ,  ( 1, 3, workflowPageState ) : "active"                 ,
 					  ( 1, 3, pageDataState     ) : "incomplete"             ,  ( 1, 3, redirectPageId    ) : "home"                    }
 				}
 			}
@@ -129,8 +188,78 @@ Model Main_DataLakeExample {
 					Definition: "aimms_logo.png";
 				}
 			}
-			Section Configuring_Page;
 			Section New_SAS_Token_Page;
+			Section Configuring_ADLS_Page {
+				Parameter p_def_listOfFileSystems {
+					IndexDomain: i_file_sys;
+					Definition: 1;
+				}
+				Procedure pr_openConfiguringADLSPage {
+					Body: {
+						pr_listFileSystems;
+					}
+				}
+				Section Create_File_System {
+					Procedure pr_openCreateFileSystemDialog {
+						Body: {
+							empty sp_newNameForFileSystem;
+							
+							s_loc_actions := {'Cancel', 'OK'};
+							
+							webui::OpenDialogPage(
+							    pageid  :  'create_file_system',
+								title   :  "Create File System", 
+								actions :  s_loc_actions, 
+								onDone  :  'pr_createFileSystem');
+						}
+						Set s_loc_actions;
+					}
+					StringParameter sp_newNameForFileSystem;
+				}
+				Section Delete_File_System {
+					Procedure pr_openDeleteFileSystemDialog {
+						Body: {
+							empty ep_fileSystem;
+							
+							s_loc_actions := {'Cancel', 'Delete'};
+							
+							webui::OpenDialogPage(
+							    pageid  :  'delete_file_system',
+								title   :  "Delete File System", 
+								actions :  s_loc_actions, 
+								onDone  :  'pr_checkAnswerWhenDeleting');
+						}
+						Set s_loc_actions;
+					}
+					Procedure pr_checkAnswerWhenDeleting {
+						Arguments: sp_in_dialogAnswer;
+						Body: {
+							if sp_in_dialogAnswer = "Delete" then
+							    s_loc_actions := {'Cancel', 'I am sure!'};
+							
+							    webui::RequestPerformWebUIDialog(
+							            title   :  "Delete File System", 
+							            message :  "Are you sure? This operation cannot be undone.", 
+							            actions :  s_loc_actions, 
+							            onDone  :  'pr_deleteFileSystem');
+							
+							elseif sp_in_dialogAnswer = "Cancel" then
+							    s_loc_actions := {'OK'};
+							
+							    webui::RequestPerformWebUIDialog(
+							        title   :  "Delete File System", 
+							        message :  "This operation was canceled.", 
+							        actions :  s_loc_actions, 
+							        onDone  :  'webui::NoOp1');
+							endif;
+						}
+						StringParameter sp_in_dialogAnswer {
+							Property: Input;
+						}
+						Set s_loc_actions;
+					}
+				}
+			}
 		}
 	}
 	Section Quantities_and_Units {

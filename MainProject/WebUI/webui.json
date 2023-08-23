@@ -52,6 +52,18 @@
                 "slug": "configuring",
                 "children": [
                   {
+                    "name": "File System - Container",
+                    "type": "pagev2-grid-sidepanel",
+                    "slug": "file_system_-_container",
+                    "children": []
+                  },
+                  {
+                    "name": "File - Path",
+                    "type": "pagev2-grid-sidepanel",
+                    "slug": "file_-_path",
+                    "children": []
+                  },
+                  {
                     "name": "Create File System",
                     "type": "pagev2-grid-dialog",
                     "slug": "create_file_system",
@@ -61,6 +73,30 @@
                     "name": "Delete File System",
                     "type": "pagev2-grid-dialog",
                     "slug": "delete_file_system",
+                    "children": []
+                  },
+                  {
+                    "name": "List Files",
+                    "type": "pagev2-grid-dialog",
+                    "slug": "list_files",
+                    "children": []
+                  },
+                  {
+                    "name": "Download Files",
+                    "type": "pagev2-grid-dialog",
+                    "slug": "download_files",
+                    "children": []
+                  },
+                  {
+                    "name": "Delete Files",
+                    "type": "pagev2-grid-dialog",
+                    "slug": "delete_files",
+                    "children": []
+                  },
+                  {
+                    "name": "Upload Files",
+                    "type": "pagev2-grid-dialog",
+                    "slug": "upload_files",
                     "children": []
                   }
                 ]
@@ -110,14 +146,63 @@
       }
     }
   },
+  "layouts/custom_3687d482-099b-4c25-a70a-0320c2c39633": {
+    "definition": {
+      "literal": {
+        "componentName": "Grid",
+        "props": {
+          "gridTemplateColumns": "1fr 1fr",
+          "gridTemplateRows": "0.1fr 1fr",
+          "gridTemplateAreas": "\"area-a area-b\" \"area-c area-d\""
+        },
+        "items": [
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-a",
+              "name": "Area A",
+              "gridAutoFlow": "column"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-b",
+              "name": "Area B",
+              "gridAutoFlow": "column"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-c",
+              "name": "Area C",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-d",
+              "name": "Area D",
+              "gridAutoFlow": "row"
+            }
+          }
+        ]
+      }
+    },
+    "displayName": {
+      "literal": "Layout5 Copy"
+    }
+  },
   "layouts/custom_4b0dffcc-c1f5-4482-864a-774382277998": {
     "definition": {
       "literal": {
         "componentName": "Grid",
         "props": {
-          "gridTemplateColumns": "0.7fr 1fr 1fr",
-          "gridTemplateRows": "1fr",
-          "gridTemplateAreas": "\"area-a area-b area-c\""
+          "gridTemplateColumns": "0.4fr 1fr",
+          "gridTemplateRows": "1fr 0.05fr",
+          "gridTemplateAreas": "\"area-a area-b\" \"area-c area-d\""
         },
         "items": [
           {
@@ -140,15 +225,23 @@
             "componentName": "WidgetArea",
             "props": {
               "gridArea": "area-c",
-              "name": "Area C",
-              "gridAutoFlow": "row"
+              "name": "Area B",
+              "gridAutoFlow": "column"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-d",
+              "name": "Area B",
+              "gridAutoFlow": "column"
             }
           }
         ]
       }
     },
     "displayName": {
-      "literal": "Layout6 Copy"
+      "literal": "ConfiguringADLS"
     }
   },
   "pages/configuring": {
@@ -158,34 +251,39 @@
     "bindings": {
       "literal": [
         {
-          "widgetUri": "List Files",
-          "gridArea": "area-b",
-          "dndId": "area-bList Files0"
+          "widgetUri": "Create File System",
+          "gridArea": "area-c",
+          "dndId": "area-cCreate File System0"
         },
         {
-          "widgetUri": "Download Directory",
+          "widgetUri": "Delete File System",
           "gridArea": "area-c",
-          "dndId": "area-cDownload Directory2"
+          "dndId": "area-aDelete File System8"
         },
         {
           "widgetUri": "Download Files",
-          "gridArea": "area-b",
-          "dndId": "area-bDownload Files3"
+          "gridArea": "area-d",
+          "dndId": "area-dDownload Files1"
         },
         {
           "widgetUri": "Upload Files",
-          "gridArea": "area-b",
-          "dndId": "area-bUpload Files4"
+          "gridArea": "area-d",
+          "dndId": "area-dUpload Files2"
         },
         {
           "widgetUri": "Delete Path",
+          "gridArea": "area-d",
+          "dndId": "area-dDelete Path3"
+        },
+        {
+          "widgetUri": "List Files",
           "gridArea": "area-b",
-          "dndId": "area-bDelete Path5"
+          "dndId": "area-bList Files4"
         },
         {
           "widgetUri": "File Paths",
           "gridArea": "area-b",
-          "dndId": "area-bFile Paths1"
+          "dndId": "area-bFile Paths5"
         },
         {
           "widgetUri": "List File Systems",
@@ -193,24 +291,38 @@
           "dndId": "area-aList File Systems6"
         },
         {
-          "widgetUri": "Create File System",
-          "gridArea": "area-a",
-          "dndId": "area-aCreate File System7"
-        },
-        {
-          "widgetUri": "Delete File System",
-          "gridArea": "area-a",
-          "dndId": "area-aDelete File System8"
-        },
-        {
           "widgetUri": "File Systems",
           "gridArea": "area-a",
-          "dndId": "area-aFile Systems9"
+          "dndId": "area-aFile Systems7"
         }
       ]
     },
     "layoutId": {
       "literal": "custom_4b0dffcc-c1f5-4482-864a-774382277998"
+    },
+    "sidepanels": {
+      "aimms": {
+        "contents": [
+          "sp_def_configuringADLSSidePanel"
+        ],
+        "slices": [
+          {
+            "identifier": "sp_def_configuringADLSSidePanel",
+            "slice": [
+              {
+                "index": "webui::indexPageExtension",
+                "type": "free",
+                "value": "webui::indexPageExtension"
+              },
+              {
+                "index": "webui::indexSidePanelSpec",
+                "type": "free",
+                "value": "webui::indexSidePanelSpec"
+              }
+            ]
+          }
+        ]
+      }
     },
     "widgets": {
       "literal": [
@@ -237,13 +349,6 @@
         },
         {
           "uri": "List File Systems",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "Download Directory",
           "layoutInfo": {
             "width": "2",
             "height": "1"
@@ -301,7 +406,7 @@
       ]
     },
     "maxcolumns": {
-      "literal": 1
+      "literal": 6
     },
     "maxrows": {
       "literal": 1
@@ -319,6 +424,9 @@
     }
   },
   "pages/delete_file_system": {
+    "aimms.widget.type": {
+      "literal": "pagev2-grid-dialog"
+    },
     "bindings": {
       "literal": [
         {
@@ -329,7 +437,7 @@
       ]
     },
     "maxcolumns": {
-      "literal": 1
+      "literal": 6
     },
     "maxrows": {
       "literal": 1
@@ -344,6 +452,93 @@
           }
         }
       ]
+    }
+  },
+  "pages/delete_files": {
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "scl_deleteFileInfo",
+          "gridArea": "area-a",
+          "dndId": "Unassigned widgetsscl_deleteFileInfo"
+        }
+      ]
+    },
+    "maxcolumns": {
+      "literal": 6
+    },
+    "maxrows": {
+      "literal": 1
+    },
+    "widgets": {
+      "literal": [
+        {
+          "uri": "scl_deleteFileInfo",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
+    }
+  },
+  "pages/download_files": {
+    "aimms.widget.type": {
+      "literal": "pagev2-grid-dialog"
+    },
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "scl_downloadFilesInfo",
+          "gridArea": "area-a",
+          "dndId": "area-ascl_downloadFilesInfo1"
+        },
+        {
+          "widgetUri": "dwn_downloadFilesOfFileSystem",
+          "gridArea": "area-a",
+          "dndId": "area-adwn_downloadFilesOfFileSystem0"
+        }
+      ]
+    },
+    "maxcolumns": {
+      "literal": 6
+    },
+    "maxrows": {
+      "literal": 1
+    },
+    "widgets": {
+      "literal": [
+        {
+          "uri": "dwn_downloadFilesOfFileSystem",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "scl_downloadFilesInfo",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
+    }
+  },
+  "pages/file_-_path": {
+    "widgets": {
+      "literal": []
+    },
+    "aimms.widget.type": {
+      "literal": "pagev2-grid-sidepanel"
+    }
+  },
+  "pages/file_system_-_container": {
+    "widgets": {
+      "literal": []
+    },
+    "aimms.widget.type": {
+      "literal": "pagev2-grid-sidepanel"
     }
   },
   "pages/home": {
@@ -386,6 +581,37 @@
       ]
     }
   },
+  "pages/list_files": {
+    "aimms.widget.type": {
+      "literal": "pagev2-grid-dialog"
+    },
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "scl_listFilesFromFileSystem",
+          "gridArea": "area-a",
+          "dndId": "Unassigned widgetsscl_listFilesFromFileSystem"
+        }
+      ]
+    },
+    "maxcolumns": {
+      "literal": 6
+    },
+    "maxrows": {
+      "literal": 1
+    },
+    "widgets": {
+      "literal": [
+        {
+          "uri": "scl_listFilesFromFileSystem",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
+    }
+  },
   "pages/new_sas_token": {
     "aimms.widget.type": {
       "literal": "pagev2-grid"
@@ -412,6 +638,14 @@
           }
         }
       ]
+    }
+  },
+  "pages/upload_files": {
+    "maxcolumns": {
+      "literal": 6
+    },
+    "maxrows": {
+      "literal": 1
     }
   },
   "widgets/Account Data": {
@@ -467,7 +701,7 @@
     "action": {
       "literal": {
         "type": "procedure",
-        "value": "pr_deletePath"
+        "value": "pr_openDeleteFilesDialog"
       }
     },
     "aimms.widget.type": {
@@ -477,7 +711,7 @@
       "literal": "Delete Path"
     },
     "title": {
-      "literal": "Delete Path"
+      "literal": "Delete Files"
     }
   },
   "widgets/Download Directory": {
@@ -524,7 +758,7 @@
     "action": {
       "literal": {
         "type": "procedure",
-        "value": "pr_downloadFiles"
+        "value": "pr_openDownloadFilesDialog"
       }
     },
     "aimms.widget.type": {
@@ -537,6 +771,14 @@
       "literal": "Download Files"
     }
   },
+  "widgets/dwn_downloadFilesOfFileSystem": {
+    "aimms.widget.type": {
+      "literal": "download"
+    },
+    "name": {
+      "literal": "dwn_downloadFilesOfFileSystem"
+    }
+  },
   "widgets/File Paths": {
     "aimms.widget.type": {
       "literal": "table"
@@ -546,7 +788,7 @@
         "contents": [
           "sp_filePath",
           "p_fileSize",
-          "p_isDirectory"
+          "bp_isDirectory"
         ]
       }
     },
@@ -556,7 +798,7 @@
     "contents.partition": {
       "literal": {
         "rowHeader": [
-          "i_path"
+          "i_pathid"
         ],
         "colHeader": [
           "<IDENTIFIER-SET>"
@@ -602,23 +844,35 @@
         {
           "type": "colHeader",
           "colKey": {
-            "<IDENTIFIER-SET>": "sp_filePath"
+            "<IDENTIFIER-SET>": "p_isDirectory"
           },
-          "width": 88.37
+          "width": 23.1
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "bp_isDirectory"
+          },
+          "width": 13.75
         },
         {
           "type": "colHeader",
           "colKey": {
             "<IDENTIFIER-SET>": "p_fileSize"
           },
-          "width": 23.33
+          "width": 14.19
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "i_path",
+          "width": 11.08
         },
         {
           "type": "colHeader",
           "colKey": {
-            "<IDENTIFIER-SET>": "p_isDirectory"
+            "<IDENTIFIER-SET>": "sp_filePath"
           },
-          "width": 23.1
+          "width": 154.42
         }
       ]
     },
@@ -626,7 +880,12 @@
       "literal": "File Paths"
     },
     "title": {
-      "literal": "Things inside the Container"
+      "aimms": {
+        "contents": [
+          "sp_def_filesTableTitle"
+        ],
+        "slices": []
+      }
     }
   },
   "widgets/File Systems": {
@@ -670,11 +929,6 @@
           "width": 21.62
         },
         {
-          "type": "rowHeader",
-          "colKey": "i_file_sys",
-          "width": 23.8
-        },
-        {
           "type": "colHeader",
           "colKey": {
             "<IDENTIFIER-SET>": "sp_fileSystemUUID"
@@ -687,6 +941,11 @@
             "<IDENTIFIER-SET>": "p_def_listOfFileSystems"
           },
           "width": 8.25
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "i_file_sys",
+          "width": 31.32
         }
       ]
     },
@@ -733,7 +992,7 @@
     "action": {
       "literal": {
         "type": "procedure",
-        "value": "pr_listFiles"
+        "value": "pr_openListFilesDialog"
       }
     },
     "aimms.widget.type": {
@@ -744,6 +1003,53 @@
     },
     "title": {
       "literal": "List Files"
+    }
+  },
+  "widgets/scl_deleteFileInfo": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "sp_def_fileSystemSelected",
+          "ep_completeFilePath"
+        ]
+      }
+    },
+    "name": {
+      "literal": "scl_deleteFileInfo"
+    }
+  },
+  "widgets/scl_downloadFilesInfo": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "sp_def_fileSystemSelected",
+          "ep_completeFilePathAndEverything"
+        ]
+      }
+    },
+    "name": {
+      "literal": "scl_downloadFilesInfo"
+    }
+  },
+  "widgets/scl_listFilesFromFileSystem": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "ep_fileSystem"
+        ]
+      }
+    },
+    "name": {
+      "literal": "scl_listFilesFromFileSystem"
     }
   },
   "widgets/scl_newNameForFileSystem": {
@@ -768,7 +1074,7 @@
     "contents": {
       "aimms": {
         "contents": [
-          "ep_fileSystem"
+          "ep_fileSystemToDelete"
         ]
       }
     },
@@ -791,7 +1097,7 @@
     "action": {
       "literal": {
         "type": "procedure",
-        "value": "pr_uploadFiles"
+        "value": "pr_openUploadFilesDialog"
       }
     },
     "aimms.widget.type": {

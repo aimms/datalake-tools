@@ -48,7 +48,7 @@ Model Main_DataLake_Tools {
 			Body: {
 				if sp_in_dialogAnswer = "I am sure!" then
 				
-				    sp_loc_fileSystemToDelete := ep_fileSystem;
+				    sp_loc_fileSystemToDelete := ep_fileSystemToDelete;
 				    dex::dls::DeleteFileSystem(sp_loc_fileSystemToDelete);
 				    dex::dls::ListFileSystems(s_fileSystems);
 				
@@ -69,83 +69,155 @@ Model Main_DataLake_Tools {
 			StringParameter sp_loc_fileSystemToDelete;
 		}
 	}
-	Section DataLake_Tools {
-		Set s_paths {
+	Section Files_Toolkit {
+		Set s_fileIds {
 			SubsetOf: Integers;
-			Index: i_path;
+			Index: i_pathid;
 		}
-		Set s_files {
-			SubsetOf: Integers;
-			Index: i_file;
+		Set s_completeFilePaths {
+			SubsetOf: s_def_completeFilePathsAndEverything;
+			Index: i_file_path;
+			Parameter: ep_completeFilePath;
 		}
 		StringParameter sp_filePath {
-			IndexDomain: i_path;
+			IndexDomain: i_pathid;
 			webui::FlagsIdentifier: sp_def_readonly;
 		}
 		Parameter p_fileSize {
-			IndexDomain: i_path;
+			IndexDomain: i_pathid;
 			webui::FlagsIdentifier: sp_def_readonly;
 		}
-		Parameter p_isDirectory {
-			IndexDomain: i_path;
+		Parameter bp_isDirectory {
+			IndexDomain: i_pathid;
+			Range: binary;
 			webui::FlagsIdentifier: sp_def_readonly;
 		}
-		StringParameter _FileName {
-			IndexDomain: i_file;
-		}
-		StringParameter AdditionalQueryParameters;
-		Procedure pr_setProxyServer {
+		Procedure pr_listFilesFromFileSystem {
+			Arguments: (sp_in_dialogAnswer);
 			Body: {
-				dex::client::DetermineProxyServer;
-			}
-		}
-		Procedure pr_generatedLibrary {
-			Body: {
-				dex::schema::libprj::LibraryRootFolder := "libs";
-				dex::schema::libprj::ApiInitiFolder := "api-init";
+				if sp_in_dialogAnswer = "List" then
+				    empty s_fileIds, sp_filePath, p_fileSize, bp_isDirectory;
+				    sp_loc_fileSystemSelected := ep_fileSystem;
+				    dex::dls::ListFiles(sp_loc_fileSystemSelected, "", s_fileIds, sp_filePath, p_fileSize, bp_isDirectory, 1);
 				
-				dex::schema::GenerateClientFromOpenAPISpec("AzureDatalake.json", "Azure_Data_Lake1", "adl1", 1, 2);
-				dex::schema::GenerateClientFromOpenAPISpec("blob.json", "Blob_Storage", "blob", 1, 2);
+				    empty s_completeFilePaths;
+				    for i_pathid | sp_filePath(i_pathid) do
+				        ep_completeFilePath := StringToElement(s_completeFilePaths, sp_filePath(i_pathid), 1);
+				    endfor;
+				
+				elseif sp_in_dialogAnswer = "Cancel" then
+				    s_loc_actions := {'OK'};
+				
+				    webui::RequestPerformWebUIDialog(
+				        title   :  "List Files", 
+				        message :  "This operation was canceled.", 
+				        actions :  s_loc_actions, 
+				        onDone  :  'webui::NoOp1');
+				endif;
 			}
-		}
-		Procedure pr_listFiles {
-			Body: {
-				dex::dls::ListFiles(sp_newNameForFileSystem, "", s_paths, sp_filePath, p_fileSize, p_isDirectory, 1);
-				block
-					DirectoryGetFiles("DLSData1", "*.*", _FileName, recursive: 1);
-				onerror err do
-					errh::MarkAsHandled(err);
-				endblock;
+			StringParameter sp_in_dialogAnswer {
+				Property: Input;
 			}
+			StringParameter sp_loc_fileSystemSelected;
+			Set s_loc_actions;
 			ElementParameter err {
 				Range: errh::PendingErrors;
 			}
 		}
-		Procedure pr_uploadFiles {
+		Procedure pr_downloadFilesFromFileSystem {
+			Arguments: sp_in_dialogAnswer;
+			Body: {
+				if sp_in_dialogAnswer = "Download" then
+				
+				    block ! check next temp id 
+				    DirectoryGetSubdirectories("download-temp", "*temp-*", sp_loc_listOfFoldersDownloaded, recursive: 1); 
+				
+				    for i_loc_int | sp_loc_listOfFoldersDownloaded(i_loc_int) do
+				        p_loc_tempIds(i_loc_int) := val(SubString(sp_loc_listOfFoldersDownloaded(i_loc_int), 6, 10));
+				    endfor;
+				
+				    p_loc_lastTempId := max(i_loc_int, p_loc_tempIds(i_loc_int));
+				    p_loc_lastTempId += 1;
+				    endblock;
+				
+				    sp_loc_directory := "download-temp/temp-" + p_loc_lastTempId;
+				    if ep_completeFilePathAndEverything = m_downloadEverything then
+				        sp_loc_filePrefix := "";
+				    else  
+				        sp_loc_filePrefix := ep_completeFilePathAndEverything;
+				    endif;
+				
+				    dex::dls::DownloadFiles(sp_def_fileSystemSelected, sp_loc_filePrefix, sp_loc_directory, 1);
+				
+				elseif sp_in_dialogAnswer = "Cancel" then
+				    s_loc_actions := {'OK'};
+				
+				    webui::RequestPerformWebUIDialog(
+				        title   :  "Download Files", 
+				        message :  "This operation was canceled.", 
+				        actions :  s_loc_actions, 
+				        onDone  :  'webui::NoOp1');
+				endif;
+			}
+			Set s_loc_integers {
+				SubsetOf: Integers;
+				Index: i_loc_int;
+				InitialData: {
+					{1..300}
+				}
+			}
+			StringParameter sp_loc_listOfFoldersDownloaded {
+				IndexDomain: i_loc_int;
+			}
+			Parameter p_loc_tempIds {
+				IndexDomain: i_loc_int;
+			}
+			Parameter p_loc_lastTempId;
+			StringParameter sp_loc_directory;
+			StringParameter sp_loc_filePrefix;
+			Set s_loc_actions;
+			StringParameter sp_in_dialogAnswer {
+				Property: Input;
+			}
+		}
+		Procedure pr_deleteFileFromFileSystem {
+			Arguments: sp_in_dialogAnswer;
+			Body: {
+				if sp_in_dialogAnswer = "Delete" then
+				    sp_loc_filePrefix := ep_completeFilePath;
+				
+				    dex::dls::DeletePath(sp_def_fileSystemSelected, sp_loc_filePrefix);
+				    dex::dls::ListFiles(sp_def_fileSystemSelected, "", s_fileIds, sp_filePath, p_fileSize, bp_isDirectory, 1);
+				
+				elseif sp_in_dialogAnswer = "Cancel" then
+				    s_loc_actions := {'OK'};
+				
+				    webui::RequestPerformWebUIDialog(
+				        title   :  "Delete Files", 
+				        message :  "This operation was canceled.", 
+				        actions :  s_loc_actions, 
+				        onDone  :  'webui::NoOp1');
+				endif;
+			}
+			StringParameter sp_in_dialogAnswer {
+				Property: Input;
+			}
+			StringParameter sp_loc_filePrefix;
+			Set s_loc_actions;
+		}
+		Procedure pr_uploadFilesFromFileSystem {
+			Arguments: sp_in_dialogAnswer;
 			Body: {
 				dex::dls::UploadFiles(sp_newNameForFileSystem, "DLSData", "sc-navigator", 1);
-				dex::dls::ListFiles(sp_newNameForFileSystem, "", s_paths, sp_filePath, p_fileSize, p_isDirectory, 1);
+				dex::dls::ListFiles(sp_newNameForFileSystem, "", s_fileIds, sp_filePath, p_fileSize, bp_isDirectory, 1);
+			}
+			StringParameter sp_in_dialogAnswer {
+				Property: Input;
 			}
 		}
-		Procedure pr_downloadFiles {
-			Body: {
-				dex::dls::DownloadFiles(sp_newNameForFileSystem, "sc-navigator", "DLSData1", 1);
-				block
-					DirectoryGetFiles("DLSData1", "*.*", _FileName, recursive: 1);
-				onerror err do
-					errh::MarkAsHandled(err);
-				endblock;
-			}
-			ElementParameter err {
-				Range: errh::PendingErrors;
-			}
-		}
-		Procedure pr_deletePath {
-			Body: {
-				dex::dls::DeletePath(sp_newNameForFileSystem,"sc-navigator");
-				dex::dls::ListFiles(sp_newNameForFileSystem, "", s_paths, sp_filePath, p_fileSize, p_isDirectory, 1);
-			}
-		}
+	}
+	Section SAS_Token_Toolkit {
+		StringParameter AdditionalQueryParameters;
 		Procedure Procedure_1 {
 			Body: {
 				dex::client::az::AccountSASQueryString(
@@ -163,7 +235,7 @@ Model Main_DataLake_Tools {
 	}
 	Section UI_Declarations {
 		StringParameter sp_def_readonly {
-			Definition: "read-only";
+			Definition: "readonly";
 		}
 		Section Workflow {
 			StringParameter sp_def_myWorkflowSteps {
@@ -194,6 +266,35 @@ Model Main_DataLake_Tools {
 					IndexDomain: i_file_sys;
 					Definition: 1;
 				}
+				StringParameter sp_def_configuringADLSSidePanel {
+					IndexDomain: (webui::indexPageExtension,webui::indexSidePanelSpec);
+					Definition: {
+						data 
+						{ ( 1, displayText ) : "File System - Container",  ( 1, pageId      ) : "file_system_-_container",
+						  ( 1, icon        ) : "aimms-bookmark2"        ,  ( 1, iconcolor   ) : "#004BFF"                 ,
+						  ( 1, state       ) : "active"                 ,  ( 2, displayText ) : "File - Path"            ,
+						  ( 2, pageId      ) : "file_-_path"            ,  ( 2, icon        ) : "aimms-bookmark2"        ,
+						  ( 2, iconcolor   ) : "#004BFF"                 ,  ( 2, state       ) : "active"                  }
+					}
+				}
+				StringParameter sp_def_filesTableTitle {
+					Definition: {
+						"List of Files (Paths) for '" + ep_fileSystem + "'";
+					}
+				}
+				StringParameter sp_def_fileSystemSelected {
+					Definition: ep_fileSystem;
+				}
+				Set s_def_completeFilePathsAndEverything {
+					Parameter: ep_completeFilePathAndEverything;
+					Definition: s_completeFilePaths + m_downloadEverything;
+				}
+				Macro m_downloadEverything {
+					Definition: 'download everything';
+				}
+				ElementParameter ep_fileSystemToDelete {
+					Range: s_fileSystems;
+				}
 				Procedure pr_openConfiguringADLSPage {
 					Body: {
 						pr_listFileSystems;
@@ -219,7 +320,7 @@ Model Main_DataLake_Tools {
 				Section Delete_File_System {
 					Procedure pr_openDeleteFileSystemDialog {
 						Body: {
-							empty ep_fileSystem;
+							empty ep_fileSystemToDelete;
 							
 							s_loc_actions := {'Cancel', 'Delete'};
 							
@@ -259,6 +360,68 @@ Model Main_DataLake_Tools {
 						Set s_loc_actions;
 					}
 				}
+				Section List_Files {
+					Procedure pr_openListFilesDialog {
+						Body: {
+							empty ep_fileSystem;
+							
+							s_loc_actions := {'Cancel', 'List'};
+							
+							webui::OpenDialogPage(
+							    pageid  :  'list_files',
+								title   :  "List Files", 
+								actions :  s_loc_actions, 
+								onDone  :  'pr_listFilesFromFileSystem');
+						}
+						Set s_loc_actions;
+					}
+				}
+				Section Download_Files {
+					Procedure pr_openDownloadFilesDialog {
+						Body: {
+							s_loc_actions := {'Cancel', 'Download'};
+							
+							empty ep_completeFilePathAndEverything;
+							
+							webui::OpenDialogPage(
+							    pageid  :  'download_files',
+								title   :  "Download Files", 
+								actions :  s_loc_actions, 
+								onDone  :  'pr_downloadFilesFromFileSystem');
+						}
+						Set s_loc_actions;
+					}
+				}
+				Section Upload_Files {
+					Procedure pr_openUploadFilesDialog {
+						Body: {
+							s_loc_actions := {'Cancel', 'Upload'};
+							
+							webui::OpenDialogPage(
+							    pageid  :  'upload_files',
+								title   :  "Upload Files", 
+								actions :  s_loc_actions, 
+								onDone  :  'pr_uploadFilesFromFileSystem');
+						}
+						Set s_loc_actions;
+					}
+				}
+				Section Delete_Files {
+					Procedure pr_openDeleteFilesDialog {
+						Body: {
+							s_loc_actions := {'Cancel', 'Delete'};
+							
+							empty ep_completeFilePath;
+							
+							webui::OpenDialogPage(
+							    pageid  :  'delete_files',
+								title   :  "Delete Files", 
+								actions :  s_loc_actions, 
+								onDone  :  'pr_deleteFileFromFileSystem');
+						}
+						Set s_loc_actions;
+					}
+				}
 			}
 		}
 	}
@@ -283,6 +446,12 @@ Model Main_DataLake_Tools {
 		Comment: "Add initialization statements here that do NOT require any library being initialized already.";
 	}
 	Procedure PostMainInitialization {
+		Body: {
+			if DirectoryExists("download-temp") then
+			    DirectoryDelete("download-temp");
+			endif;
+			DirectoryCreate("download-temp");
+		}
 		Comment: {
 			"Add initialization statements here that require that the libraries are already initialized properly,
 			or add statements that require the Data Management module to be initialized."
@@ -321,6 +490,22 @@ Model Main_DataLake_Tools {
 			Return 1 to allow the termination sequence to continue.
 			Return 0 if you want to cancel the termination sequence.
 			It is recommended to only use the procedure PreMainTermination to cancel the termination sequence and let this procedure always return 1."
+		}
+	}
+	Section old {
+		Procedure pr_setProxyServer {
+			Body: {
+				dex::client::DetermineProxyServer;
+			}
+		}
+		Procedure pr_generatedLibrary {
+			Body: {
+				dex::schema::libprj::LibraryRootFolder := "libs";
+				dex::schema::libprj::ApiInitiFolder := "api-init";
+				
+				dex::schema::GenerateClientFromOpenAPISpec("AzureDatalake.json", "Azure_Data_Lake1", "adl1", 1, 2);
+				dex::schema::GenerateClientFromOpenAPISpec("blob.json", "Blob_Storage", "blob", 1, 2);
+			}
 		}
 	}
 }

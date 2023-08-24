@@ -217,19 +217,49 @@ Model Main_DataLake_Tools {
 		}
 	}
 	Section SAS_Token_Toolkit {
-		StringParameter AdditionalQueryParameters;
-		Procedure Procedure_1 {
+		Set s_def_services {
+			Parameter: ep_service;
+			Definition: {
+				{'bf'}
+			}
+		}
+		Set s_def_resourceTypes {
+			Parameter: ep_resourceType;
+			Definition: {
+				{'o'}
+			}
+		}
+		Set s_def_permissions {
+			Parameter: ep_permission;
+			Definition: {
+				{'crw'}
+			}
+		}
+		StringParameter sp_def_storageAccount {
+			Definition: dex::dls::StorageAccount;
+		}
+		Parameter p_secondsToExpire {
+			Unit: s;
+			Default: 600;
+		}
+		StringParameter sp_SASQueryString {
+			webui::FlagsIdentifier: sp_def_readonly;
+		}
+		Procedure pr_createSASQuery {
 			Body: {
+				ep_service := 'bf';
+				ep_resourceType := 'o';
+				ep_permission := 'crw';
+				
 				dex::client::az::AccountSASQueryString(
 					accessKey     :  dex::dls::StorageAccessKey, 
 					accountName   :  dex::dls::StorageAccount, 
-					services      :  "bf", 
-					resourceTypes :  "o", 
-					permissions   :  "crw", 
-					expiryDate    :  dex::client::az::ExpiryDateFromNow(600[s]), 
+					services      :  ep_service, 
+					resourceTypes :  ep_resourceType, 
+					permissions   :  ep_permission, 
+					expiryDate    :  dex::client::az::ExpiryDateFromNow(p_secondsToExpire), 
 					ip            :  "", 
-					queryString   :  AdditionalQueryParameters
-					);
+					queryString   :  sp_SASQueryString);
 			}
 		}
 	}
@@ -451,6 +481,7 @@ Model Main_DataLake_Tools {
 			    DirectoryDelete("download-temp");
 			endif;
 			DirectoryCreate("download-temp");
+			ep_fileSystem := '';
 		}
 		Comment: {
 			"Add initialization statements here that require that the libraries are already initialized properly,

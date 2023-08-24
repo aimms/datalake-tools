@@ -146,6 +146,47 @@
       }
     }
   },
+  "layouts/custom_3463aa24-07f7-4678-bac6-3790e2ade568": {
+    "definition": {
+      "literal": {
+        "componentName": "Grid",
+        "props": {
+          "gridTemplateColumns": "0.3fr 1fr",
+          "gridTemplateRows": "1fr 0.3fr",
+          "gridTemplateAreas": "\"area-a area-b\" \"area-c area-c\""
+        },
+        "items": [
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-a",
+              "name": "Area A",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-b",
+              "name": "Area B",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-c",
+              "name": "Area C",
+              "gridAutoFlow": "row"
+            }
+          }
+        ]
+      }
+    },
+    "displayName": {
+      "literal": "Layout7 Copy"
+    }
+  },
   "layouts/custom_3687d482-099b-4c25-a70a-0320c2c39633": {
     "definition": {
       "literal": {
@@ -299,6 +340,11 @@
     },
     "layoutId": {
       "literal": "custom_4b0dffcc-c1f5-4482-864a-774382277998"
+    },
+    "onload": {
+      "aimms": {
+        "run": "pr_openConfiguringADLSPage"
+      }
     },
     "sidepanels": {
       "aimms": {
@@ -480,6 +526,9 @@
           }
         }
       ]
+    },
+    "aimms.widget.type": {
+      "literal": "pagev2-grid-dialog"
     }
   },
   "pages/download_files": {
@@ -489,14 +538,14 @@
     "bindings": {
       "literal": [
         {
-          "widgetUri": "scl_downloadFilesInfo",
-          "gridArea": "area-a",
-          "dndId": "area-ascl_downloadFilesInfo1"
+          "widgetUri": "dwn_downloadFilesOfFileSystem",
+          "gridArea": "Unassigned widgets",
+          "dndId": "area-adwn_downloadFilesOfFileSystem1"
         },
         {
-          "widgetUri": "dwn_downloadFilesOfFileSystem",
+          "widgetUri": "scl_downloadFilesInfo",
           "gridArea": "area-a",
-          "dndId": "area-adwn_downloadFilesOfFileSystem0"
+          "dndId": "area-ascl_downloadFilesInfo0"
         }
       ]
     },
@@ -526,19 +575,53 @@
     }
   },
   "pages/file_-_path": {
-    "widgets": {
-      "literal": []
-    },
     "aimms.widget.type": {
       "literal": "pagev2-grid-sidepanel"
+    },
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "txt_fileInfo",
+          "gridArea": "area-a",
+          "dndId": "Unassigned widgetstxt_fileInfo"
+        }
+      ]
+    },
+    "widgets": {
+      "literal": [
+        {
+          "uri": "txt_fileInfo",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
     }
   },
   "pages/file_system_-_container": {
-    "widgets": {
-      "literal": []
-    },
     "aimms.widget.type": {
       "literal": "pagev2-grid-sidepanel"
+    },
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "txt_fileSystemInfo",
+          "gridArea": "area-a",
+          "dndId": "Unassigned widgetstxt_fileSystemInfo"
+        }
+      ]
+    },
+    "widgets": {
+      "literal": [
+        {
+          "uri": "txt_fileSystemInfo",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
     }
   },
   "pages/home": {
@@ -619,19 +702,55 @@
     "bindings": {
       "literal": [
         {
+          "widgetUri": "scl_SASToken",
+          "gridArea": "area-c",
+          "dndId": "area-dscl_SASToken0"
+        },
+        {
+          "widgetUri": "scl_SASTokenInputs",
+          "gridArea": "area-b",
+          "dndId": "area-bscl_SASTokenInputs1"
+        },
+        {
           "widgetUri": "Account Data",
           "gridArea": "area-a",
-          "dndId": "Unassigned widgetsAccount Data0"
+          "dndId": "area-aAccount Data2"
+        },
+        {
+          "widgetUri": "btn_createToken",
+          "gridArea": "area-b",
+          "dndId": "area-bbtn_createToken3"
         }
       ]
     },
     "layoutId": {
-      "literal": "Layout7"
+      "literal": "custom_3463aa24-07f7-4678-bac6-3790e2ade568"
     },
     "widgets": {
       "literal": [
         {
           "uri": "Account Data",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "scl_SASTokenInputs",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "btn_createToken",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "scl_SASToken",
           "layoutInfo": {
             "width": "2",
             "height": "1"
@@ -646,6 +765,9 @@
     },
     "maxrows": {
       "literal": 1
+    },
+    "aimms.widget.type": {
+      "literal": "pagev2-grid-dialog"
     }
   },
   "widgets/Account Data": {
@@ -655,12 +777,35 @@
     "contents": {
       "aimms": {
         "contents": [
-          "dex::dls::StorageAccount"
+          "sp_def_storageAccount"
         ]
       }
     },
+    "contents.labels.visible": {
+      "literal": 0
+    },
     "name": {
       "literal": "Account Data"
+    },
+    "title": {
+      "literal": "Storage Account"
+    }
+  },
+  "widgets/btn_createToken": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_createSASQuery"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "btn_createToken"
+    },
+    "title": {
+      "literal": "Create New SAS Token"
     }
   },
   "widgets/Create File System": {
@@ -712,46 +857,6 @@
     },
     "title": {
       "literal": "Delete Files"
-    }
-  },
-  "widgets/Download Directory": {
-    "aimms.widget.type": {
-      "literal": "table"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "_FileName"
-        ]
-      }
-    },
-    "contents.partition": {
-      "literal": {
-        "rowHeader": [
-          "i_file"
-        ],
-        "colHeader": [
-          "<IDENTIFIER-SET>"
-        ],
-        "aggregated": []
-      }
-    },
-    "custom.column.widths": {
-      "literal": [
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "_FileName"
-          },
-          "width": 148.51
-        }
-      ]
-    },
-    "name": {
-      "literal": "Download Directory"
-    },
-    "title": {
-      "literal": "return value for download"
     }
   },
   "widgets/Download Files": {
@@ -1067,6 +1172,48 @@
       "literal": "scl_newNameForFileSystem"
     }
   },
+  "widgets/scl_SASToken": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "sp_SASQueryString"
+        ]
+      }
+    },
+    "contents.labels.visible": {
+      "literal": 0
+    },
+    "name": {
+      "literal": "scl_SASToken"
+    },
+    "title": {
+      "literal": "SAS Token"
+    }
+  },
+  "widgets/scl_SASTokenInputs": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "ep_service",
+          "ep_resourceType",
+          "ep_permission",
+          "p_secondsToExpire"
+        ]
+      }
+    },
+    "name": {
+      "literal": "scl_SASTokenInputs"
+    },
+    "title": {
+      "literal": "Inputs for SAS Token"
+    }
+  },
   "widgets/scl_selectFileSystem": {
     "aimms.widget.type": {
       "literal": "scalar"
@@ -1080,6 +1227,28 @@
     },
     "name": {
       "literal": "scl_selectFileSystem"
+    }
+  },
+  "widgets/txt_fileInfo": {
+    "aimms.widget.type": {
+      "literal": "text"
+    },
+    "contents": {
+      "literal": "<div>teeeeeeeeest</div>"
+    },
+    "name": {
+      "literal": "txt_fileInfo"
+    }
+  },
+  "widgets/txt_fileSystemInfo": {
+    "aimms.widget.type": {
+      "literal": "text"
+    },
+    "contents": {
+      "literal": "<div>tes test test</div>"
+    },
+    "name": {
+      "literal": "txt_fileSystemInfo"
     }
   },
   "widgets/txt_welcome": {

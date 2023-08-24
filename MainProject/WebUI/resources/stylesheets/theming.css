@@ -7,12 +7,12 @@
   --secondaryDark: #009B00;
   --primaryDark: #000081;
   --primary: #004BFF;
-  --primaryLight: #C0F9FF;
+  --primaryLight: #0092D1;
 
 /*---------------------------------------------------------------------
         HEADER
 ----------------------------------------------------------------------*/  
-  --bg_app-logo: 15px 50% / 30px no-repeat url(/app-resources/resources/images/data-lake2.png); /*app logo*/
+  --bg_app-logo: 15px 50% / 30px no-repeat url(/app-resources/resources/images/data-lake.png); /*app logo*/
   --spacing_app-logo_width: 45px;
   --color_border_app-header-divider: var(--primaryDark); /*line color after header*/
   --color_bg_app-canvas: url(/app-resources/resources/images/RightBackground.png) rgb(249, 249, 249) no-repeat left/contain; /*background color*/
@@ -43,12 +43,14 @@
 /*---------------------------------------------------------------------
         BUTTONS
 ----------------------------------------------------------------------*/
-  --color_bg_button_primary: var(--secondary);
-  --color_bg_button_primary_hover: var(--secondaryDark); /*open issue about it*/
-  --border_button_secondary_hover: 1px solid var(--primary);
-  --color_text_button_secondary_hover: var(--primary);
-  --color_text_button_secondary: var(--secondary);
-  --border_button_secondary: 1px solid var(--secondary);  
+  --color_bg_button_primary: var(--primaryDark);
+  --color_bg_button_primary_hover: var(--primaryLight);
+
+  --border_button_secondary_hover: 1px solid var(--secondaryDark);
+  --color_text_button_secondary_hover: white;
+  --color_bg_button_secondary_hover: var(--secondaryDark);
+  --color_text_button_secondary: var(--secondaryDark);
+  --border_button_secondary: 1px solid var(--secondaryDark);  
 
 }
 

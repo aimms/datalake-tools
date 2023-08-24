@@ -1,10 +1,12 @@
-.aimms-widget[data-widget\.uri="gnt_shiftGantt"] .awf-dock.top{
+.aimms-widget[data-widget\.uri="scl_newNameForFileSystem"] .awf-dock.top,
+.aimms-widget[data-widget\.uri="scl_selectFileSystem"] .awf-dock.top,
+.aimms-widget[data-widget\.uri="scl_listFilesFromFileSystem"] .awf-dock.top,
+.aimms-widget[data-widget\.uri="scl_downloadFilesInfo"] .awf-dock.top,
+.aimms-widget[data-widget\.uri="scl_newNameForFileSystem"] .awf-dock.top {
   display: none;
 }
 
-.tag-label>.label {
-  background: linear-gradient(180deg, rgba(255,255,255,1) 20%, var(--primary) 100%);
-  border-bottom: 2px solid var(--primaryDark);
-  font-weight: bold;
-  color: var(--color_text_default);
+.sidepanel-container .sidepanel-tabs-container {
+  grid-auto-rows: minmax(1.875rem,200px);
+  
 }

@@ -44,7 +44,14 @@
                 "name": "New SAS Token",
                 "type": "pagev2-grid",
                 "slug": "new_sas_token",
-                "children": []
+                "children": [
+                  {
+                    "name": "SAS Token",
+                    "type": "pagev2-grid-sidepanel",
+                    "slug": "sas_token",
+                    "children": []
+                  }
+                ]
               },
               {
                 "name": "Configuring ADLS",
@@ -704,27 +711,56 @@
         {
           "widgetUri": "scl_SASToken",
           "gridArea": "area-c",
-          "dndId": "area-dscl_SASToken0"
-        },
-        {
-          "widgetUri": "scl_SASTokenInputs",
-          "gridArea": "area-b",
-          "dndId": "area-bscl_SASTokenInputs1"
+          "dndId": "area-cscl_SASToken0"
         },
         {
           "widgetUri": "Account Data",
           "gridArea": "area-a",
-          "dndId": "area-aAccount Data2"
+          "dndId": "area-aAccount Data1"
+        },
+        {
+          "widgetUri": "tbl_permission",
+          "gridArea": "area-b",
+          "dndId": "area-btbl_permission3"
+        },
+        {
+          "widgetUri": "scl_SASTokenInputs",
+          "gridArea": "area-b",
+          "dndId": "area-bscl_SASTokenInputs2"
         },
         {
           "widgetUri": "btn_createToken",
           "gridArea": "area-b",
-          "dndId": "area-bbtn_createToken3"
+          "dndId": "area-bbtn_createToken4"
         }
       ]
     },
     "layoutId": {
       "literal": "custom_3463aa24-07f7-4678-bac6-3790e2ade568"
+    },
+    "sidepanels": {
+      "aimms": {
+        "contents": [
+          "sp_def_newSASTokenSidePanel"
+        ],
+        "slices": [
+          {
+            "identifier": "sp_def_newSASTokenSidePanel",
+            "slice": [
+              {
+                "index": "webui::indexPageExtension",
+                "type": "free",
+                "value": "webui::indexPageExtension"
+              },
+              {
+                "index": "webui::indexSidePanelSpec",
+                "type": "free",
+                "value": "webui::indexSidePanelSpec"
+              }
+            ]
+          }
+        ]
+      }
     },
     "widgets": {
       "literal": [
@@ -751,6 +787,35 @@
         },
         {
           "uri": "scl_SASToken",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "tbl_permission",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
+    }
+  },
+  "pages/sas_token": {
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "txt_sasTokenInfo",
+          "gridArea": "area-a",
+          "dndId": "Unassigned widgetstxt_sasTokenInfo"
+        }
+      ]
+    },
+    "widgets": {
+      "literal": [
+        {
+          "uri": "txt_sasTokenInfo",
           "layoutInfo": {
             "width": "2",
             "height": "1"
@@ -1000,8 +1065,7 @@
     "contents": {
       "aimms": {
         "contents": [
-          "p_def_listOfFileSystems",
-          "sp_fileSystemUUID"
+          "p_def_listOfFileSystems"
         ]
       }
     },
@@ -1202,7 +1266,6 @@
         "contents": [
           "ep_service",
           "ep_resourceType",
-          "ep_permission",
           "p_secondsToExpire"
         ]
       }
@@ -1229,6 +1292,53 @@
       "literal": "scl_selectFileSystem"
     }
   },
+  "widgets/tbl_permission": {
+    "aimms.widget.type": {
+      "literal": "table"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "bp_permissionPossibilities"
+        ]
+      }
+    },
+    "contents.displaydomain": {
+      "literal": {
+        "bp_permissionpossibilities": "1"
+      }
+    },
+    "contents.partition": {
+      "literal": {
+        "rowHeader": [
+          "<IDENTIFIER-SET>"
+        ],
+        "colHeader": [
+          "i_perm"
+        ],
+        "aggregated": []
+      }
+    },
+    "custom.column.widths": {
+      "literal": [
+        {
+          "type": "rowHeader",
+          "width": 39.24
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "<IDENTIFIER-SET>",
+          "width": 32.82
+        }
+      ]
+    },
+    "name": {
+      "literal": "tbl_permission"
+    },
+    "title": {
+      "literal": "Inputs for SAS Token"
+    }
+  },
   "widgets/txt_fileInfo": {
     "aimms.widget.type": {
       "literal": "text"
@@ -1249,6 +1359,17 @@
     },
     "name": {
       "literal": "txt_fileSystemInfo"
+    }
+  },
+  "widgets/txt_sasTokenInfo": {
+    "aimms.widget.type": {
+      "literal": "text"
+    },
+    "contents": {
+      "literal": "<div><br></div>"
+    },
+    "name": {
+      "literal": "txt_sasTokenInfo"
     }
   },
   "widgets/txt_welcome": {

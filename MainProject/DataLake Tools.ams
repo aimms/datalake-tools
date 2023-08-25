@@ -6,10 +6,6 @@ Model Main_DataLake_Tools {
 			Index: i_file_sys;
 			Parameter: ep_fileSystem;
 		}
-		StringParameter sp_fileSystemUUID {
-			IndexDomain: i_file_sys;
-			webui::FlagsIdentifier: sp_def_readonly;
-		}
 		Procedure pr_listFileSystems {
 			Body: {
 				dex::dls::ListFileSystems(s_fileSystems);
@@ -19,13 +15,11 @@ Model Main_DataLake_Tools {
 			Arguments: (sp_in_dialogAnswer);
 			Body: {
 				if sp_in_dialogAnswer = "OK" then
-				    dex::schema::CreateUUID(sp_loc_UUID);
 				
 				    dex::dls::CreateFileSystem(sp_newNameForFileSystem);
 				    dex::dls::ListFileSystems(s_fileSystems);
 				
 				    ep_fileSystem := StringToElement(s_fileSystems, sp_newNameForFileSystem, 0);
-				    sp_fileSystemUUID(ep_fileSystem) := sp_loc_UUID;
 				
 				elseif sp_in_dialogAnswer = "Cancel" then
 				    s_loc_actions := {'OK'};
@@ -220,20 +214,28 @@ Model Main_DataLake_Tools {
 		Set s_def_services {
 			Parameter: ep_service;
 			Definition: {
-				{'bf'}
+				{'q', 't', 'b', 'f', 
+				'qt', 'qb', 'qf', 'tb', 'tf', 'bf',
+				'qtb', 'qtf', 'qbf', 'tbf', 'qtbf' }
 			}
+			Comment: "combionation of everything";
 		}
 		Set s_def_resourceTypes {
 			Parameter: ep_resourceType;
 			Definition: {
-				{'o'}
+				{'o', 'c', 's', 'oc', 'os', 'cs', 'cos'}
 			}
 		}
 		Set s_def_permissions {
+			Index: i_perm;
 			Parameter: ep_permission;
 			Definition: {
-				{'crw'}
+				{'c', 'r', 'w', 'd', 'y', 'l', 'a', 'u', 'p', 't', 'f'}
 			}
+		}
+		Parameter bp_permissionPossibilities {
+			IndexDomain: i_perm;
+			Range: binary;
 		}
 		StringParameter sp_def_storageAccount {
 			Definition: dex::dls::StorageAccount;
@@ -247,20 +249,21 @@ Model Main_DataLake_Tools {
 		}
 		Procedure pr_createSASQuery {
 			Body: {
-				ep_service := 'bf';
-				ep_resourceType := 'o';
-				ep_permission := 'crw';
+				for i_perm | bp_permissionPossibilities(i_perm) do 
+				    sp_loc_permission += i_perm;
+				endfor;    
 				
 				dex::client::az::AccountSASQueryString(
 					accessKey     :  dex::dls::StorageAccessKey, 
 					accountName   :  dex::dls::StorageAccount, 
 					services      :  ep_service, 
 					resourceTypes :  ep_resourceType, 
-					permissions   :  ep_permission, 
+					permissions   :  sp_loc_permission, 
 					expiryDate    :  dex::client::az::ExpiryDateFromNow(p_secondsToExpire), 
 					ip            :  "", 
 					queryString   :  sp_SASQueryString);
 			}
+			StringParameter sp_loc_permission;
 		}
 	}
 	Section UI_Declarations {
@@ -290,7 +293,16 @@ Model Main_DataLake_Tools {
 					Definition: "aimms_logo.png";
 				}
 			}
-			Section New_SAS_Token_Page;
+			Section New_SAS_Token_Page {
+				StringParameter sp_def_newSASTokenSidePanel {
+					IndexDomain: (webui::indexPageExtension,webui::indexSidePanelSpec);
+					Definition: {
+						data 
+						{ ( 1, displayText ) : "SAS Token"      ,  ( 1, pageId      ) : "sas_token"      ,  ( 1, icon        ) : "aimms-bookmark2",
+						  ( 1, iconcolor   ) : "#004BFF"        ,  ( 1, state       ) : "active"          }
+					}
+				}
+			}
 			Section Configuring_ADLS_Page {
 				Parameter p_def_listOfFileSystems {
 					IndexDomain: i_file_sys;
@@ -521,22 +533,6 @@ Model Main_DataLake_Tools {
 			Return 1 to allow the termination sequence to continue.
 			Return 0 if you want to cancel the termination sequence.
 			It is recommended to only use the procedure PreMainTermination to cancel the termination sequence and let this procedure always return 1."
-		}
-	}
-	Section old {
-		Procedure pr_setProxyServer {
-			Body: {
-				dex::client::DetermineProxyServer;
-			}
-		}
-		Procedure pr_generatedLibrary {
-			Body: {
-				dex::schema::libprj::LibraryRootFolder := "libs";
-				dex::schema::libprj::ApiInitiFolder := "api-init";
-				
-				dex::schema::GenerateClientFromOpenAPISpec("AzureDatalake.json", "Azure_Data_Lake1", "adl1", 1, 2);
-				dex::schema::GenerateClientFromOpenAPISpec("blob.json", "Blob_Storage", "blob", 1, 2);
-			}
 		}
 	}
 }

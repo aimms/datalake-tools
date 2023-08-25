@@ -822,6 +822,9 @@
           }
         }
       ]
+    },
+    "aimms.widget.type": {
+      "literal": "pagev2-grid-sidepanel"
     }
   },
   "pages/upload_files": {
@@ -1344,7 +1347,7 @@
       "literal": "text"
     },
     "contents": {
-      "literal": "<div>teeeeeeeeest</div>"
+      "literal": "<div>Considering that your Azure Data Lake Storage Gen2 (ADLS) data is organized closely to files&nbsp;organized on your computer:&nbsp;</div><div><br></div><ul><li>A 'path' is a reference to a directory. It could be a folder, or the location of a file in a folder.</li><li>The files that you ingest to your storage account become blobs once uploaded. Therefore, a 'file' is also referred to as 'blob'.&nbsp;</li></ul><div><br></div><div><a href=\"https://learn.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction-abfs-uri\" target=\"_blank\">Read more in the ADLS documentation from Azure</a>.&nbsp;</div>"
     },
     "name": {
       "literal": "txt_fileInfo"
@@ -1355,7 +1358,7 @@
       "literal": "text"
     },
     "contents": {
-      "literal": "<div>tes test test</div>"
+      "literal": "<div>A file system can also be referred to as a 'container' - consider these terms as synonymous.&nbsp;</div><div><br></div><div>Your Azure Data Lake Storage Gen2 (ADLS) data is organized closely to files&nbsp;organized on your computer. Therefore, you can consider a 'file system' like a root folder, able to holding files in it's own root directory or in any subfolder (which are the 'paths', see next side panel).&nbsp;&nbsp;</div><div><br></div><div><a href=\"https://learn.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction#data-lake-storage-gen2\" target=\"_blank\">Read more in the ADLS documentation from Azure</a>.&nbsp;</div>"
     },
     "name": {
       "literal": "txt_fileSystemInfo"
@@ -1366,7 +1369,7 @@
       "literal": "text"
     },
     "contents": {
-      "literal": "<div><br></div>"
+      "literal": "<div>Service, resource type and permission are configurations required when creating a new SAS Token.&nbsp;</div><div><br></div><div><a href=\"https://learn.microsoft.com/en-us/rest/api/storageservices/create-account-sas#specify-the-account-sas-parameters\" target=\"_blank\">Read more in the ADLS documentation from Azure</a>.&nbsp;</div>"
     },
     "name": {
       "literal": "txt_sasTokenInfo"

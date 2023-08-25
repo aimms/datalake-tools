@@ -1,8 +1,10 @@
 # datalake-tools
 
 **Mirrored in:** https://github.com/aimms/datalake-tools
+
 **How-to:** https://how-to.aimms.com/Articles/598/598-datalake-tools.html
-**Community:** 
+
+**Community:** https://community.aimms.com/aimms-pro-cloud-platform-43/datalake-tools-1520
 
 ## Introduction
 

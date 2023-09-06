@@ -73,6 +73,21 @@ Model Main_DataLake_Tools {
 			Index: i_file_path;
 			Parameter: ep_completeFilePath;
 		}
+		Set s_def_completeFilePathsAndEverything {
+			Parameter: ep_completeFilePathAndEverything;
+			Definition: s_completeFilePaths + m_downloadEverything;
+		}
+		Set s_def_folderPathsAndEverything {
+			SubsetOf: s_def_completeFilePathsAndEverything;
+			Parameter: ep_folderPathsAndEverything;
+			Definition: {
+				{i_file_path | 
+				        exists(i_pathid | 
+				                bp_path_x_fileId(i_pathid, i_file_path)  
+				                and bp_isDirectory(i_pathid))} 
+				+  m_downloadEverything
+			}
+		}
 		StringParameter sp_filePath {
 			IndexDomain: i_pathid;
 			webui::FlagsIdentifier: sp_def_readonly;
@@ -86,6 +101,10 @@ Model Main_DataLake_Tools {
 			Range: binary;
 			webui::FlagsIdentifier: sp_def_readonly;
 		}
+		Parameter bp_path_x_fileId {
+			IndexDomain: (i_pathid,i_file_path);
+			Range: binary;
+		}
 		Procedure pr_listFilesFromFileSystem {
 			Arguments: (sp_in_dialogAnswer);
 			Body: {
@@ -97,6 +116,7 @@ Model Main_DataLake_Tools {
 				    empty s_completeFilePaths;
 				    for i_pathid | sp_filePath(i_pathid) do
 				        ep_completeFilePath := StringToElement(s_completeFilePaths, sp_filePath(i_pathid), 1);
+				        bp_path_x_fileId(i_pathid, ep_completeFilePath) := 1;
 				    endfor;
 				
 				elseif sp_in_dialogAnswer = "Cancel" then
@@ -119,40 +139,29 @@ Model Main_DataLake_Tools {
 			}
 		}
 		Procedure pr_downloadFilesFromFileSystem {
-			Arguments: sp_in_dialogAnswer;
 			Body: {
-				if sp_in_dialogAnswer = "Download" then
+				block ! check next temp id 
+				DirectoryGetSubdirectories("download-temp", "*DatalakeDownload-*", sp_loc_listOfFoldersDownloaded, recursive: 1); 
 				
-				    block ! check next temp id 
-				    DirectoryGetSubdirectories("download-temp", "*temp-*", sp_loc_listOfFoldersDownloaded, recursive: 1); 
+				for i_loc_int | sp_loc_listOfFoldersDownloaded(i_loc_int) do
+				    p_loc_tempIds(i_loc_int) := val(SubString(sp_loc_listOfFoldersDownloaded(i_loc_int), 18, 25));
+				endfor;
 				
-				    for i_loc_int | sp_loc_listOfFoldersDownloaded(i_loc_int) do
-				        p_loc_tempIds(i_loc_int) := val(SubString(sp_loc_listOfFoldersDownloaded(i_loc_int), 6, 10));
-				    endfor;
+				p_loc_lastTempId := max(i_loc_int, p_loc_tempIds(i_loc_int));
+				p_loc_lastTempId += 1;
+				endblock;
 				
-				    p_loc_lastTempId := max(i_loc_int, p_loc_tempIds(i_loc_int));
-				    p_loc_lastTempId += 1;
-				    endblock;
-				
-				    sp_loc_directory := "download-temp/temp-" + p_loc_lastTempId;
-				    if ep_completeFilePathAndEverything = m_downloadEverything then
-				        sp_loc_filePrefix := "";
-				    else  
-				        sp_loc_filePrefix := ep_completeFilePathAndEverything;
-				    endif;
-				
-				    dex::dls::DownloadFiles(sp_def_fileSystemSelected, sp_loc_filePrefix, sp_loc_directory, 1);
-				
-				elseif sp_in_dialogAnswer = "Cancel" then
-				    s_loc_actions := {'OK'};
-				
-				    webui::RequestPerformWebUIDialog(
-				        title   :  "Download Files", 
-				        message :  "This operation was canceled.", 
-				        actions :  s_loc_actions, 
-				        onDone  :  'webui::NoOp1');
+				sp_loc_directory := "download-temp/DatalakeDownload-" + p_loc_lastTempId;
+				if ep_folderPathsAndEverything = m_downloadEverything then
+				    sp_loc_filePrefix := "";
+				else  
+				    sp_loc_filePrefix := ep_folderPathsAndEverything;
 				endif;
+				
+				dex::dls::DownloadFiles(sp_def_fileSystemSelected, sp_loc_filePrefix, sp_loc_directory, 1);
+				pr_zipFile(sp_loc_directory);
 			}
+			Comment: "this procedure is used on pr_downloadWidget(FileLocation,StatusCode,StatusDescription)";
 			Set s_loc_integers {
 				SubsetOf: Integers;
 				Index: i_loc_int;
@@ -165,14 +174,12 @@ Model Main_DataLake_Tools {
 			}
 			Parameter p_loc_tempIds {
 				IndexDomain: i_loc_int;
+				InitialData: 0;
 			}
 			Parameter p_loc_lastTempId;
 			StringParameter sp_loc_directory;
 			StringParameter sp_loc_filePrefix;
 			Set s_loc_actions;
-			StringParameter sp_in_dialogAnswer {
-				Property: Input;
-			}
 		}
 		Procedure pr_deleteFileFromFileSystem {
 			Arguments: sp_in_dialogAnswer;
@@ -327,10 +334,6 @@ Model Main_DataLake_Tools {
 				StringParameter sp_def_fileSystemSelected {
 					Definition: ep_fileSystem;
 				}
-				Set s_def_completeFilePathsAndEverything {
-					Parameter: ep_completeFilePathAndEverything;
-					Definition: s_completeFilePaths + m_downloadEverything;
-				}
 				Macro m_downloadEverything {
 					Definition: 'download everything';
 				}
@@ -421,17 +424,52 @@ Model Main_DataLake_Tools {
 				Section Download_Files {
 					Procedure pr_openDownloadFilesDialog {
 						Body: {
-							s_loc_actions := {'Cancel', 'Download'};
+							s_loc_actions := {'OK'};
 							
-							empty ep_completeFilePathAndEverything;
+							empty ep_folderPathsAndEverything;
 							
 							webui::OpenDialogPage(
 							    pageid  :  'download_files',
 								title   :  "Download Files", 
 								actions :  s_loc_actions, 
-								onDone  :  'pr_downloadFilesFromFileSystem');
+								onDone  :  'webui::NoOp1');
 						}
 						Set s_loc_actions;
+					}
+					Procedure pr_downloadWidget {
+						Arguments: (FileLocation,statusCode,statusDescription);
+						Body: {
+							FileLocation := "DatalakeDownload.zip";
+							pr_downloadFilesFromFileSystem;
+							
+							FinalLocation := webui::GetIOFilePath(FileLocation);
+							
+							if FileExists(FinalLocation) then
+							
+							   ! if successful, statusCode is set to 'CREATED' which will trigger the download widget to show the Get button
+							   StatusCode := webui::ReturnStatusCode('CREATED');
+							   ! displaying the status message as All perfect instead of the default "File ready to download"
+							   StatusDescription := "All perfect!";
+							
+							else !if previous write statement was not successful
+							
+							   ! setting the statusCode to 'ERROR' and the download widget will not show the Get button anymore
+							   statusCode := webui::ReturnStatusCode('ERROR');
+							   !displaying a custom error message
+							   statusDescription := "Something went wrong when creating the file.";
+							
+							endif;
+						}
+						StringParameter FileLocation {
+							Property: Output;
+						}
+						StringParameter FinalLocation;
+						Parameter StatusCode {
+							Property: Output;
+						}
+						StringParameter StatusDescription {
+							Property: Output;
+						}
 					}
 				}
 				Section Upload_Files {
@@ -474,15 +512,48 @@ Model Main_DataLake_Tools {
 		}
 		Quantity SI_Time_Duration {
 			BaseUnit: s;
-			Conversions: minute->s : #-># * 60;
+			Conversions: {
+				minute->s : #-># * 60,
+				hour->s : #-># * 3600,
+				month->s : #-># * 2628000
+			}
 			Comment: {
 				"Expresses the value for the duration of periods.
 				
 				The unit s has been added automatically because it is a required unit for AimmsWebUI.
 				
-				The unit minute has been added automatically because it is a required unit for AimmsWebUI."
+				The unit minute has been added automatically because it is a required unit for AimmsWebUI.
+				
+				The unit hour has been added automatically because it is a required unit for Library GuardServerSession.
+				
+				The unit month has been added automatically because it is a required unit for Library GuardServerSession."
 			}
 		}
+	}
+	Section Toolkit {
+		Procedure pr_zipFile {
+			Arguments: sp_in_folderName;
+			Body: {
+				CurrentErrorMessage := "" ;
+				
+				sp_loc_destinationFile := "DatalakeDownload.zip";
+				if FileExists(sp_loc_destinationFile) then
+					FileDelete(sp_loc_destinationFile);
+				endif;
+				
+				if AimmsStringConstants('Platform') = "Linux" then
+					Execute("zip", "-r " + sp_loc_destinationFile + " " + sp_in_folderName, wait:1) ;
+				else
+					Execute("powershell \"Compress-Archive -Path " + sp_in_folderName + " -DestinationPath " + sp_loc_destinationFile + "\"", wait:1);
+				endif ;
+				if not FileExists(sp_loc_destinationFile) then
+					raise error "Unable to create " + sp_loc_destinationFile + ": " + CurrentErrorMessage ;
+				endif ;
+			}
+			StringParameter sp_loc_destinationFile;
+			StringParameter sp_in_folderName;
+		}
+		Procedure pr_unzipFile;
 	}
 	Procedure MainInitialization {
 		Comment: "Add initialization statements here that do NOT require any library being initialized already.";

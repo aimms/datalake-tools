@@ -547,12 +547,17 @@
         {
           "widgetUri": "dwn_downloadFilesOfFileSystem",
           "gridArea": "Unassigned widgets",
-          "dndId": "area-adwn_downloadFilesOfFileSystem1"
+          "dndId": "Unassigned widgetsdwn_downloadFilesOfFileSystem0"
         },
         {
           "widgetUri": "scl_downloadFilesInfo",
           "gridArea": "area-a",
-          "dndId": "area-ascl_downloadFilesInfo0"
+          "dndId": "area-ascl_downloadFilesInfo1"
+        },
+        {
+          "widgetUri": "dwn_downloadFiles",
+          "gridArea": "area-a",
+          "dndId": "Unassigned widgetsdwn_downloadFiles"
         }
       ]
     },
@@ -573,6 +578,13 @@
         },
         {
           "uri": "scl_downloadFilesInfo",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "dwn_downloadFiles",
           "layoutInfo": {
             "width": "2",
             "height": "1"
@@ -944,6 +956,20 @@
       "literal": "Download Files"
     }
   },
+  "widgets/dwn_downloadFiles": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_downloadWidget"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "download"
+    },
+    "name": {
+      "literal": "dwn_downloadFiles"
+    }
+  },
   "widgets/dwn_downloadFilesOfFileSystem": {
     "aimms.widget.type": {
       "literal": "download"
@@ -1201,7 +1227,7 @@
       "aimms": {
         "contents": [
           "sp_def_fileSystemSelected",
-          "ep_completeFilePathAndEverything"
+          "ep_folderPathsAndEverything"
         ]
       }
     },

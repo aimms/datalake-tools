@@ -81,11 +81,18 @@ Model Main_DataLake_Tools {
 			SubsetOf: s_def_completeFilePathsAndEverything;
 			Parameter: ep_folderPathsAndEverything;
 			Definition: {
+				s_def_folderPaths
+				+  m_downloadEverything
+			}
+		}
+		Set s_def_folderPaths {
+			SubsetOf: s_def_completeFilePathsAndEverything;
+			Parameter: ep_folderPaths;
+			Definition: {
 				{i_file_path | 
 				        exists(i_pathid | 
 				                bp_path_x_fileId(i_pathid, i_file_path)  
-				                and bp_isDirectory(i_pathid))} 
-				+  m_downloadEverything
+				                and bp_isDirectory(i_pathid))}
 			}
 		}
 		StringParameter sp_filePath {
@@ -181,6 +188,16 @@ Model Main_DataLake_Tools {
 			StringParameter sp_loc_filePrefix;
 			Set s_loc_actions;
 		}
+		Procedure pr_uploadFilesFromFileSystem {
+			Body: {
+				dex::dls::UploadFiles(sp_def_fileSystemSelected, "upload-temp", ep_folderPaths, 1);
+				
+				pr_listFilesFromFileSystem(sp_in_dialogAnswer :  "List");
+			}
+			StringParameter sp_in_dialogAnswer {
+				Property: Input;
+			}
+		}
 		Procedure pr_deleteFileFromFileSystem {
 			Arguments: sp_in_dialogAnswer;
 			Body: {
@@ -188,7 +205,7 @@ Model Main_DataLake_Tools {
 				    sp_loc_filePrefix := ep_completeFilePath;
 				
 				    dex::dls::DeletePath(sp_def_fileSystemSelected, sp_loc_filePrefix);
-				    dex::dls::ListFiles(sp_def_fileSystemSelected, "", s_fileIds, sp_filePath, p_fileSize, bp_isDirectory, 1);
+				    pr_listFilesFromFileSystem(sp_in_dialogAnswer :  "List");
 				
 				elseif sp_in_dialogAnswer = "Cancel" then
 				    s_loc_actions := {'OK'};
@@ -205,16 +222,6 @@ Model Main_DataLake_Tools {
 			}
 			StringParameter sp_loc_filePrefix;
 			Set s_loc_actions;
-		}
-		Procedure pr_uploadFilesFromFileSystem {
-			Arguments: sp_in_dialogAnswer;
-			Body: {
-				dex::dls::UploadFiles(sp_newNameForFileSystem, "DLSData", "sc-navigator", 1);
-				dex::dls::ListFiles(sp_newNameForFileSystem, "", s_fileIds, sp_filePath, p_fileSize, bp_isDirectory, 1);
-			}
-			StringParameter sp_in_dialogAnswer {
-				Property: Input;
-			}
 		}
 	}
 	Section SAS_Token_Toolkit {
@@ -475,15 +482,51 @@ Model Main_DataLake_Tools {
 				Section Upload_Files {
 					Procedure pr_openUploadFilesDialog {
 						Body: {
-							s_loc_actions := {'Cancel', 'Upload'};
+							s_loc_actions := {'OK'};
 							
 							webui::OpenDialogPage(
 							    pageid  :  'upload_files',
 								title   :  "Upload Files", 
 								actions :  s_loc_actions, 
-								onDone  :  'pr_uploadFilesFromFileSystem');
+								onDone  :  'webui::NoOp1');
 						}
 						Set s_loc_actions;
+					}
+					Procedure pr_uploadWidget {
+						Arguments: (FileLocation,StatusCode,StatusDescription);
+						Body: {
+							! we store the location of the file in string parameter UploadLocation
+							UploadLocation := webui::GetIOFilePath(FileLocation);
+							
+							p_loc_isZip := FindString(UploadLocation, ".zip");
+							
+							if p_loc_isZip <> 0 then
+							    pr_unzipFile(sp_in_zippedFile :  UploadLocation);
+							    pr_uploadFilesFromFileSystem;
+							
+							    ! if successful, statusCode is set to 'OK' which will trigger the WebUI to show the message below in a grey box
+							    StatusCode := webui::ReturnStatusCode('OK');
+							    StatusDescription := "File was uploaded and read successfully";
+							
+							else !if previous read statement was not successful
+							
+							    ! setting the statusCode to 'ERROR'
+							    statusCode := webui::ReturnStatusCode('ERROR');
+							    statusDescription := "Please upload a .zip file.";
+							
+							endif;
+						}
+						StringParameter FileLocation {
+							Property: Input;
+						}
+						StringParameter UploadLocation;
+						Parameter StatusCode {
+							Property: Output;
+						}
+						StringParameter StatusDescription {
+							Property: Output;
+						}
+						Parameter p_loc_isZip;
 					}
 				}
 				Section Delete_Files {
@@ -553,7 +596,52 @@ Model Main_DataLake_Tools {
 			StringParameter sp_loc_destinationFile;
 			StringParameter sp_in_folderName;
 		}
-		Procedure pr_unzipFile;
+		Procedure pr_unzipFile {
+			Arguments: sp_in_zippedFile;
+			Body: {
+				CurrentErrorMessage := "" ;
+				
+				sp_loc_destinationFolder := "upload-temp";
+				if DirectoryExists(sp_loc_destinationFolder) then
+					DirectoryDelete(sp_loc_destinationFolder);
+				endif;
+				DirectoryCreate(sp_loc_destinationFolder);
+				
+				DirectoryGetCurrent(sp_loc_destinationFolder);
+				sp_loc_destinationFolder := sp_loc_destinationFolder + "upload-temp";
+				
+				if AimmsStringConstants('Platform') = "Linux" then
+					Execute("unzip", sp_in_zippedFile + " -d " + sp_loc_destinationFolder, wait:1) ;
+				else
+				    Execute("powershell \"Expand-Archive -Path '" + sp_in_zippedFile + "' -DestinationPath " + sp_loc_destinationFolder + "\"", wait:1);
+				endif ;
+				
+				DirectoryGetFiles(sp_loc_destinationFolder, "", sp_loc_fileNames);
+				DirectoryGetSubdirectories(sp_loc_destinationFolder, "**", sp_loc_folderNames(i_fon));
+				
+				if not exists(i_fin | sp_loc_fileNames(i_fin)) 
+				    and not exists(i_fon | sp_loc_folderNames(i_fon)) then
+				
+					raise error "Unable to create " + sp_loc_destinationFolder + ": " + CurrentErrorMessage ;
+				endif ;
+			}
+			StringParameter sp_loc_destinationFolder;
+			StringParameter sp_in_zippedFile;
+			Set s_loc_fileNumbers {
+				SubsetOf: Integers;
+				Index: i_fin;
+			}
+			StringParameter sp_loc_fileNames {
+				IndexDomain: i_fin;
+			}
+			Set s_loc_folderNumbers {
+				SubsetOf: Integers;
+				Index: i_fon;
+			}
+			StringParameter sp_loc_folderNames {
+				IndexDomain: i_fon;
+			}
+		}
 	}
 	Procedure MainInitialization {
 		Comment: "Add initialization statements here that do NOT require any library being initialized already.";

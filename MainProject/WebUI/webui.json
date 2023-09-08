@@ -83,27 +83,27 @@
                     "children": []
                   },
                   {
-                    "name": "List Files",
-                    "type": "pagev2-grid-dialog",
-                    "slug": "list_files",
-                    "children": []
-                  },
-                  {
                     "name": "Download Files",
                     "type": "pagev2-grid-dialog",
                     "slug": "download_files",
                     "children": []
                   },
                   {
-                    "name": "Delete Files",
+                    "name": "List Files",
                     "type": "pagev2-grid-dialog",
-                    "slug": "delete_files",
+                    "slug": "list_files",
                     "children": []
                   },
                   {
                     "name": "Upload Files",
                     "type": "pagev2-grid-dialog",
                     "slug": "upload_files",
+                    "children": []
+                  },
+                  {
+                    "name": "Delete Files",
+                    "type": "pagev2-grid-dialog",
+                    "slug": "delete_files",
                     "children": []
                   }
                 ]
@@ -840,14 +840,58 @@
     }
   },
   "pages/upload_files": {
+    "aimms.widget.type": {
+      "literal": "pagev2-grid-dialog"
+    },
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "txt_infoAboutUpload",
+          "gridArea": "area-a",
+          "dndId": "area-atxt_infoAboutUpload1"
+        },
+        {
+          "widgetUri": "scl_uploadFilesInfo",
+          "gridArea": "area-a",
+          "dndId": "area-ascl_uploadFilesInfo0"
+        },
+        {
+          "widgetUri": "upl_uploadZip",
+          "gridArea": "area-a",
+          "dndId": "area-aupl_uploadZip2"
+        }
+      ]
+    },
     "maxcolumns": {
       "literal": 6
     },
     "maxrows": {
       "literal": 1
     },
-    "aimms.widget.type": {
-      "literal": "pagev2-grid-dialog"
+    "widgets": {
+      "literal": [
+        {
+          "uri": "upl_uploadZip",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "scl_uploadFilesInfo",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "txt_infoAboutUpload",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
     }
   },
   "widgets/Account Data": {
@@ -1321,6 +1365,22 @@
       "literal": "scl_selectFileSystem"
     }
   },
+  "widgets/scl_uploadFilesInfo": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "sp_def_fileSystemSelected",
+          "ep_folderPaths"
+        ]
+      }
+    },
+    "name": {
+      "literal": "scl_uploadFilesInfo"
+    }
+  },
   "widgets/tbl_permission": {
     "aimms.widget.type": {
       "literal": "table"
@@ -1390,6 +1450,17 @@
       "literal": "txt_fileSystemInfo"
     }
   },
+  "widgets/txt_infoAboutUpload": {
+    "aimms.widget.type": {
+      "literal": "text"
+    },
+    "contents": {
+      "literal": "<div>You can upload either one unique file under the <u>selected folder</u>, or a complete tree of folders and files. <b>For either option, it is required to upload a .zip file. </b>The zip file will be unzipped and uploaded into the <u>current file system</u> under the <u>selected folder</u>.&nbsp;</div><div><br></div><div>If the <u>select folder</u> input is empty, the files/folders will be uploaded to the root folder of the file system.&nbsp;</div><div>&nbsp;</div>"
+    },
+    "name": {
+      "literal": "txt_infoAboutUpload"
+    }
+  },
   "widgets/txt_sasTokenInfo": {
     "aimms.widget.type": {
       "literal": "text"
@@ -1410,6 +1481,20 @@
     },
     "name": {
       "literal": "txt_welcome"
+    }
+  },
+  "widgets/upl_uploadZip": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_uploadWidget"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "upload"
+    },
+    "name": {
+      "literal": "upl_uploadZip"
     }
   },
   "widgets/Upload Files": {

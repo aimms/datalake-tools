@@ -1,6 +1,7 @@
 .aimms-widget[data-widget\.uri="scl_newNameForFileSystem"] .awf-dock.top,
 .aimms-widget[data-widget\.uri="scl_selectFileSystem"] .awf-dock.top,
 .aimms-widget[data-widget\.uri="scl_listFilesFromFileSystem"] .awf-dock.top,
+.aimms-widget[data-widget\.uri="scl_uploadFilesInfo"] .awf-dock.top,
 .aimms-widget[data-widget\.uri="scl_downloadFilesInfo"] .awf-dock.top,
 .aimms-widget[data-widget\.uri="scl_newNameForFileSystem"] .awf-dock.top {
   display: none;

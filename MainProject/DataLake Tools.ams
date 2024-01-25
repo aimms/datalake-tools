@@ -1,255 +1,22 @@
 ## ams_version=1.0
 
 Model Main_DataLake_Tools {
-	Section File_System_Toolkit {
-		Set s_fileSystems {
-			Index: i_file_sys;
-			Parameter: ep_fileSystem;
-		}
-		Procedure pr_listFileSystems {
-			Body: {
-				dex::dls::ListFileSystems(s_fileSystems);
-			}
-		}
-		Procedure pr_createFileSystem {
-			Arguments: (sp_in_dialogAnswer);
-			Body: {
-				if sp_in_dialogAnswer = "OK" then
-				
-				    dex::dls::CreateFileSystem(sp_newNameForFileSystem);
-				    dex::dls::ListFileSystems(s_fileSystems);
-				
-				    ep_fileSystem := StringToElement(s_fileSystems, sp_newNameForFileSystem, 0);
-				
-				elseif sp_in_dialogAnswer = "Cancel" then
-				    s_loc_actions := {'OK'};
-				
-				    webui::RequestPerformWebUIDialog(
-				        title   :  "Create File System", 
-				        message :  "This operation was canceled.", 
-				        actions :  s_loc_actions, 
-				        onDone  :  'webui::NoOp1');
-				endif;
-			}
-			StringParameter sp_in_dialogAnswer {
-				Property: Input;
-			}
-			Set s_loc_actions;
-			StringParameter sp_loc_UUID;
-		}
-		Procedure pr_deleteFileSystem {
-			Arguments: (sp_in_dialogAnswer);
-			Body: {
-				if sp_in_dialogAnswer = "I am sure!" then
-				
-				    sp_loc_fileSystemToDelete := ep_fileSystemToDelete;
-				    dex::dls::DeleteFileSystem(sp_loc_fileSystemToDelete);
-				    dex::dls::ListFileSystems(s_fileSystems);
-				
-				elseif sp_in_dialogAnswer = "Cancel" then
-				    s_loc_actions := {'OK'};
-				
-				    webui::RequestPerformWebUIDialog(
-				        title   :  "Delete File System", 
-				        message :  "This operation was canceled.", 
-				        actions :  s_loc_actions, 
-				        onDone  :  'webui::NoOp1');
-				endif;
-			}
-			StringParameter sp_in_dialogAnswer {
-				Property: Input;
-			}
-			Set s_loc_actions;
-			StringParameter sp_loc_fileSystemToDelete;
-		}
-	}
-	Section Files_Toolkit {
-		Set s_fileIds {
-			SubsetOf: Integers;
-			Index: i_pathid;
-		}
-		Set s_completeFilePaths {
-			SubsetOf: s_def_completeFilePathsAndEverything;
-			Index: i_file_path;
-			Parameter: ep_completeFilePath;
-		}
-		Set s_def_completeFilePathsAndEverything {
-			Parameter: ep_completeFilePathAndEverything;
-			Definition: s_completeFilePaths + m_downloadEverything;
-		}
-		Set s_def_folderPathsAndEverything {
-			SubsetOf: s_def_completeFilePathsAndEverything;
-			Parameter: ep_folderPathsAndEverything;
-			Definition: {
-				s_def_folderPaths
-				+  m_downloadEverything
-			}
-		}
-		Set s_def_folderPaths {
-			SubsetOf: s_def_completeFilePathsAndEverything;
-			Parameter: ep_folderPaths;
-			Definition: {
-				{i_file_path | 
-				        exists(i_pathid | 
-				                bp_path_x_fileId(i_pathid, i_file_path)  
-				                and bp_isDirectory(i_pathid))}
-			}
-		}
-		StringParameter sp_filePath {
-			IndexDomain: i_pathid;
-			webui::FlagsIdentifier: sp_def_readonly;
-		}
-		Parameter p_fileSize {
-			IndexDomain: i_pathid;
-			webui::FlagsIdentifier: sp_def_readonly;
-		}
-		Parameter bp_isDirectory {
-			IndexDomain: i_pathid;
-			Range: binary;
-			webui::FlagsIdentifier: sp_def_readonly;
-		}
-		Parameter bp_path_x_fileId {
-			IndexDomain: (i_pathid,i_file_path);
-			Range: binary;
-		}
-		Procedure pr_listFilesFromFileSystem {
-			Arguments: (sp_in_dialogAnswer);
-			Body: {
-				if sp_in_dialogAnswer = "List" then
-				    empty s_fileIds, sp_filePath, p_fileSize, bp_isDirectory;
-				    sp_loc_fileSystemSelected := ep_fileSystem;
-				    dex::dls::ListFiles(sp_loc_fileSystemSelected, "", s_fileIds, sp_filePath, p_fileSize, bp_isDirectory, 1);
-				
-				    empty s_completeFilePaths;
-				    for i_pathid | sp_filePath(i_pathid) do
-				        ep_completeFilePath := StringToElement(s_completeFilePaths, sp_filePath(i_pathid), 1);
-				        bp_path_x_fileId(i_pathid, ep_completeFilePath) := 1;
-				    endfor;
-				
-				elseif sp_in_dialogAnswer = "Cancel" then
-				    s_loc_actions := {'OK'};
-				
-				    webui::RequestPerformWebUIDialog(
-				        title   :  "List Files", 
-				        message :  "This operation was canceled.", 
-				        actions :  s_loc_actions, 
-				        onDone  :  'webui::NoOp1');
-				endif;
-			}
-			StringParameter sp_in_dialogAnswer {
-				Property: Input;
-			}
-			StringParameter sp_loc_fileSystemSelected;
-			Set s_loc_actions;
-			ElementParameter err {
-				Range: errh::PendingErrors;
-			}
-		}
-		Procedure pr_downloadFilesFromFileSystem {
-			Body: {
-				block ! check next temp id 
-				DirectoryGetSubdirectories("download-temp", "*DatalakeDownload-*", sp_loc_listOfFoldersDownloaded, recursive: 1); 
-				
-				for i_loc_int | sp_loc_listOfFoldersDownloaded(i_loc_int) do
-				    p_loc_tempIds(i_loc_int) := val(SubString(sp_loc_listOfFoldersDownloaded(i_loc_int), 18, 25));
-				endfor;
-				
-				p_loc_lastTempId := max(i_loc_int, p_loc_tempIds(i_loc_int));
-				p_loc_lastTempId += 1;
-				endblock;
-				
-				sp_loc_directory := "download-temp/DatalakeDownload-" + p_loc_lastTempId;
-				if ep_folderPathsAndEverything = m_downloadEverything then
-				    sp_loc_filePrefix := "";
-				else  
-				    sp_loc_filePrefix := ep_folderPathsAndEverything;
-				endif;
-				
-				dex::dls::DownloadFiles(sp_def_fileSystemSelected, sp_loc_filePrefix, sp_loc_directory, 1);
-				pr_zipFile(sp_loc_directory);
-			}
-			Comment: "this procedure is used on pr_downloadWidget(FileLocation,StatusCode,StatusDescription)";
-			Set s_loc_integers {
-				SubsetOf: Integers;
-				Index: i_loc_int;
-				InitialData: {
-					{1..300}
-				}
-			}
-			StringParameter sp_loc_listOfFoldersDownloaded {
-				IndexDomain: i_loc_int;
-			}
-			Parameter p_loc_tempIds {
-				IndexDomain: i_loc_int;
-				InitialData: 0;
-			}
-			Parameter p_loc_lastTempId;
-			StringParameter sp_loc_directory;
-			StringParameter sp_loc_filePrefix;
-			Set s_loc_actions;
-		}
-		Procedure pr_uploadFilesFromFileSystem {
-			Body: {
-				dex::dls::UploadFiles(sp_def_fileSystemSelected, "upload-temp", ep_folderPaths, 1);
-				
-				pr_listFilesFromFileSystem(sp_in_dialogAnswer :  "List");
-			}
-			StringParameter sp_in_dialogAnswer {
-				Property: Input;
-			}
-		}
-		Procedure pr_deleteFileFromFileSystem {
-			Arguments: sp_in_dialogAnswer;
-			Body: {
-				if sp_in_dialogAnswer = "Delete" then
-				    sp_loc_filePrefix := ep_completeFilePath;
-				
-				    dex::dls::DeletePath(sp_def_fileSystemSelected, sp_loc_filePrefix);
-				    pr_listFilesFromFileSystem(sp_in_dialogAnswer :  "List");
-				
-				elseif sp_in_dialogAnswer = "Cancel" then
-				    s_loc_actions := {'OK'};
-				
-				    webui::RequestPerformWebUIDialog(
-				        title   :  "Delete Files", 
-				        message :  "This operation was canceled.", 
-				        actions :  s_loc_actions, 
-				        onDone  :  'webui::NoOp1');
-				endif;
-			}
-			StringParameter sp_in_dialogAnswer {
-				Property: Input;
-			}
-			StringParameter sp_loc_filePrefix;
-			Set s_loc_actions;
-		}
-	}
 	Section SAS_Token_Toolkit {
-		Set s_def_services {
-			Parameter: ep_service;
-			Definition: {
-				{'q', 't', 'b', 'f', 
-				'qt', 'qb', 'qf', 'tb', 'tf', 'bf',
-				'qtb', 'qtf', 'qbf', 'tbf', 'qtbf' }
-			}
-			Comment: "combionation of everything";
-		}
-		Set s_def_resourceTypes {
-			Parameter: ep_resourceType;
-			Definition: {
-				{'o', 'c', 's', 'oc', 'os', 'cs', 'cos'}
-			}
-		}
 		Set s_def_permissions {
 			Index: i_perm;
 			Parameter: ep_permission;
 			Definition: {
-				{'c', 'r', 'w', 'd', 'y', 'l', 'a', 'u', 'p', 't', 'f'}
+				{'c', 'r', 'w', 'd', 'y', 'l', 'a', 'u', 'p', 't', 'f', 'i'}
 			}
+		}
+		Set s_fileSystems {
+			Index: i_file_sys;
+			Parameter: ep_fileSystem;
 		}
 		Parameter bp_permissionPossibilities {
 			IndexDomain: i_perm;
 			Range: binary;
+			webui::TooltipIdentifier: sp_permissionTooltip(i_perm);
 		}
 		StringParameter sp_def_storageAccount {
 			Definition: dex::dls::StorageAccount;
@@ -261,23 +28,71 @@ Model Main_DataLake_Tools {
 		StringParameter sp_SASQueryString {
 			webui::FlagsIdentifier: sp_def_readonly;
 		}
-		Procedure pr_createSASQuery {
+		Procedure pr_createAccountSASQuery {
 			Body: {
-				for i_perm | bp_permissionPossibilities(i_perm) do 
-				    sp_loc_permission += i_perm;
-				endfor;    
+				if sum(i_perm, bp_permissionPossibilities(i_perm)) then
+				    for i_perm | bp_permissionPossibilities(i_perm) do 
+				        sp_loc_permission += i_perm;
+				    endfor;    
 				
-				dex::client::az::AccountSASQueryString(
-					accessKey     :  dex::dls::StorageAccessKey, 
-					accountName   :  dex::dls::StorageAccount, 
-					services      :  ep_service, 
-					resourceTypes :  ep_resourceType, 
-					permissions   :  sp_loc_permission, 
-					expiryDate    :  dex::client::az::ExpiryDateFromNow(p_secondsToExpire), 
-					ip            :  "", 
-					queryString   :  sp_SASQueryString);
+				    dex::dls::GetAccountSASQueryString(
+				        queryString :  sp_SASQueryString, 
+				        permissions :  sp_loc_permission, 
+				        expiry      :  p_secondsToExpire);
+				else 
+				    s_loc_actions := {'OK'};
+				
+				    webui::RequestPerformWebUIDialog(
+				        title   :  "Missing Information", 
+				        message :  "Please select at least one permission.", 
+				        actions :  s_loc_actions, 
+				        onDone  :  'webui::NoOp1');
+				endif;
 			}
 			StringParameter sp_loc_permission;
+			Set s_loc_actions;
+		}
+		Procedure pr_createContainerSASQuery {
+			Body: {
+				if sum(i_perm, bp_permissionPossibilities(i_perm)) and ep_fileSystem then
+				    for i_perm | bp_permissionPossibilities(i_perm) do 
+				        sp_loc_permission += i_perm;
+				    endfor;    
+				
+				    dex::dls::GetContainerSASQueryString(
+				        queryString        :  sp_SASQueryString, 
+				        fileSystem         :  ep_fileSystem, 
+				        permissions        :  sp_loc_permission, 
+				        expiry             :  p_secondsToExpire);
+				else 
+				    s_loc_actions := {'OK'};
+				
+				    if not sum(i_perm, bp_permissionPossibilities(i_perm)) and not ep_fileSystem then 
+				        webui::RequestPerformWebUIDialog(
+				            title   :  "Missing Information", 
+				            message :  "Please select at least one permission and a File System.", 
+				            actions :  s_loc_actions, 
+				            onDone  :  'webui::NoOp1');
+				
+				    elseif not sum(i_perm, bp_permissionPossibilities(i_perm)) then
+				        webui::RequestPerformWebUIDialog(
+				            title   :  "Missing Information", 
+				            message :  "Please select at least one permission.", 
+				            actions :  s_loc_actions, 
+				            onDone  :  'webui::NoOp1');
+				
+				    elseif not ep_fileSystem then
+				        webui::RequestPerformWebUIDialog(
+				            title   :  "Missing Information", 
+				            message :  "Please select a File System.", 
+				            actions :  s_loc_actions, 
+				            onDone  :  'webui::NoOp1');
+				
+				    endif;                    
+				endif;
+			}
+			StringParameter sp_loc_permission;
+			Set s_loc_actions;
 		}
 	}
 	Section UI_Declarations {
@@ -289,15 +104,37 @@ Model Main_DataLake_Tools {
 				IndexDomain: (webui::indexWorkflowOrder,webui::indexNoOfPages,webui::indexWorkflowPageSpec);
 				Definition: {
 					data 
-					{ ( 1, 1, displayText       ) : "Welcome"                ,  ( 1, 1, icon              ) : "aimms-happy"            ,
-					  ( 1, 1, pageId            ) : "home"                   ,  ( 1, 1, tooltip           ) : "Welcome to the Toolkit!",
-					  ( 1, 1, workflowPageState ) : "active"                 ,  ( 1, 1, pageDataState     ) : "Incomplete"             ,
-					  ( 1, 2, displayText       ) : "New SAS Token"          ,  ( 1, 2, icon              ) : "aimms-stack-plus"       ,
-					  ( 1, 2, pageId            ) : "new_sas_token"          ,  ( 1, 2, workflowPageState ) : "active"                 ,
-					  ( 1, 2, pageDataState     ) : "incomplete"             ,  ( 1, 2, redirectPageId    ) : "home"                   ,
-					  ( 1, 3, displayText       ) : "Configuring ADLS"       ,  ( 1, 3, icon              ) : "aimms-stack-text"       ,
-					  ( 1, 3, pageId            ) : "configuring"            ,  ( 1, 3, workflowPageState ) : "active"                 ,
-					  ( 1, 3, pageDataState     ) : "incomplete"             ,  ( 1, 3, redirectPageId    ) : "home"                    }
+					{ ( 1, 1, displayText       ) : "Welcome",
+					  ( 1, 1, icon              ) : "aimms-happy",
+					  ( 1, 1, pageId            ) : "home",
+					  ( 1, 1, tooltip           ) : "Welcome to the Toolkit!",
+					  ( 1, 1, workflowPageState ) : "active",
+					  ( 1, 1, pageDataState     ) : "Incomplete",
+					  ( 1, 2, displayText       ) : "Account SAS Token",
+					  ( 1, 2, icon              ) : "aimms-user5",
+					  ( 1, 2, pageId            ) : "new_sas_token",
+					  ( 1, 2, tooltip           ) : "Create your Account SAS Token",
+					  ( 1, 2, workflowPageState ) : "active",
+					  ( 1, 2, pageDataState     ) : "incomplete",
+					  ( 1, 2, redirectPageId    ) : "home",
+					  ( 1, 3, displayText       ) : "Container SAS Token",
+					  ( 1, 3, icon              ) : "aimms-cube4",
+					  ( 1, 3, pageId            ) : "container_sas_token",
+					  ( 1, 3, tooltip           ) : "Create your Container SAS Token",
+					  ( 1, 3, workflowPageState ) : "active",
+					  ( 1, 3, pageDataState     ) : "incomplete",
+					  ( 1, 3, redirectPageId    ) : "home" }
+				}
+			}
+		}
+		Section Status_Bar {
+			StringParameter sp_def_myStatusBar {
+				IndexDomain: (webui::indexApplicationExtension,webui::indexStatusBarSpec);
+				Definition: {
+					{   ( '1', 'header'  ) : "Storage Account:"                    ,
+					    ( '1', 'text'    ) : dex::dls::StorageAccount             ,
+					    ( '1', 'tooltip' ) : "This is the current Storage Account",  
+					    ( '1', 'state'   ) : "active"                              }
 				}
 			}
 		}
@@ -307,243 +144,26 @@ Model Main_DataLake_Tools {
 					Definition: "aimms_logo.png";
 				}
 			}
-			Section New_SAS_Token_Page {
-				StringParameter sp_def_newSASTokenSidePanel {
-					IndexDomain: (webui::indexPageExtension,webui::indexSidePanelSpec);
-					Definition: {
-						data 
-						{ ( 1, displayText ) : "SAS Token"      ,  ( 1, pageId      ) : "sas_token"      ,  ( 1, icon        ) : "aimms-bookmark2",
-						  ( 1, iconcolor   ) : "#004BFF"        ,  ( 1, state       ) : "active"          }
-					}
-				}
-			}
-			Section Configuring_ADLS_Page {
-				Parameter p_def_listOfFileSystems {
-					IndexDomain: i_file_sys;
-					Definition: 1;
-				}
-				StringParameter sp_def_configuringADLSSidePanel {
-					IndexDomain: (webui::indexPageExtension,webui::indexSidePanelSpec);
-					Definition: {
-						data 
-						{ ( 1, displayText ) : "File System - Container",  ( 1, pageId      ) : "file_system_-_container",
-						  ( 1, icon        ) : "aimms-bookmark2"        ,  ( 1, iconcolor   ) : "#004BFF"                 ,
-						  ( 1, state       ) : "active"                 ,  ( 2, displayText ) : "File - Path"            ,
-						  ( 2, pageId      ) : "file_-_path"            ,  ( 2, icon        ) : "aimms-bookmark2"        ,
-						  ( 2, iconcolor   ) : "#004BFF"                 ,  ( 2, state       ) : "active"                  }
-					}
-				}
-				StringParameter sp_def_filesTableTitle {
-					Definition: {
-						"List of Files (Paths) for '" + ep_fileSystem + "'";
-					}
-				}
-				StringParameter sp_def_fileSystemSelected {
-					Definition: ep_fileSystem;
-				}
-				Macro m_downloadEverything {
-					Definition: 'download everything';
-				}
-				ElementParameter ep_fileSystemToDelete {
-					Range: s_fileSystems;
-				}
-				Procedure pr_openConfiguringADLSPage {
-					Body: {
-						pr_listFileSystems;
-					}
-				}
-				Section Create_File_System {
-					Procedure pr_openCreateFileSystemDialog {
-						Body: {
-							empty sp_newNameForFileSystem;
-							
-							s_loc_actions := {'Cancel', 'OK'};
-							
-							webui::OpenDialogPage(
-							    pageid  :  'create_file_system',
-								title   :  "Create File System", 
-								actions :  s_loc_actions, 
-								onDone  :  'pr_createFileSystem');
-						}
-						Set s_loc_actions;
-					}
-					StringParameter sp_newNameForFileSystem;
-				}
-				Section Delete_File_System {
-					Procedure pr_openDeleteFileSystemDialog {
-						Body: {
-							empty ep_fileSystemToDelete;
-							
-							s_loc_actions := {'Cancel', 'Delete'};
-							
-							webui::OpenDialogPage(
-							    pageid  :  'delete_file_system',
-								title   :  "Delete File System", 
-								actions :  s_loc_actions, 
-								onDone  :  'pr_checkAnswerWhenDeleting');
-						}
-						Set s_loc_actions;
-					}
-					Procedure pr_checkAnswerWhenDeleting {
-						Arguments: sp_in_dialogAnswer;
-						Body: {
-							if sp_in_dialogAnswer = "Delete" then
-							    s_loc_actions := {'Cancel', 'I am sure!'};
-							
-							    webui::RequestPerformWebUIDialog(
-							            title   :  "Delete File System", 
-							            message :  "Are you sure? This operation cannot be undone.", 
-							            actions :  s_loc_actions, 
-							            onDone  :  'pr_deleteFileSystem');
-							
-							elseif sp_in_dialogAnswer = "Cancel" then
-							    s_loc_actions := {'OK'};
-							
-							    webui::RequestPerformWebUIDialog(
-							        title   :  "Delete File System", 
-							        message :  "This operation was canceled.", 
-							        actions :  s_loc_actions, 
-							        onDone  :  'webui::NoOp1');
-							endif;
-						}
-						StringParameter sp_in_dialogAnswer {
-							Property: Input;
-						}
-						Set s_loc_actions;
-					}
-				}
-				Section List_Files {
-					Procedure pr_openListFilesDialog {
-						Body: {
-							empty ep_fileSystem;
-							
-							s_loc_actions := {'Cancel', 'List'};
-							
-							webui::OpenDialogPage(
-							    pageid  :  'list_files',
-								title   :  "List Files", 
-								actions :  s_loc_actions, 
-								onDone  :  'pr_listFilesFromFileSystem');
-						}
-						Set s_loc_actions;
-					}
-				}
-				Section Download_Files {
-					Procedure pr_openDownloadFilesDialog {
-						Body: {
-							s_loc_actions := {'OK'};
-							
-							empty ep_folderPathsAndEverything;
-							
-							webui::OpenDialogPage(
-							    pageid  :  'download_files',
-								title   :  "Download Files", 
-								actions :  s_loc_actions, 
-								onDone  :  'webui::NoOp1');
-						}
-						Set s_loc_actions;
-					}
-					Procedure pr_downloadWidget {
-						Arguments: (FileLocation,statusCode,statusDescription);
-						Body: {
-							FileLocation := "DatalakeDownload.zip";
-							pr_downloadFilesFromFileSystem;
-							
-							FinalLocation := webui::GetIOFilePath(FileLocation);
-							
-							if FileExists(FinalLocation) then
-							
-							   ! if successful, statusCode is set to 'CREATED' which will trigger the download widget to show the Get button
-							   StatusCode := webui::ReturnStatusCode('CREATED');
-							   ! displaying the status message as All perfect instead of the default "File ready to download"
-							   StatusDescription := "All perfect!";
-							
-							else !if previous write statement was not successful
-							
-							   ! setting the statusCode to 'ERROR' and the download widget will not show the Get button anymore
-							   statusCode := webui::ReturnStatusCode('ERROR');
-							   !displaying a custom error message
-							   statusDescription := "Something went wrong when creating the file.";
-							
-							endif;
-						}
-						StringParameter FileLocation {
-							Property: Output;
-						}
-						StringParameter FinalLocation;
-						Parameter StatusCode {
-							Property: Output;
-						}
-						StringParameter StatusDescription {
-							Property: Output;
-						}
-					}
-				}
-				Section Upload_Files {
-					Procedure pr_openUploadFilesDialog {
-						Body: {
-							s_loc_actions := {'OK'};
-							
-							webui::OpenDialogPage(
-							    pageid  :  'upload_files',
-								title   :  "Upload Files", 
-								actions :  s_loc_actions, 
-								onDone  :  'webui::NoOp1');
-						}
-						Set s_loc_actions;
-					}
-					Procedure pr_uploadWidget {
-						Arguments: (FileLocation,StatusCode,StatusDescription);
-						Body: {
-							! we store the location of the file in string parameter UploadLocation
-							UploadLocation := webui::GetIOFilePath(FileLocation);
-							
-							p_loc_isZip := FindString(UploadLocation, ".zip");
-							
-							if p_loc_isZip <> 0 then
-							    pr_unzipFile(sp_in_zippedFile :  UploadLocation);
-							    pr_uploadFilesFromFileSystem;
-							
-							    ! if successful, statusCode is set to 'OK' which will trigger the WebUI to show the message below in a grey box
-							    StatusCode := webui::ReturnStatusCode('OK');
-							    StatusDescription := "File was uploaded and read successfully";
-							
-							else !if previous read statement was not successful
-							
-							    ! setting the statusCode to 'ERROR'
-							    statusCode := webui::ReturnStatusCode('ERROR');
-							    statusDescription := "Please upload a .zip file.";
-							
-							endif;
-						}
-						StringParameter FileLocation {
-							Property: Input;
-						}
-						StringParameter UploadLocation;
-						Parameter StatusCode {
-							Property: Output;
-						}
-						StringParameter StatusDescription {
-							Property: Output;
-						}
-						Parameter p_loc_isZip;
-					}
-				}
-				Section Delete_Files {
-					Procedure pr_openDeleteFilesDialog {
-						Body: {
-							s_loc_actions := {'Cancel', 'Delete'};
-							
-							empty ep_completeFilePath;
-							
-							webui::OpenDialogPage(
-							    pageid  :  'delete_files',
-								title   :  "Delete Files", 
-								actions :  s_loc_actions, 
-								onDone  :  'pr_deleteFileFromFileSystem');
-						}
-						Set s_loc_actions;
-					}
+			StringParameter sp_permissionTooltip {
+				IndexDomain: i_perm;
+				Definition: {
+					data 
+					{ c : "Create (c): Valid for Container resource types and the following Object resource types: blobs and files. Users can create"
+					      " new resources, but may not overwrite existing resources.",
+					  r : "Read (r): Valid for all signed resources types (Service, Container, and Object). Permits read permissions to the specifie"
+					      "d resource type.",
+					  w : "Write (w): Valid for all signed resources types (Service, Container, and Object). Permits write access for the specified "
+					      "resource type, allowing a user to create and update resources.",
+					  d : "Delete (d): Valid for Container and Object resource types, except for queue messages.",
+					  y : "Permanent Delete (y): Valid for Object resource type of Blob only.",
+					  l : "List (l): Valid for Service and Container resource types only.",
+					  a : "Add (a): Valid for the following Object resource types only: queue messages, table entities, and append blobs.",
+					  u : "Update (u): Valid for the following Object resource types only: queue messages and table entities.",
+					  p : "Process (p): Valid for the following Object resource type only: queue messages.",
+					  t : "Tag (t): Valid for the following Object resource type only: blobs. Permits blob tag operations.",
+					  f : "Filter (f): Valid for the following Object resource type only: blob. Permits filtering by blob tag.",
+					  i : "Set Immutability Policy (i): Valid for the following Object resource type only: blob. Permits set/delete immutability pol"
+					      "icy and legal hold on a blob." }
 				}
 			}
 		}
@@ -573,86 +193,12 @@ Model Main_DataLake_Tools {
 			}
 		}
 	}
-	Section Toolkit {
-		Procedure pr_zipFile {
-			Arguments: sp_in_folderName;
-			Body: {
-				CurrentErrorMessage := "" ;
-				
-				sp_loc_destinationFile := "DatalakeDownload.zip";
-				if FileExists(sp_loc_destinationFile) then
-					FileDelete(sp_loc_destinationFile);
-				endif;
-				
-				if AimmsStringConstants('Platform') = "Linux" then
-					Execute("zip", "-r " + sp_loc_destinationFile + " " + sp_in_folderName, wait:1) ;
-				else
-					Execute("powershell \"Compress-Archive -Path " + sp_in_folderName + " -DestinationPath " + sp_loc_destinationFile + "\"", wait:1);
-				endif ;
-				if not FileExists(sp_loc_destinationFile) then
-					raise error "Unable to create " + sp_loc_destinationFile + ": " + CurrentErrorMessage ;
-				endif ;
-			}
-			StringParameter sp_loc_destinationFile;
-			StringParameter sp_in_folderName;
-		}
-		Procedure pr_unzipFile {
-			Arguments: sp_in_zippedFile;
-			Body: {
-				CurrentErrorMessage := "" ;
-				
-				sp_loc_destinationFolder := "upload-temp";
-				if DirectoryExists(sp_loc_destinationFolder) then
-					DirectoryDelete(sp_loc_destinationFolder);
-				endif;
-				DirectoryCreate(sp_loc_destinationFolder);
-				
-				DirectoryGetCurrent(sp_loc_destinationFolder);
-				sp_loc_destinationFolder := sp_loc_destinationFolder + "upload-temp";
-				
-				if AimmsStringConstants('Platform') = "Linux" then
-					Execute("unzip", sp_in_zippedFile + " -d " + sp_loc_destinationFolder, wait:1) ;
-				else
-				    Execute("powershell \"Expand-Archive -Path '" + sp_in_zippedFile + "' -DestinationPath " + sp_loc_destinationFolder + "\"", wait:1);
-				endif ;
-				
-				DirectoryGetFiles(sp_loc_destinationFolder, "", sp_loc_fileNames);
-				DirectoryGetSubdirectories(sp_loc_destinationFolder, "**", sp_loc_folderNames(i_fon));
-				
-				if not exists(i_fin | sp_loc_fileNames(i_fin)) 
-				    and not exists(i_fon | sp_loc_folderNames(i_fon)) then
-				
-					raise error "Unable to create " + sp_loc_destinationFolder + ": " + CurrentErrorMessage ;
-				endif ;
-			}
-			StringParameter sp_loc_destinationFolder;
-			StringParameter sp_in_zippedFile;
-			Set s_loc_fileNumbers {
-				SubsetOf: Integers;
-				Index: i_fin;
-			}
-			StringParameter sp_loc_fileNames {
-				IndexDomain: i_fin;
-			}
-			Set s_loc_folderNumbers {
-				SubsetOf: Integers;
-				Index: i_fon;
-			}
-			StringParameter sp_loc_folderNames {
-				IndexDomain: i_fon;
-			}
-		}
-	}
 	Procedure MainInitialization {
 		Comment: "Add initialization statements here that do NOT require any library being initialized already.";
 	}
 	Procedure PostMainInitialization {
 		Body: {
-			if DirectoryExists("download-temp") then
-			    DirectoryDelete("download-temp");
-			endif;
-			DirectoryCreate("download-temp");
-			ep_fileSystem := '';
+			dex::dls::ListFileSystems(s_fileSystems);
 		}
 		Comment: {
 			"Add initialization statements here that require that the libraries are already initialized properly,

@@ -41,7 +41,7 @@
                 "children": []
               },
               {
-                "name": "New SAS Token",
+                "name": "Account SAS Token",
                 "type": "pagev2-grid",
                 "slug": "new_sas_token",
                 "children": [
@@ -54,59 +54,34 @@
                 ]
               },
               {
-                "name": "Configuring ADLS",
+                "name": "Container SAS Token",
                 "type": "pagev2-grid",
-                "slug": "configuring",
-                "children": [
-                  {
-                    "name": "File System - Container",
-                    "type": "pagev2-grid-sidepanel",
-                    "slug": "file_system_-_container",
-                    "children": []
-                  },
-                  {
-                    "name": "File - Path",
-                    "type": "pagev2-grid-sidepanel",
-                    "slug": "file_-_path",
-                    "children": []
-                  },
-                  {
-                    "name": "Create File System",
-                    "type": "pagev2-grid-dialog",
-                    "slug": "create_file_system",
-                    "children": []
-                  },
-                  {
-                    "name": "Delete File System",
-                    "type": "pagev2-grid-dialog",
-                    "slug": "delete_file_system",
-                    "children": []
-                  },
-                  {
-                    "name": "Download Files",
-                    "type": "pagev2-grid-dialog",
-                    "slug": "download_files",
-                    "children": []
-                  },
-                  {
-                    "name": "List Files",
-                    "type": "pagev2-grid-dialog",
-                    "slug": "list_files",
-                    "children": []
-                  },
-                  {
-                    "name": "Upload Files",
-                    "type": "pagev2-grid-dialog",
-                    "slug": "upload_files",
-                    "children": []
-                  },
-                  {
-                    "name": "Delete Files",
-                    "type": "pagev2-grid-dialog",
-                    "slug": "delete_files",
-                    "children": []
-                  }
-                ]
+                "slug": "container_sas_token",
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "statusmessages": {
+      "aimms": {
+        "contents": [
+          "sp_def_myStatusBar"
+        ],
+        "slices": [
+          {
+            "identifier": "sp_def_myStatusBar",
+            "slice": [
+              {
+                "index": "webui::indexApplicationExtension",
+                "type": "free",
+                "value": "webui::indexApplicationExtension"
+              },
+              {
+                "index": "webui::indexStatusBarSpec",
+                "type": "free",
+                "value": "webui::indexStatusBarSpec"
               }
             ]
           }
@@ -158,9 +133,9 @@
       "literal": {
         "componentName": "Grid",
         "props": {
-          "gridTemplateColumns": "0.3fr 1fr",
-          "gridTemplateRows": "1fr 0.3fr",
-          "gridTemplateAreas": "\"area-a area-b\" \"area-c area-c\""
+          "gridTemplateColumns": "1fr",
+          "gridTemplateRows": "0.6fr 0.5fr 0.3fr",
+          "gridTemplateAreas": "\"area-b\" \"area-a\" \"area-c\""
         },
         "items": [
           {
@@ -191,7 +166,7 @@
       }
     },
     "displayName": {
-      "literal": "Layout7 Copy"
+      "literal": "AccountSASToken"
     }
   },
   "layouts/custom_3687d482-099b-4c25-a70a-0320c2c39633": {
@@ -199,9 +174,9 @@
       "literal": {
         "componentName": "Grid",
         "props": {
-          "gridTemplateColumns": "1fr 1fr",
-          "gridTemplateRows": "0.1fr 1fr",
-          "gridTemplateAreas": "\"area-a area-b\" \"area-c area-d\""
+          "gridTemplateColumns": "1fr",
+          "gridTemplateRows": "0.6fr 0.5fr 0.3fr",
+          "gridTemplateAreas": "\"area-b\" \"area-a\" \"area-c\""
         },
         "items": [
           {
@@ -209,7 +184,7 @@
             "props": {
               "gridArea": "area-a",
               "name": "Area A",
-              "gridAutoFlow": "column"
+              "gridAutoFlow": "row"
             }
           },
           {
@@ -217,7 +192,7 @@
             "props": {
               "gridArea": "area-b",
               "name": "Area B",
-              "gridAutoFlow": "column"
+              "gridAutoFlow": "row"
             }
           },
           {
@@ -227,20 +202,12 @@
               "name": "Area C",
               "gridAutoFlow": "row"
             }
-          },
-          {
-            "componentName": "WidgetArea",
-            "props": {
-              "gridArea": "area-d",
-              "name": "Area D",
-              "gridAutoFlow": "row"
-            }
           }
         ]
       }
     },
     "displayName": {
-      "literal": "Layout5 Copy"
+      "literal": "ContainerSASToken"
     }
   },
   "layouts/custom_4b0dffcc-c1f5-4482-864a-774382277998": {
@@ -292,349 +259,50 @@
       "literal": "ConfiguringADLS"
     }
   },
-  "pages/configuring": {
+  "pages/container_sas_token": {
     "aimms.widget.type": {
       "literal": "pagev2-grid"
     },
     "bindings": {
       "literal": [
         {
-          "widgetUri": "Create File System",
-          "gridArea": "area-c",
-          "dndId": "area-cCreate File System0"
-        },
-        {
-          "widgetUri": "Delete File System",
-          "gridArea": "area-c",
-          "dndId": "area-aDelete File System8"
-        },
-        {
-          "widgetUri": "Download Files",
-          "gridArea": "area-d",
-          "dndId": "area-dDownload Files1"
-        },
-        {
-          "widgetUri": "Upload Files",
-          "gridArea": "area-d",
-          "dndId": "area-dUpload Files2"
-        },
-        {
-          "widgetUri": "Delete Path",
-          "gridArea": "area-d",
-          "dndId": "area-dDelete Path3"
-        },
-        {
-          "widgetUri": "List Files",
+          "widgetUri": "tbl_permission_1",
           "gridArea": "area-b",
-          "dndId": "area-bList Files4"
+          "dndId": "area-atbl_permission_10"
         },
         {
-          "widgetUri": "File Paths",
-          "gridArea": "area-b",
-          "dndId": "area-bFile Paths5"
+          "widgetUri": "btn_createToken_1",
+          "gridArea": "area-c",
+          "dndId": "area-cbtn_createToken_11"
         },
         {
-          "widgetUri": "List File Systems",
-          "gridArea": "area-a",
-          "dndId": "area-aList File Systems6"
-        },
-        {
-          "widgetUri": "File Systems",
-          "gridArea": "area-a",
-          "dndId": "area-aFile Systems7"
+          "widgetUri": "scl_SASToken_1",
+          "gridArea": "area-c",
+          "dndId": "area-cscl_SASToken_12"
         }
       ]
     },
     "layoutId": {
-      "literal": "custom_4b0dffcc-c1f5-4482-864a-774382277998"
-    },
-    "onload": {
-      "aimms": {
-        "run": "pr_openConfiguringADLSPage"
-      }
-    },
-    "sidepanels": {
-      "aimms": {
-        "contents": [
-          "sp_def_configuringADLSSidePanel"
-        ],
-        "slices": [
-          {
-            "identifier": "sp_def_configuringADLSSidePanel",
-            "slice": [
-              {
-                "index": "webui::indexPageExtension",
-                "type": "free",
-                "value": "webui::indexPageExtension"
-              },
-              {
-                "index": "webui::indexSidePanelSpec",
-                "type": "free",
-                "value": "webui::indexSidePanelSpec"
-              }
-            ]
-          }
-        ]
-      }
+      "literal": "custom_3687d482-099b-4c25-a70a-0320c2c39633"
     },
     "widgets": {
       "literal": [
         {
-          "uri": "Delete Path",
+          "uri": "btn_createToken_1",
           "layoutInfo": {
             "width": "2",
             "height": "1"
           }
         },
         {
-          "uri": "Upload Files",
+          "uri": "scl_SASToken_1",
           "layoutInfo": {
             "width": "2",
             "height": "1"
           }
         },
         {
-          "uri": "Download Files",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "List File Systems",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "File Systems",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "List Files",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "Delete File System",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "Create File System",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "File Paths",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        }
-      ]
-    }
-  },
-  "pages/create_file_system": {
-    "aimms.widget.type": {
-      "literal": "pagev2-grid-dialog"
-    },
-    "bindings": {
-      "literal": [
-        {
-          "widgetUri": "scl_newNameForFileSystem",
-          "gridArea": "area-a",
-          "dndId": "Unassigned widgetsscl_newNameForFileSystem"
-        }
-      ]
-    },
-    "maxcolumns": {
-      "literal": 6
-    },
-    "maxrows": {
-      "literal": 1
-    },
-    "widgets": {
-      "literal": [
-        {
-          "uri": "scl_newNameForFileSystem",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        }
-      ]
-    }
-  },
-  "pages/delete_file_system": {
-    "aimms.widget.type": {
-      "literal": "pagev2-grid-dialog"
-    },
-    "bindings": {
-      "literal": [
-        {
-          "widgetUri": "scl_selectFileSystem",
-          "gridArea": "area-a",
-          "dndId": "Unassigned widgetsscl_selectFileSystem"
-        }
-      ]
-    },
-    "maxcolumns": {
-      "literal": 6
-    },
-    "maxrows": {
-      "literal": 1
-    },
-    "widgets": {
-      "literal": [
-        {
-          "uri": "scl_selectFileSystem",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        }
-      ]
-    }
-  },
-  "pages/delete_files": {
-    "bindings": {
-      "literal": [
-        {
-          "widgetUri": "scl_deleteFileInfo",
-          "gridArea": "area-a",
-          "dndId": "Unassigned widgetsscl_deleteFileInfo"
-        }
-      ]
-    },
-    "maxcolumns": {
-      "literal": 6
-    },
-    "maxrows": {
-      "literal": 1
-    },
-    "widgets": {
-      "literal": [
-        {
-          "uri": "scl_deleteFileInfo",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        }
-      ]
-    },
-    "aimms.widget.type": {
-      "literal": "pagev2-grid-dialog"
-    }
-  },
-  "pages/download_files": {
-    "aimms.widget.type": {
-      "literal": "pagev2-grid-dialog"
-    },
-    "bindings": {
-      "literal": [
-        {
-          "widgetUri": "dwn_downloadFilesOfFileSystem",
-          "gridArea": "Unassigned widgets",
-          "dndId": "Unassigned widgetsdwn_downloadFilesOfFileSystem0"
-        },
-        {
-          "widgetUri": "scl_downloadFilesInfo",
-          "gridArea": "area-a",
-          "dndId": "area-ascl_downloadFilesInfo1"
-        },
-        {
-          "widgetUri": "dwn_downloadFiles",
-          "gridArea": "area-a",
-          "dndId": "Unassigned widgetsdwn_downloadFiles"
-        }
-      ]
-    },
-    "maxcolumns": {
-      "literal": 6
-    },
-    "maxrows": {
-      "literal": 1
-    },
-    "widgets": {
-      "literal": [
-        {
-          "uri": "dwn_downloadFilesOfFileSystem",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "scl_downloadFilesInfo",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "dwn_downloadFiles",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        }
-      ]
-    }
-  },
-  "pages/file_-_path": {
-    "aimms.widget.type": {
-      "literal": "pagev2-grid-sidepanel"
-    },
-    "bindings": {
-      "literal": [
-        {
-          "widgetUri": "txt_fileInfo",
-          "gridArea": "area-a",
-          "dndId": "Unassigned widgetstxt_fileInfo"
-        }
-      ]
-    },
-    "widgets": {
-      "literal": [
-        {
-          "uri": "txt_fileInfo",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        }
-      ]
-    }
-  },
-  "pages/file_system_-_container": {
-    "aimms.widget.type": {
-      "literal": "pagev2-grid-sidepanel"
-    },
-    "bindings": {
-      "literal": [
-        {
-          "widgetUri": "txt_fileSystemInfo",
-          "gridArea": "area-a",
-          "dndId": "Unassigned widgetstxt_fileSystemInfo"
-        }
-      ]
-    },
-    "widgets": {
-      "literal": [
-        {
-          "uri": "txt_fileSystemInfo",
+          "uri": "tbl_permission_1",
           "layoutInfo": {
             "width": "2",
             "height": "1"
@@ -683,37 +351,6 @@
       ]
     }
   },
-  "pages/list_files": {
-    "aimms.widget.type": {
-      "literal": "pagev2-grid-dialog"
-    },
-    "bindings": {
-      "literal": [
-        {
-          "widgetUri": "scl_listFilesFromFileSystem",
-          "gridArea": "area-a",
-          "dndId": "Unassigned widgetsscl_listFilesFromFileSystem"
-        }
-      ]
-    },
-    "maxcolumns": {
-      "literal": 6
-    },
-    "maxrows": {
-      "literal": 1
-    },
-    "widgets": {
-      "literal": [
-        {
-          "uri": "scl_listFilesFromFileSystem",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        }
-      ]
-    }
-  },
   "pages/new_sas_token": {
     "aimms.widget.type": {
       "literal": "pagev2-grid"
@@ -721,75 +358,27 @@
     "bindings": {
       "literal": [
         {
+          "widgetUri": "btn_createToken",
+          "gridArea": "area-c",
+          "dndId": "area-bbtn_createToken2"
+        },
+        {
           "widgetUri": "scl_SASToken",
           "gridArea": "area-c",
           "dndId": "area-cscl_SASToken0"
         },
         {
-          "widgetUri": "Account Data",
-          "gridArea": "area-a",
-          "dndId": "area-aAccount Data1"
-        },
-        {
           "widgetUri": "tbl_permission",
           "gridArea": "area-b",
-          "dndId": "area-btbl_permission3"
-        },
-        {
-          "widgetUri": "scl_SASTokenInputs",
-          "gridArea": "area-b",
-          "dndId": "area-bscl_SASTokenInputs2"
-        },
-        {
-          "widgetUri": "btn_createToken",
-          "gridArea": "area-b",
-          "dndId": "area-bbtn_createToken4"
+          "dndId": "area-btbl_permission1"
         }
       ]
     },
     "layoutId": {
       "literal": "custom_3463aa24-07f7-4678-bac6-3790e2ade568"
     },
-    "sidepanels": {
-      "aimms": {
-        "contents": [
-          "sp_def_newSASTokenSidePanel"
-        ],
-        "slices": [
-          {
-            "identifier": "sp_def_newSASTokenSidePanel",
-            "slice": [
-              {
-                "index": "webui::indexPageExtension",
-                "type": "free",
-                "value": "webui::indexPageExtension"
-              },
-              {
-                "index": "webui::indexSidePanelSpec",
-                "type": "free",
-                "value": "webui::indexSidePanelSpec"
-              }
-            ]
-          }
-        ]
-      }
-    },
     "widgets": {
       "literal": [
-        {
-          "uri": "Account Data",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "scl_SASTokenInputs",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
         {
           "uri": "btn_createToken",
           "layoutInfo": {
@@ -839,87 +428,11 @@
       "literal": "pagev2-grid-sidepanel"
     }
   },
-  "pages/upload_files": {
-    "aimms.widget.type": {
-      "literal": "pagev2-grid-dialog"
-    },
-    "bindings": {
-      "literal": [
-        {
-          "widgetUri": "txt_infoAboutUpload",
-          "gridArea": "area-a",
-          "dndId": "area-atxt_infoAboutUpload1"
-        },
-        {
-          "widgetUri": "scl_uploadFilesInfo",
-          "gridArea": "area-a",
-          "dndId": "area-ascl_uploadFilesInfo0"
-        },
-        {
-          "widgetUri": "upl_uploadZip",
-          "gridArea": "area-a",
-          "dndId": "area-aupl_uploadZip2"
-        }
-      ]
-    },
-    "maxcolumns": {
-      "literal": 6
-    },
-    "maxrows": {
-      "literal": 1
-    },
-    "widgets": {
-      "literal": [
-        {
-          "uri": "upl_uploadZip",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "scl_uploadFilesInfo",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "txt_infoAboutUpload",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        }
-      ]
-    }
-  },
-  "widgets/Account Data": {
-    "aimms.widget.type": {
-      "literal": "scalar"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "sp_def_storageAccount"
-        ]
-      }
-    },
-    "contents.labels.visible": {
-      "literal": 0
-    },
-    "name": {
-      "literal": "Account Data"
-    },
-    "title": {
-      "literal": "Storage Account"
-    }
-  },
   "widgets/btn_createToken": {
     "action": {
       "literal": {
         "type": "procedure",
-        "value": "pr_createSASQuery"
+        "value": "pr_createAccountSASQuery"
       }
     },
     "aimms.widget.type": {
@@ -929,273 +442,24 @@
       "literal": "btn_createToken"
     },
     "title": {
-      "literal": "Create New SAS Token"
+      "literal": "Create New Account SAS Token"
     }
   },
-  "widgets/Create File System": {
+  "widgets/btn_createToken_1": {
     "action": {
       "literal": {
         "type": "procedure",
-        "value": "pr_openCreateFileSystemDialog"
+        "value": "pr_createContainerSASQuery"
       }
     },
     "aimms.widget.type": {
       "literal": "button"
     },
     "name": {
-      "literal": "Create File System"
+      "literal": "btn_createContainerToken"
     },
     "title": {
-      "literal": "Create File System"
-    }
-  },
-  "widgets/Delete File System": {
-    "action": {
-      "literal": {
-        "type": "procedure",
-        "value": "pr_openDeleteFileSystemDialog"
-      }
-    },
-    "aimms.widget.type": {
-      "literal": "button"
-    },
-    "name": {
-      "literal": "Delete File System"
-    },
-    "title": {
-      "literal": "Delete File System"
-    }
-  },
-  "widgets/Delete Path": {
-    "action": {
-      "literal": {
-        "type": "procedure",
-        "value": "pr_openDeleteFilesDialog"
-      }
-    },
-    "aimms.widget.type": {
-      "literal": "button"
-    },
-    "name": {
-      "literal": "Delete Path"
-    },
-    "title": {
-      "literal": "Delete Files"
-    }
-  },
-  "widgets/Download Files": {
-    "action": {
-      "literal": {
-        "type": "procedure",
-        "value": "pr_openDownloadFilesDialog"
-      }
-    },
-    "aimms.widget.type": {
-      "literal": "button"
-    },
-    "name": {
-      "literal": "Download Files"
-    },
-    "title": {
-      "literal": "Download Files"
-    }
-  },
-  "widgets/dwn_downloadFiles": {
-    "action": {
-      "literal": {
-        "type": "procedure",
-        "value": "pr_downloadWidget"
-      }
-    },
-    "aimms.widget.type": {
-      "literal": "download"
-    },
-    "name": {
-      "literal": "dwn_downloadFiles"
-    }
-  },
-  "widgets/dwn_downloadFilesOfFileSystem": {
-    "aimms.widget.type": {
-      "literal": "download"
-    },
-    "name": {
-      "literal": "dwn_downloadFilesOfFileSystem"
-    }
-  },
-  "widgets/File Paths": {
-    "aimms.widget.type": {
-      "literal": "table"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "sp_filePath",
-          "p_fileSize",
-          "bp_isDirectory"
-        ]
-      }
-    },
-    "contents.numdecimals": {
-      "literal": 0
-    },
-    "contents.partition": {
-      "literal": {
-        "rowHeader": [
-          "i_pathid"
-        ],
-        "colHeader": [
-          "<IDENTIFIER-SET>"
-        ],
-        "aggregated": []
-      }
-    },
-    "contents.sorting": {
-      "literal": [
-        {
-          "partIndex": 0,
-          "partOffsets": [
-            -1,
-            2
-          ],
-          "mode": "setorder"
-        }
-      ]
-    },
-    "custom.column.widths": {
-      "literal": [
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "FileSize"
-          },
-          "width": 23.21
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "FilePath"
-          },
-          "width": 97.44
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "isDirectory"
-          },
-          "width": 13.5
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "p_isDirectory"
-          },
-          "width": 23.1
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "bp_isDirectory"
-          },
-          "width": 13.75
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "p_fileSize"
-          },
-          "width": 14.19
-        },
-        {
-          "type": "rowHeader",
-          "colKey": "i_path",
-          "width": 11.08
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "sp_filePath"
-          },
-          "width": 154.42
-        }
-      ]
-    },
-    "name": {
-      "literal": "File Paths"
-    },
-    "title": {
-      "aimms": {
-        "contents": [
-          "sp_def_filesTableTitle"
-        ],
-        "slices": []
-      }
-    }
-  },
-  "widgets/File Systems": {
-    "aimms.widget.type": {
-      "literal": "table"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "p_def_listOfFileSystems"
-        ]
-      }
-    },
-    "contents.numdecimals": {
-      "literal": 0
-    },
-    "contents.partition": {
-      "literal": {
-        "rowHeader": [
-          "FileSystems_i"
-        ],
-        "colHeader": [
-          "<IDENTIFIER-SET>"
-        ],
-        "aggregated": []
-      }
-    },
-    "custom.column.widths": {
-      "literal": [
-        {
-          "type": "rowHeader",
-          "colKey": "FileSystems_i",
-          "width": 30.34
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "s_fileSystems"
-          },
-          "width": 21.62
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "sp_fileSystemUUID"
-          },
-          "width": 53.8
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "p_def_listOfFileSystems"
-          },
-          "width": 8.25
-        },
-        {
-          "type": "rowHeader",
-          "colKey": "i_file_sys",
-          "width": 31.32
-        }
-      ]
-    },
-    "name": {
-      "literal": "File Systems"
-    },
-    "title": {
-      "literal": "List of File System (Container)"
+      "literal": "Create New Container SAS Token"
     }
   },
   "widgets/img_homeLogo": {
@@ -1211,102 +475,6 @@
     },
     "name": {
       "literal": "img_homeLogo"
-    }
-  },
-  "widgets/List File Systems": {
-    "action": {
-      "literal": {
-        "type": "procedure",
-        "value": "pr_listFileSystems"
-      }
-    },
-    "aimms.widget.type": {
-      "literal": "button"
-    },
-    "name": {
-      "literal": "List File Systems"
-    },
-    "title": {
-      "literal": "List File Systems"
-    }
-  },
-  "widgets/List Files": {
-    "action": {
-      "literal": {
-        "type": "procedure",
-        "value": "pr_openListFilesDialog"
-      }
-    },
-    "aimms.widget.type": {
-      "literal": "button"
-    },
-    "name": {
-      "literal": "List Files"
-    },
-    "title": {
-      "literal": "List Files"
-    }
-  },
-  "widgets/scl_deleteFileInfo": {
-    "aimms.widget.type": {
-      "literal": "scalar"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "sp_def_fileSystemSelected",
-          "ep_completeFilePath"
-        ]
-      }
-    },
-    "name": {
-      "literal": "scl_deleteFileInfo"
-    }
-  },
-  "widgets/scl_downloadFilesInfo": {
-    "aimms.widget.type": {
-      "literal": "scalar"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "sp_def_fileSystemSelected",
-          "ep_folderPathsAndEverything"
-        ]
-      }
-    },
-    "name": {
-      "literal": "scl_downloadFilesInfo"
-    }
-  },
-  "widgets/scl_listFilesFromFileSystem": {
-    "aimms.widget.type": {
-      "literal": "scalar"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "ep_fileSystem"
-        ]
-      }
-    },
-    "name": {
-      "literal": "scl_listFilesFromFileSystem"
-    }
-  },
-  "widgets/scl_newNameForFileSystem": {
-    "aimms.widget.type": {
-      "literal": "scalar"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "sp_newNameForFileSystem"
-        ]
-      }
-    },
-    "name": {
-      "literal": "scl_newNameForFileSystem"
     }
   },
   "widgets/scl_SASToken": {
@@ -1327,58 +495,28 @@
       "literal": "scl_SASToken"
     },
     "title": {
-      "literal": "SAS Token"
+      "literal": "Account SAS Token"
     }
   },
-  "widgets/scl_SASTokenInputs": {
+  "widgets/scl_SASToken_1": {
     "aimms.widget.type": {
       "literal": "scalar"
     },
     "contents": {
       "aimms": {
         "contents": [
-          "ep_service",
-          "ep_resourceType",
-          "p_secondsToExpire"
+          "sp_SASQueryString"
         ]
       }
     },
+    "contents.labels.visible": {
+      "literal": 0
+    },
     "name": {
-      "literal": "scl_SASTokenInputs"
+      "literal": "scl_ContainerSASToken"
     },
     "title": {
-      "literal": "Inputs for SAS Token"
-    }
-  },
-  "widgets/scl_selectFileSystem": {
-    "aimms.widget.type": {
-      "literal": "scalar"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "ep_fileSystemToDelete"
-        ]
-      }
-    },
-    "name": {
-      "literal": "scl_selectFileSystem"
-    }
-  },
-  "widgets/scl_uploadFilesInfo": {
-    "aimms.widget.type": {
-      "literal": "scalar"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "sp_def_fileSystemSelected",
-          "ep_folderPaths"
-        ]
-      }
-    },
-    "name": {
-      "literal": "scl_uploadFilesInfo"
+      "literal": "Container SAS Token"
     }
   },
   "widgets/tbl_permission": {
@@ -1388,7 +526,8 @@
     "contents": {
       "aimms": {
         "contents": [
-          "bp_permissionPossibilities"
+          "bp_permissionPossibilities",
+          "p_secondsToExpire"
         ]
       }
     },
@@ -1396,6 +535,9 @@
       "literal": {
         "bp_permissionpossibilities": "1"
       }
+    },
+    "contents.numdecimals": {
+      "literal": 0
     },
     "contents.partition": {
       "literal": {
@@ -1415,50 +557,110 @@
           "width": 39.24
         },
         {
+          "type": "colHeader",
+          "colKey": {
+            "i_perm": ""
+          },
+          "width": 12.36
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "p_secondsToExpire"
+          },
+          "width": 18.54
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "bp_permissionPossibilities"
+          },
+          "width": 19.16
+        },
+        {
           "type": "rowHeader",
           "colKey": "<IDENTIFIER-SET>",
-          "width": 32.82
+          "width": 27.12
         }
       ]
     },
     "name": {
-      "literal": "tbl_permission"
+      "literal": "tbl_SASTokenInputs"
     },
     "title": {
-      "literal": "Inputs for SAS Token"
+      "literal": "Inputs for Account SAS Token"
     }
   },
-  "widgets/txt_fileInfo": {
+  "widgets/tbl_permission_1": {
     "aimms.widget.type": {
-      "literal": "text"
+      "literal": "table"
     },
     "contents": {
-      "literal": "<div>Considering that your Azure Data Lake Storage Gen2 (ADLS) data is organized closely to files&nbsp;organized on your computer:&nbsp;</div><div><br></div><ul><li>A 'path' is a reference to a directory. It could be a folder, or the location of a file in a folder.</li><li>The files that you ingest to your storage account become blobs once uploaded. Therefore, a 'file' is also referred to as 'blob'.&nbsp;</li></ul><div><br></div><div><a href=\"https://learn.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction-abfs-uri\" target=\"_blank\">Read more in the ADLS documentation from Azure</a>.&nbsp;</div>"
+      "aimms": {
+        "contents": [
+          "bp_permissionPossibilities",
+          "ep_fileSystem"
+        ]
+      }
+    },
+    "contents.displaydomain": {
+      "literal": {
+        "bp_permissionpossibilities": "1"
+      }
+    },
+    "contents.numdecimals": {
+      "literal": 0
+    },
+    "contents.partition": {
+      "literal": {
+        "rowHeader": [
+          "<IDENTIFIER-SET>"
+        ],
+        "colHeader": [
+          "i_perm"
+        ],
+        "aggregated": []
+      }
+    },
+    "custom.column.widths": {
+      "literal": [
+        {
+          "type": "rowHeader",
+          "width": 39.24
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "p_secondsToExpire"
+          },
+          "width": 18.54
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "bp_permissionPossibilities"
+          },
+          "width": 19.16
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "<IDENTIFIER-SET>",
+          "width": 19.48
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "i_perm": ""
+          },
+          "width": 52.8
+        }
+      ]
     },
     "name": {
-      "literal": "txt_fileInfo"
-    }
-  },
-  "widgets/txt_fileSystemInfo": {
-    "aimms.widget.type": {
-      "literal": "text"
+      "literal": "tbl_containerSASTokenInputs"
     },
-    "contents": {
-      "literal": "<div>A file system can also be referred to as a 'container' - consider these terms as synonymous.&nbsp;</div><div><br></div><div>Your Azure Data Lake Storage Gen2 (ADLS) data is organized closely to files&nbsp;organized on your computer. Therefore, you can consider a 'file system' like a root folder, able to holding files in it's own root directory or in any subfolder (which are the 'paths', see next side panel).&nbsp;&nbsp;</div><div><br></div><div><a href=\"https://learn.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction#data-lake-storage-gen2\" target=\"_blank\">Read more in the ADLS documentation from Azure</a>.&nbsp;</div>"
-    },
-    "name": {
-      "literal": "txt_fileSystemInfo"
-    }
-  },
-  "widgets/txt_infoAboutUpload": {
-    "aimms.widget.type": {
-      "literal": "text"
-    },
-    "contents": {
-      "literal": "<div>You can upload either one unique file under the <u>selected folder</u>, or a complete tree of folders and files. <b>For either option, it is required to upload a .zip file. </b>The zip file will be unzipped and uploaded into the <u>current file system</u> under the <u>selected folder</u>.&nbsp;</div><div><br></div><div>If the <u>select folder</u> input is empty, the files/folders will be uploaded to the root folder of the file system.&nbsp;</div><div>&nbsp;</div>"
-    },
-    "name": {
-      "literal": "txt_infoAboutUpload"
+    "title": {
+      "literal": "Inputs for Container SAS Token"
     }
   },
   "widgets/txt_sasTokenInfo": {
@@ -1481,37 +683,6 @@
     },
     "name": {
       "literal": "txt_welcome"
-    }
-  },
-  "widgets/upl_uploadZip": {
-    "action": {
-      "literal": {
-        "type": "procedure",
-        "value": "pr_uploadWidget"
-      }
-    },
-    "aimms.widget.type": {
-      "literal": "upload"
-    },
-    "name": {
-      "literal": "upl_uploadZip"
-    }
-  },
-  "widgets/Upload Files": {
-    "action": {
-      "literal": {
-        "type": "procedure",
-        "value": "pr_openUploadFilesDialog"
-      }
-    },
-    "aimms.widget.type": {
-      "literal": "button"
-    },
-    "name": {
-      "literal": "Upload Files"
-    },
-    "title": {
-      "literal": "Upload Files"
     }
   }
 }

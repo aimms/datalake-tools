@@ -202,9 +202,6 @@ Model Main_DataLake_Tools {
 		Comment: "Add initialization statements here that do NOT require any library being initialized already.";
 	}
 	Procedure PostMainInitialization {
-		Body: {
-			pr_fetchFileSystem;
-		}
 		Comment: {
 			"Add initialization statements here that require that the libraries are already initialized properly,
 			or add statements that require the Data Management module to be initialized."

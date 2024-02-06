@@ -290,6 +290,11 @@
     "layoutId": {
       "literal": "custom_3687d482-099b-4c25-a70a-0320c2c39633"
     },
+    "onload": {
+      "aimms": {
+        "run": "pr_fetchFileSystem"
+      }
+    },
     "widgets": {
       "literal": [
         {

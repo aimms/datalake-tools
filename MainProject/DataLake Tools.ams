@@ -94,6 +94,11 @@ Model Main_DataLake_Tools {
 			StringParameter sp_loc_permission;
 			Set s_loc_actions;
 		}
+		Procedure pr_fetchFileSystem {
+			Body: {
+				dex::dls::ListFileSystems(s_fileSystems);
+			}
+		}
 	}
 	Section UI_Declarations {
 		StringParameter sp_def_readonly {
@@ -198,27 +203,14 @@ Model Main_DataLake_Tools {
 	}
 	Procedure PostMainInitialization {
 		Body: {
-			dex::dls::ListFileSystems(s_fileSystems);
+			pr_fetchFileSystem;
 		}
 		Comment: {
 			"Add initialization statements here that require that the libraries are already initialized properly,
 			or add statements that require the Data Management module to be initialized."
 		}
 	}
-	Procedure MainExecution {
-		Body: {
-			!adl::CurrentDatasetName := "Test Dataset3" ;
-			!adl::CurrentDatasetDescription := "This is a test dataset to test the upload and download procedures" ;
-			!adl::DatasetTables := data { Table1, Table2, Table3, Table4, Table5, Table6, Table7, Table8 } ;
-			!adl::TableFile(adl::tbl) := data 
-			!    { Table1 : "Table1.txt",  Table2 : "Table2.txt",  Table3 : "Table3.txt",  Table4 : "Table4.txt",  Table5 : "Table5.txt",
-			!      Table6 : "Table6.txt",  Table7 : "Table7.txt",  Table8 : "Table8.txt" } ;
-			!
-			!adl::UploadDataset("TestDataset");
-			!adl::DownloadDataset(adl::DatasetBaseURL('Test Dataset'), "TestDatasetOut");
-			!
-		}
-	}
+	Procedure MainExecution;
 	Procedure PreMainTermination {
 		Body: {
 			return DataManagementExit();

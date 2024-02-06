@@ -268,7 +268,12 @@
         {
           "widgetUri": "tbl_permission_1",
           "gridArea": "area-b",
-          "dndId": "area-atbl_permission_10"
+          "dndId": "area-btbl_permission_10"
+        },
+        {
+          "widgetUri": "btn_createToken_2",
+          "gridArea": "area-b",
+          "dndId": "Unassigned widgetsbtn_createToken_23"
         },
         {
           "widgetUri": "btn_createToken_1",
@@ -303,6 +308,13 @@
         },
         {
           "uri": "tbl_permission_1",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "btn_createToken_2",
           "layoutInfo": {
             "width": "2",
             "height": "1"
@@ -462,6 +474,23 @@
       "literal": "Create New Container SAS Token"
     }
   },
+  "widgets/btn_createToken_2": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_fetchFileSystem"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "btn_refreshFileSystem"
+    },
+    "title": {
+      "literal": "Refresh File System"
+    }
+  },
   "widgets/img_homeLogo": {
     "aimms.widget.type": {
       "literal": "image"
@@ -496,6 +525,9 @@
     },
     "title": {
       "literal": "Account SAS Token"
+    },
+    "views": {
+      "literal": {}
     }
   },
   "widgets/scl_SASToken_1": {
@@ -517,6 +549,9 @@
     },
     "title": {
       "literal": "Container SAS Token"
+    },
+    "views": {
+      "literal": {}
     }
   },
   "widgets/tbl_permission": {
@@ -589,6 +624,9 @@
     },
     "title": {
       "literal": "Inputs for Account SAS Token"
+    },
+    "views": {
+      "literal": {}
     }
   },
   "widgets/tbl_permission_1": {
@@ -661,6 +699,9 @@
     },
     "title": {
       "literal": "Inputs for Container SAS Token"
+    },
+    "views": {
+      "literal": {}
     }
   },
   "widgets/txt_sasTokenInfo": {

@@ -642,7 +642,8 @@
       "aimms": {
         "contents": [
           "bp_permissionPossibilities",
-          "ep_fileSystem"
+          "ep_fileSystem",
+          "p_secondsToExpire"
         ]
       }
     },
@@ -686,16 +687,16 @@
           "width": 19.16
         },
         {
-          "type": "rowHeader",
-          "colKey": "<IDENTIFIER-SET>",
-          "width": 19.48
-        },
-        {
           "type": "colHeader",
           "colKey": {
             "i_perm": ""
           },
           "width": 52.8
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "<IDENTIFIER-SET>",
+          "width": 28.99
         }
       ]
     },

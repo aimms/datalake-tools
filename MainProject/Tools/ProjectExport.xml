@@ -3,9 +3,8 @@
 	<ExcludedFile>api-init</ExcludedFile>
 	<ExcludedFile>backup</ExcludedFile>
 	<ExcludedFile>data</ExcludedFile>
-	<ExcludedFile>download-temp</ExcludedFile>
 	<ExcludedFile>log</ExcludedFile>
 	<ExcludedFile>PROTemp</ExcludedFile>
-	<ExcludedFile>tracings</ExcludedFile>
+	<ExcludedFile>crash-stacktrace.txt</ExcludedFile>
 	<ExcludedFile>_Local_Libs_</ExcludedFile>
 </ExportSettings>

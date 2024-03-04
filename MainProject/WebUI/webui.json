@@ -174,16 +174,24 @@
       "literal": {
         "componentName": "Grid",
         "props": {
-          "gridTemplateColumns": "1fr",
+          "gridTemplateColumns": "1fr 1fr",
           "gridTemplateRows": "0.6fr 0.5fr 0.3fr",
-          "gridTemplateAreas": "\"area-b\" \"area-a\" \"area-c\""
+          "gridTemplateAreas": "\"area-b area-b\" \"area-a-1 area-a-2\" \"area-c area-c\""
         },
         "items": [
           {
             "componentName": "WidgetArea",
             "props": {
-              "gridArea": "area-a",
-              "name": "Area A",
+              "gridArea": "area-a-1",
+              "name": "Area A1",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-a-2",
+              "name": "Area A2",
               "gridAutoFlow": "row"
             }
           },
@@ -259,6 +267,55 @@
       "literal": "ConfiguringADLS"
     }
   },
+  "layouts/custom_7dcf432f-0224-4912-8d4f-8249c3881e34": {
+    "definition": {
+      "literal": {
+        "componentName": "Grid",
+        "props": {
+          "gridTemplateColumns": "1fr 1fr 1fr 1fr",
+          "gridTemplateRows": "1fr 1fr",
+          "gridTemplateAreas": "\"area-a area-a area-b area-c\" \"area-d area-d area-d area-d\""
+        },
+        "items": [
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-a",
+              "name": "Area A",
+              "gridAutoFlow": "column"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-b",
+              "name": "Area B",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-c",
+              "name": "Area C",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-d",
+              "name": "Area D",
+              "gridAutoFlow": "column"
+            }
+          }
+        ]
+      }
+    },
+    "displayName": {
+      "literal": "Layout8 Copy"
+    }
+  },
   "pages/container_sas_token": {
     "aimms.widget.type": {
       "literal": "pagev2-grid"
@@ -266,24 +323,44 @@
     "bindings": {
       "literal": [
         {
+          "widgetUri": "filesystem_name",
+          "gridArea": "area-a-2",
+          "dndId": "area-a-2filesystem_name0"
+        },
+        {
+          "widgetUri": "create_fileSystem",
+          "gridArea": "area-a-2",
+          "dndId": "area-a-2create_fileSystem1"
+        },
+        {
           "widgetUri": "tbl_permission_1",
           "gridArea": "area-b",
-          "dndId": "area-btbl_permission_10"
+          "dndId": "area-btbl_permission_12"
         },
         {
           "widgetUri": "btn_createToken_2",
           "gridArea": "area-b",
-          "dndId": "Unassigned widgetsbtn_createToken_23"
+          "dndId": "area-bbtn_createToken_23"
         },
         {
           "widgetUri": "btn_createToken_1",
           "gridArea": "area-c",
-          "dndId": "area-cbtn_createToken_11"
+          "dndId": "area-cbtn_createToken_14"
         },
         {
           "widgetUri": "scl_SASToken_1",
           "gridArea": "area-c",
-          "dndId": "area-cscl_SASToken_12"
+          "dndId": "area-cscl_SASToken_15"
+        },
+        {
+          "widgetUri": "selected_filesystems",
+          "gridArea": "area-a-1",
+          "dndId": "area-a-1selected_filesystems6"
+        },
+        {
+          "widgetUri": "delete_selected_filesystems",
+          "gridArea": "area-a-1",
+          "dndId": "Unassigned widgetsdelete_selected_filesystems"
         }
       ]
     },
@@ -292,7 +369,7 @@
     },
     "onload": {
       "aimms": {
-        "run": "pr_fetchFileSystem"
+        "run": "pr_fetchFileSystems"
       }
     },
     "widgets": {
@@ -320,6 +397,34 @@
         },
         {
           "uri": "btn_createToken_2",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "filesystem_name",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "create_fileSystem",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "selected_filesystems",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "delete_selected_filesystems",
           "layoutInfo": {
             "width": "2",
             "height": "1"
@@ -483,7 +588,7 @@
     "action": {
       "literal": {
         "type": "procedure",
-        "value": "pr_fetchFileSystem"
+        "value": "pr_fetchFileSystems"
       }
     },
     "aimms.widget.type": {
@@ -494,6 +599,76 @@
     },
     "title": {
       "literal": "Refresh File System"
+    }
+  },
+  "widgets/create_fileSystem": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_createFileSystem"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "create_fileSystem"
+    },
+    "title": {
+      "literal": "Create File System"
+    }
+  },
+  "widgets/delete_selected_filesystems": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_deleteSelectedFileSystems"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "delete_selected_filesystems"
+    },
+    "title": {
+      "literal": "Delete Selected File Systems"
+    }
+  },
+  "widgets/filesystem_name": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "sp_fileSystem"
+        ]
+      }
+    },
+    "contents.labels.visible": {
+      "literal": 0
+    },
+    "name": {
+      "literal": "filesystem_name"
+    },
+    "title": {
+      "literal": "File System to Create"
+    },
+    "views": {
+      "literal": {}
+    },
+    "views.__display_order__": {
+      "literal": [
+        "views.0",
+        "views.1"
+      ]
+    },
+    "views.0.type": {
+      "literal": "view"
+    },
+    "views.1.type": {
+      "literal": "template"
     }
   },
   "widgets/img_homeLogo": {
@@ -518,21 +693,30 @@
     "contents": {
       "aimms": {
         "contents": [
-          "sp_SASQueryString"
+          "sp_accountSASQueryString",
+          "sp_accountSASURL"
         ]
       }
     },
     "contents.labels.visible": {
-      "literal": 0
+      "literal": 1
     },
     "name": {
       "literal": "scl_SASToken"
     },
     "title": {
-      "literal": "Account SAS Token"
+      "literal": "Account SAS URL"
     },
     "views": {
       "literal": {}
+    },
+    "views.__display_order__": {
+      "literal": [
+        "views.0"
+      ]
+    },
+    "views.0.type": {
+      "literal": "view"
     }
   },
   "widgets/scl_SASToken_1": {
@@ -542,21 +726,45 @@
     "contents": {
       "aimms": {
         "contents": [
-          "sp_SASQueryString"
+          "sp_containerSASQueryString",
+          "sp_containerSASURL"
         ]
       }
     },
     "contents.labels.visible": {
-      "literal": 0
+      "literal": 1
     },
     "name": {
       "literal": "scl_ContainerSASToken"
     },
     "title": {
-      "literal": "Container SAS Token"
+      "literal": "Container SAS URL"
     },
     "views": {
       "literal": {}
+    },
+    "views.__display_order__": {
+      "literal": [
+        "views.0"
+      ]
+    },
+    "views.0.type": {
+      "literal": "view"
+    }
+  },
+  "widgets/selected_filesystems": {
+    "aimms.widget.type": {
+      "literal": "multiselect"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "bp_selectedFileSystems"
+        ]
+      }
+    },
+    "name": {
+      "literal": "selected_filesystems"
     }
   },
   "widgets/tbl_permission": {
@@ -567,7 +775,8 @@
       "aimms": {
         "contents": [
           "bp_permissionPossibilities",
-          "p_secondsToExpire"
+          "p_secondsToExpire",
+          "p_daysToExpire"
         ]
       }
     },
@@ -599,13 +808,6 @@
         {
           "type": "colHeader",
           "colKey": {
-            "i_perm": ""
-          },
-          "width": 12.36
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
             "<IDENTIFIER-SET>": "p_secondsToExpire"
           },
           "width": 18.54
@@ -621,6 +823,13 @@
           "type": "rowHeader",
           "colKey": "<IDENTIFIER-SET>",
           "width": 27.12
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "i_perm": ""
+          },
+          "width": 25.97
         }
       ]
     },
@@ -643,7 +852,8 @@
         "contents": [
           "bp_permissionPossibilities",
           "ep_fileSystem",
-          "p_secondsToExpire"
+          "p_secondsToExpire",
+          "p_daysToExpire"
         ]
       }
     },
@@ -708,6 +918,14 @@
     },
     "views": {
       "literal": {}
+    },
+    "views.__display_order__": {
+      "literal": [
+        "views.0"
+      ]
+    },
+    "views.0.type": {
+      "literal": "view"
     }
   },
   "widgets/txt_sasTokenInfo": {

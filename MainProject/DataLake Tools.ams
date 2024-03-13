@@ -48,12 +48,25 @@ Model Main_DataLake_Tools {
 				
 					p_secondsToExpire := if (p_daysToExpire) then p_daysToExpire else p_secondsToExpire endif;
 				
-				    dex::dls::GetAccountSASQueryString(
-				        queryString :  sp_accountSASQueryString, 
-				        permissions :  sp_loc_permission, 
-				        expiry      :  p_secondsToExpire);
+				    if p_secondsToExpire = 0 then
+				        s_loc_actions := {'OK'};
 				
-					sp_accountSASURL := FormatString("https://%s.blob.core.windows.net/?%s", dex::dls::StorageAccount, sp_accountSASQueryString);
+				        webui::RequestPerformWebUIDialog(
+				            title   :  "Missing Information", 
+				            message :  "Please set an expiration.", 
+				            actions :  s_loc_actions, 
+				            onDone  :  'webui::NoOp1');
+				    else
+				
+				        dex::dls::GetAccountSASQueryString(
+				            queryString :  sp_accountSASQueryString, 
+				            permissions :  sp_loc_permission, 
+				            expiry      :  p_secondsToExpire);
+				
+				        sp_accountSASURL 
+				        :=  FormatString("https://%s.blob.core.windows.net/?%s", dex::dls::StorageAccount, sp_accountSASQueryString);
+				
+				    endif;    
 				else 
 				    s_loc_actions := {'OK'};
 				
@@ -79,13 +92,26 @@ Model Main_DataLake_Tools {
 				
 					p_secondsToExpire := if (p_daysToExpire) then p_daysToExpire else p_secondsToExpire endif;
 				
-				    dex::dls::GetContainerSASQueryString(
-				        queryString        :  sp_containerSASQueryString, 
-				        fileSystem         :  ep_fileSystem, 
-				        permissions        :  sp_loc_permission, 
-				        expiry             :  p_secondsToExpire);
+				    if p_secondsToExpire = 0 then
+				        s_loc_actions := {'OK'};
 				
-				    sp_containerSASURL := FormatString("https://%s.blob.core.windows.net/%e?%s", dex::dls::StorageAccount, ep_fileSystem, sp_containerSASQueryString);
+				        webui::RequestPerformWebUIDialog(
+				            title   :  "Missing Information", 
+				            message :  "Please set an expiration.", 
+				            actions :  s_loc_actions, 
+				            onDone  :  'webui::NoOp1');
+				    else
+				
+				        dex::dls::GetContainerSASQueryString(
+				            queryString        :  sp_containerSASQueryString, 
+				            fileSystem         :  ep_fileSystem, 
+				            permissions        :  sp_loc_permission, 
+				            expiry             :  p_secondsToExpire);
+				
+				        sp_containerSASURL 
+				        :=  FormatString("https://%s.blob.core.windows.net/%e?%s", dex::dls::StorageAccount, ep_fileSystem, sp_containerSASQueryString);
+				
+				    endif;
 				else 
 				    s_loc_actions := {'OK'};
 				

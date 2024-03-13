@@ -323,14 +323,19 @@
     "bindings": {
       "literal": [
         {
-          "widgetUri": "filesystem_name",
+          "widgetUri": "selected_filesystems",
           "gridArea": "area-a-2",
-          "dndId": "area-a-2filesystem_name0"
+          "dndId": "area-a-2selected_filesystems0"
         },
         {
-          "widgetUri": "create_fileSystem",
+          "widgetUri": "btn_createToken_2",
           "gridArea": "area-a-2",
-          "dndId": "area-a-2create_fileSystem1"
+          "dndId": "area-a-2btn_createToken_21"
+        },
+        {
+          "widgetUri": "delete_selected_filesystems",
+          "gridArea": "area-a-2",
+          "dndId": "area-a-1delete_selected_filesystems7"
         },
         {
           "widgetUri": "tbl_permission_1",
@@ -338,29 +343,24 @@
           "dndId": "area-btbl_permission_12"
         },
         {
-          "widgetUri": "btn_createToken_2",
-          "gridArea": "area-b",
-          "dndId": "area-bbtn_createToken_23"
-        },
-        {
           "widgetUri": "btn_createToken_1",
           "gridArea": "area-c",
-          "dndId": "area-cbtn_createToken_14"
+          "dndId": "area-cbtn_createToken_13"
         },
         {
           "widgetUri": "scl_SASToken_1",
           "gridArea": "area-c",
-          "dndId": "area-cscl_SASToken_15"
+          "dndId": "area-cscl_SASToken_14"
         },
         {
-          "widgetUri": "selected_filesystems",
+          "widgetUri": "filesystem_name",
           "gridArea": "area-a-1",
-          "dndId": "area-a-1selected_filesystems6"
+          "dndId": "area-a-1filesystem_name5"
         },
         {
-          "widgetUri": "delete_selected_filesystems",
+          "widgetUri": "create_fileSystem",
           "gridArea": "area-a-1",
-          "dndId": "Unassigned widgetsdelete_selected_filesystems"
+          "dndId": "area-a-1create_fileSystem6"
         }
       ]
     },
@@ -598,7 +598,7 @@
       "literal": "btn_refreshFileSystem"
     },
     "title": {
-      "literal": "Refresh File System"
+      "literal": "Update File System List"
     }
   },
   "widgets/create_fileSystem": {
@@ -765,6 +765,9 @@
     },
     "name": {
       "literal": "selected_filesystems"
+    },
+    "title": {
+      "literal": "File System List"
     }
   },
   "widgets/tbl_permission": {

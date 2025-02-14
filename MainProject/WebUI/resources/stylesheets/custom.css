@@ -11,3 +11,10 @@
   grid-auto-rows: minmax(1.875rem,200px);
   
 }
+
+/*Centering cells*/
+.tag-table .cell.flag-string .cell-wrapper,
+.tag-table .cell.flag-number input,
+.tag-table .cell.flag-string input{
+    text-align: center;
+}

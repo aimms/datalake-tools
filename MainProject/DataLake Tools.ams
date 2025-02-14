@@ -2,109 +2,62 @@
 
 Model Main_DataLake_Tools {
 	Section SAS_Token_Toolkit {
-		Set s_account_permissions {
-			Index: i_acct_perm;
-			Parameter: ep_acct_permission;
-			Definition: data { r, w, d, x, y, l, a, c, u, p, t, f, i };
-			Comment: {
-				"\"r\" (Read)
-				\"w\" (Write)
-				\"d\" (Delete)
-				\"x\" (DeleteVersion)
-				\"y\" (PermanentDelete)
-				\"l\" (List)
-				\"a\" (Add)
-				\"c\" (Create)
-				\"u\" (Update)
-				\"p\" (Process)
-				\"t\" (Tag)
-				\"f\" (Filter)
-				\"i\" (SetImmutabilityPolicy)"
+		DeclarationSection General_Info {
+			Parameter p_secondsToExpire {
+				Unit: s;
+				webui::UponChangeProcedure: pr_uponChangeExpirySeconds;
 			}
-		}
-		Set s_service_permissions {
-			Index: i_svc_perm;
-			Parameter: ep_svc_permission;
-			Definition: data { r, a, c, w, d, x, y, l, t, f, m, e, o, p, i };
-			Comment: {
-				"\"r\" (Read)
-				\"a\" (Add)
-				\"c\" (Create)
-				\"w\" (Write)
-				\"d\" (Delete)
-				\"x\" (Delete Version)
-				\"y\" (Permanent Delete)
-				\"l\" (List)
-				\"t\" (Tags)
-				\"f\" (Find)
-				\"m\" (Move)
-				\"e\" (Execute)
-				\"o\" (Ownership)
-				\"p\" (Permissions)
-				\"i\" (SetImmutabiltyPolicy)"
+			Parameter p_daysToExpire {
+				Unit: day;
+				webui::UponChangeProcedure: pr_uponChangeExpiryDays;
 			}
+			StringParameter sp_startDate {
+				webui::FlagsIdentifier: sp_def_readonly;
+			}
+			StringParameter sp_expiryDate {
+				webui::FlagsIdentifier: sp_def_readonly;
+			}
+			StringParameter sp_fileSystem;
+			StringParameter sp_accessPolicy;
 		}
-		Set s_fileSystems {
-			Index: i_file_sys;
-		}
-		ElementParameter ep_fileSystem {
-			Range: s_fileSystems;
-			webui::UponChangeProcedure: pr_getAccessPolicies;
-		}
-		Set s_storedAccessPolicies {
-			Index: i_pol;
-		}
-		ElementParameter ep_pol {
-			Range: s_storedAccessPolicies;
-			webui::UponChangeProcedure: pr_uponChangeAccessPolicy;
-		}
-		Parameter bp_acct_permissionPossibilities {
-			IndexDomain: i_acct_perm;
-			Range: binary;
-			webui::TooltipIdentifier: sp_acct_permissionTooltip(i_acct_perm);
-		}
-		Parameter bp_svc_permissionPossibilities {
-			IndexDomain: i_svc_perm;
-			Range: binary;
-			webui::TooltipIdentifier: sp_svc_permissionTooltip(i_svc_perm);
-		}
-		StringParameter sp_def_storageAccount {
-			Definition: dex::dls::StorageAccount;
-		}
-		Parameter p_secondsToExpire {
-			Unit: s;
-			webui::UponChangeProcedure: pr_uponChangeExpirySeconds;
-		}
-		Parameter p_daysToExpire {
-			Unit: day;
-			webui::UponChangeProcedure: pr_uponChangeExpiryDays;
-		}
-		StringParameter sp_startDate;
-		StringParameter sp_expiryDate;
-		StringParameter sp_accountSASQueryString {
-			webui::FlagsIdentifier: sp_def_readonly;
-		}
-		StringParameter sp_accountSASURL;
-		StringParameter sp_containerSASQueryString {
-			webui::FlagsIdentifier: sp_def_readonly;
-		}
-		StringParameter sp_containerSASURL;
-		StringParameter sp_fileSystem;
-		StringParameter sp_accessPolicy;
-		StringParameter sp_policyStart {
-			IndexDomain: i_pol;
-		}
-		StringParameter sp_policyEnd {
-			IndexDomain: i_pol;
-		}
-		StringParameter sp_policyPermission {
-			IndexDomain: i_pol;
+		DeclarationSection Account_SAS_Tokens {
+			Set s_account_permissions {
+				Index: i_acct_perm;
+				Parameter: ep_acct_permission;
+				Definition: data { r, w, d, x, y, l, a, c, u, p, t, f, i };
+				Comment: {
+					"\"r\" (Read)
+					\"w\" (Write)
+					\"d\" (Delete)
+					\"x\" (DeleteVersion)
+					\"y\" (PermanentDelete)
+					\"l\" (List)
+					\"a\" (Add)
+					\"c\" (Create)
+					\"u\" (Update)
+					\"p\" (Process)
+					\"t\" (Tag)
+					\"f\" (Filter)
+					\"i\" (SetImmutabilityPolicy)"
+				}
+			}
+			Parameter bp_acct_permissionPossibilities {
+				IndexDomain: i_acct_perm;
+				Range: binary;
+				webui::TooltipIdentifier: sp_acct_permissionTooltip(i_acct_perm);
+			}
+			StringParameter sp_accountSASQueryString {
+				webui::FlagsIdentifier: sp_def_readonly;
+			}
+			StringParameter sp_accountSASURL {
+				webui::FlagsIdentifier: sp_def_readonly;
+			}
 		}
 		Procedure pr_createAccountSASQuery {
 			Body: {
-				if sum(i_svc_perm, bp_svc_permissionPossibilities(i_svc_perm)) then
-				    for i_svc_perm | bp_svc_permissionPossibilities(i_svc_perm) do 
-				        sp_loc_permission += i_svc_perm;
+				if sum(i_acct_perm, bp_acct_permissionPossibilities(i_acct_perm)) then
+				    for i_acct_perm | bp_acct_permissionPossibilities(i_acct_perm) do 
+				        sp_loc_permission += i_acct_perm;
 				    endfor;    
 				
 					p_secondsToExpire := if (p_daysToExpire) then p_daysToExpire else p_secondsToExpire endif;
@@ -144,9 +97,48 @@ Model Main_DataLake_Tools {
 				Unit: s;
 			}
 		}
+		DeclarationSection Container_SAS_Tokens {
+			Set s_service_permissions {
+				Index: i_svc_perm;
+				Parameter: ep_svc_permission;
+				Definition: data { r, a, c, w, d, x, y, l, t, f, m, e, o, p, i };
+				Comment: {
+					"\"r\" (Read)
+					\"a\" (Add)
+					\"c\" (Create)
+					\"w\" (Write)
+					\"d\" (Delete)
+					\"x\" (Delete Version)
+					\"y\" (Permanent Delete)
+					\"l\" (List)
+					\"t\" (Tags)
+					\"f\" (Find)
+					\"m\" (Move)
+					\"e\" (Execute)
+					\"o\" (Ownership)
+					\"p\" (Permissions)
+					\"i\" (SetImmutabiltyPolicy)"
+				}
+			}
+			Parameter bp_svc_permissionPossibilities {
+				IndexDomain: i_svc_perm;
+				Range: binary;
+				webui::TooltipIdentifier: sp_svc_permissionTooltip(i_svc_perm);
+			}
+			Parameter bp_svc_inputPermissionPossibilities {
+				IndexDomain: i_svc_perm;
+				Range: binary;
+				webui::TooltipIdentifier: sp_svc_permissionTooltip(i_svc_perm);
+			}
+			StringParameter sp_containerSASQueryString {
+				webui::FlagsIdentifier: sp_def_readonly;
+			}
+			StringParameter sp_containerSASURL;
+		}
 		Procedure pr_createContainerSASQuery {
 			Body: {
 				if sum(i_svc_perm, bp_svc_permissionPossibilities(i_svc_perm)) and ep_fileSystem then
+				
 					if (not ep_pol) then
 						for i_svc_perm | bp_svc_permissionPossibilities(i_svc_perm) do 
 							sp_loc_permission += i_svc_perm;
@@ -207,12 +199,36 @@ Model Main_DataLake_Tools {
 			StringParameter sp_loc_permission;
 			Set s_loc_actions;
 		}
+		DeclarationSection Access_Policies {
+			Set s_storedAccessPolicies {
+				Index: i_pol;
+			}
+			ElementParameter ep_pol {
+				Range: s_storedAccessPolicies;
+				webui::UponChangeProcedure: pr_uponChangeAccessPolicy;
+			}
+			Parameter p_def_existingAccessPolicies {
+				IndexDomain: i_pol;
+				Definition: 1;
+			}
+			StringParameter sp_policyStart {
+				IndexDomain: i_pol;
+			}
+			StringParameter sp_policyEnd {
+				IndexDomain: i_pol;
+			}
+			StringParameter sp_policyPermission {
+				IndexDomain: i_pol;
+			}
+		}
 		Procedure pr_getAccessPolicies {
 			Body: {
 				if (ep_fileSystem) then
 					dex::dls::GetAccessPolicy(ep_fileSystem, s_storedAccessPolicies, sp_policyStart(i_pol), sp_policyEnd(i_pol), sp_policyPermission(i_pol));
 					empty ep_pol;
 				endif;
+				
+				empty sp_containerSASQueryString, sp_containerSASURL;
 			}
 		}
 		Procedure pr_setAccessPolicies {
@@ -230,10 +246,14 @@ Model Main_DataLake_Tools {
 					pr_setAccessPolicies;
 					empty ep_pol;
 				endif;
+				
+				empty bp_svc_permissionPossibilities;
 			}
 		}
 		Procedure pr_createAccessPolicy {
 			Body: {
+				bp_svc_permissionPossibilities(i_svc_perm) := bp_svc_inputPermissionPossibilities(i_svc_perm);
+				
 				if (card(s_storedAccessPolicies) < 5 and sp_accessPolicy) then
 					SetElementAdd(s_storedAccessPolicies, ep_pol, sp_accessPolicy);
 					empty sp_policyPermission(ep_pol);
@@ -248,10 +268,14 @@ Model Main_DataLake_Tools {
 					pr_uponChangeAccessPolicy;
 					empty sp_accessPolicy;
 				endif;
+				
+				empty bp_svc_inputPermissionPossibilities;
 			}
 		}
 		Procedure pr_updateAccessPolicy {
 			Body: {
+				ep_loc_initialPol := ep_pol;
+				
 				if (ep_pol) then
 					empty sp_policyPermission(ep_pol);
 				    for i_svc_perm | bp_svc_permissionPossibilities(i_svc_perm) do 
@@ -262,6 +286,25 @@ Model Main_DataLake_Tools {
 				
 					pr_setAccessPolicies;
 				endif;
+				
+				ep_pol := ep_loc_initialPol;
+			}
+			ElementParameter ep_loc_initialPol {
+				Range: s_storedAccessPolicies;
+			}
+		}
+		DeclarationSection File_Systems {
+			Set s_fileSystems {
+				Index: i_file_sys;
+			}
+			ElementParameter ep_fileSystem {
+				Range: s_fileSystems;
+				webui::UponChangeProcedure: pr_getAccessPolicies;
+			}
+			Parameter p_def_existingFileSystems {
+				IndexDomain: i_file_sys;
+				Definition: 1;
+				webui::FlagsIdentifier: sp_def_readonly;
 			}
 		}
 		Procedure pr_fetchFileSystems {
@@ -287,36 +330,6 @@ Model Main_DataLake_Tools {
 				endif;
 			}
 		}
-		Procedure pr_uponChangeExpiryDays {
-			Body: {
-				p_secondsToExpire := p_daysToExpire;
-				pr_uponChangeExpirySeconds;
-			}
-		}
-		Procedure pr_uponChangeExpirySeconds {
-			Body: {
-				sp_startDate := dex::ExpiryDateFromNow(0[s]);
-				sp_expiryDate := dex::ExpiryDateFromNow(p_secondsToExpire);
-			}
-		}
-		Procedure pr_uponChangeAccessPolicy {
-			Body: {
-				if (ep_pol) then
-					permissionLength := StringLength(sp_policyPermission(ep_pol));
-					empty bp_svc_permissionPossibilities, p_secondsToExpire, p_daysToExpire;
-					sp_startDate := sp_policyStart(ep_pol);
-					sp_expiryDate := sp_policyEnd(ep_pol);
-					while (LoopCount <= permissionLength) do
-						permission := SubString(sp_policyPermission(ep_pol), LoopCount, LoopCount);
-						for (i_svc_perm | i_svc_perm = permission) do
-							bp_svc_permissionPossibilities(i_svc_perm) := 1;
-						endfor;
-					endwhile;
-				endif;
-			}
-			Parameter permissionLength;
-			StringParameter permission;
-		}
 	}
 	Section UI_Declarations {
 		StringParameter sp_def_readonly {
@@ -333,18 +346,18 @@ Model Main_DataLake_Tools {
 					  ( 1, 1, tooltip           ) : "Welcome to the Toolkit!",
 					  ( 1, 1, workflowPageState ) : "active",
 					  ( 1, 1, pageDataState     ) : "Incomplete",
-					  ( 1, 2, displayText       ) : "Account SAS Token",
-					  ( 1, 2, icon              ) : "aimms-user5",
-					  ( 1, 2, pageId            ) : "new_sas_token",
-					  ( 1, 2, tooltip           ) : "Create your Account SAS Token",
+					  ( 1, 2, displayText       ) : "Container SAS Token",
+					  ( 1, 2, icon              ) : "aimms-cube4",
+					  ( 1, 2, pageId            ) : "container_sas_token",
+					  ( 1, 2, tooltip           ) : "Create your Container SAS Token",
 					  ( 1, 2, workflowPageState ) : "active",
 					  ( 1, 2, pageDataState     ) : "incomplete",
 					  ( 1, 2, redirectPageId    ) : "home",
-					  ( 1, 3, displayText       ) : "Container SAS Token",
-					  ( 1, 3, icon              ) : "aimms-cube4",
-					  ( 1, 3, pageId            ) : "container_sas_token",
-					  ( 1, 3, tooltip           ) : "Create your Container SAS Token",
-					  ( 1, 3, workflowPageState ) : "active",
+					  ( 1, 3, displayText       ) : "Account SAS Token",
+					  ( 1, 3, icon              ) : "aimms-user5",
+					  ( 1, 3, pageId            ) : "new_sas_token",
+					  ( 1, 3, tooltip           ) : "Create your Account SAS Token",
+					  ( 1, 3, workflowPageState ) : "inactive",
 					  ( 1, 3, pageDataState     ) : "incomplete",
 					  ( 1, 3, redirectPageId    ) : "home" }
 				}
@@ -360,6 +373,9 @@ Model Main_DataLake_Tools {
 					    ( '1', 'state'   ) : "active"                              }
 				}
 			}
+			StringParameter sp_def_storageAccount {
+				Definition: dex::dls::StorageAccount;
+			}
 		}
 		Section Pages {
 			Section Welcome_Page {
@@ -367,58 +383,104 @@ Model Main_DataLake_Tools {
 					Definition: "aimms_logo.png";
 				}
 			}
-			StringParameter sp_acct_permissionTooltip {
-				IndexDomain: i_acct_perm;
-				Definition: {
-					data 
-					{ r : "Read: Valid for all signed resources types (Service, Container, and Object). Permits read permissions to the specified re"
-					      "source type.",
-					  w : "Write: Valid for all signed resources types (Service, Container, and Object). Permits write access for the specified reso"
-					      "urce type, allowing a user to create and update resources.",
-					  d : "Delete: Valid for Container and Object resource types, except for queue messages.",
-					  x : "Delete Version: Valid for Object resource type of Blob only.",
-					  y : "Permanent Delete: Valid for Object resource type of Blob only.",
-					  l : "List: Valid for Service and Container resource types only.",
-					  a : "Add: Valid for the following Object resource types only: queue messages, table entities, and append blobs.",
-					  c : "Create: Valid for Container resource types and the following Object resource types: blobs and files. Users can create new"
-					      " resources, but may not overwrite existing resources.",
-					  u : "Update: Valid for the following Object resource types only: queue messages and table entities.",
-					  p : "Process: Valid for the following Object resource type only: queue messages.",
-					  t : "Tag: Valid for the following Object resource type only: blobs. Permits blob tag operations.",
-					  f : "Filter: Valid for the following Object resource type only: blob. Permits filtering by blob tag.",
-					  i : "Set Immutability Policy: Valid for the following Object resource type only: blob. Permits set/delete immutability policy "
-					      "and legal hold on a blob." }
+			Section Container_SAS_Token_Page {
+				StringParameter sp_svc_permissionTooltip {
+					IndexDomain: i_svc_perm;
+					Definition: {
+						data 
+						{ r : "Read the content, blocklist, properties, and metadata of any blob in the container or directory. Use a blob as the source"
+						      " of a copy operation.",
+						  a : "Add a block to an append blob.",
+						  c : "Write a new blob, snapshot a blob, or copy a blob to a new blob.",
+						  w : "Create or write content, properties, metadata, or blocklist. Snapshot or lease the blob. Resize the blob (page blob only)"
+						      ". Use the blob as the destination of a copy operation.",
+						  d : "Delete a blob. For version 2017-07-29 and later, the Delete permission also allows breaking a lease on a blob. For more i"
+						      "nformation, see the Lease Blob operation.",
+						  x : "Delete a blob version.",
+						  y : "Permanently delete a blob snapshot or version.",
+						  l : "List blobs non-recursively.",
+						  t : "Read or write the tags on a blob.",
+						  f : "Find blobs with index tags.",
+						  m : "Move a blob or a directory and its contents to a new location. This operation can optionally be restricted to the owner o"
+						      "f the child blob, directory, or parent directory if the saoid parameter is included on the SAS token and the sticky bit i"
+						      "s set on the parent directory.",
+						  e : "Get the system properties and, if the hierarchical namespace is enabled for the storage account, get the POSIX ACL of a b"
+						      "lob. If the hierarchical namespace is enabled and the caller is the owner of a blob, this permission grants the ability t"
+						      "o set the owning group, POSIX permissions, and POSIX ACL of the blob. doesn't permit the caller to read user-defined meta"
+						      "data.",
+						  o : "When the hierarchical namespace is enabled, this permission enables the caller to set the owner or the owning group, or t"
+						      "o act as the owner when renaming or deleting a directory or blob within a directory that has the sticky bit set.",
+						  p : "When the hierarchical namespace is enabled, this permission allows the caller to set permissions and POSIX ACLs on direct"
+						      "ories and blobs.",
+						  i : "Set or delete the immutability policy or legal hold on a blob." }
+					}
+				}
+				StringParameter sp_def_tabbedManagePages {
+					IndexDomain: (webui::indexNoOfTabs,webui::indexTabSpec);
+					Definition: {
+						data 
+						{ ( 1, displayText ) : "Manage Access Policy",  ( 1, pageId      ) : "manage_access_policy",
+						  ( 1, state       ) : "active"              ,  ( 2, displayText ) : "Manage File System"  ,
+						  ( 2, pageId      ) : "manage_file_system"  ,  ( 2, state       ) : "active"               }
+					}
+				}
+				Procedure pr_uponChangeExpiryDays {
+					Body: {
+						p_secondsToExpire := p_daysToExpire;
+						pr_uponChangeExpirySeconds;
+					}
+				}
+				Procedure pr_uponChangeExpirySeconds {
+					Body: {
+						sp_startDate := dex::ExpiryDateFromNow(0[s]);
+						sp_expiryDate := dex::ExpiryDateFromNow(p_secondsToExpire);
+					}
+				}
+				Procedure pr_uponChangeAccessPolicy {
+					Body: {
+						if (ep_pol) then
+						
+							permissionLength := StringLength(sp_policyPermission(ep_pol));
+							empty bp_svc_permissionPossibilities, p_secondsToExpire, p_daysToExpire;
+							sp_startDate := sp_policyStart(ep_pol);
+							sp_expiryDate := sp_policyEnd(ep_pol);
+							while (LoopCount <= permissionLength) do
+								permission := SubString(sp_policyPermission(ep_pol), LoopCount, LoopCount);
+								for (i_svc_perm | i_svc_perm = permission) do
+									bp_svc_permissionPossibilities(i_svc_perm) := 1;
+								endfor;
+							endwhile;
+						endif;
+						
+						empty sp_containerSASQueryString, sp_containerSASURL;
+					}
+					Parameter permissionLength;
+					StringParameter permission;
 				}
 			}
-			StringParameter sp_svc_permissionTooltip {
-				IndexDomain: i_svc_perm;
-				Definition: {
-					data 
-					{ r : "Read the content, blocklist, properties, and metadata of any blob in the container or directory. Use a blob as the source"
-					      " of a copy operation.",
-					  a : "Add a block to an append blob.",
-					  c : "Write a new blob, snapshot a blob, or copy a blob to a new blob.",
-					  w : "Create or write content, properties, metadata, or blocklist. Snapshot or lease the blob. Resize the blob (page blob only)"
-					      ". Use the blob as the destination of a copy operation.",
-					  d : "Delete a blob. For version 2017-07-29 and later, the Delete permission also allows breaking a lease on a blob. For more i"
-					      "nformation, see the Lease Blob operation.",
-					  x : "Delete a blob version.",
-					  y : "Permanently delete a blob snapshot or version.",
-					  l : "List blobs non-recursively.",
-					  t : "Read or write the tags on a blob.",
-					  f : "Find blobs with index tags.",
-					  m : "Move a blob or a directory and its contents to a new location. This operation can optionally be restricted to the owner o"
-					      "f the child blob, directory, or parent directory if the saoid parameter is included on the SAS token and the sticky bit i"
-					      "s set on the parent directory.",
-					  e : "Get the system properties and, if the hierarchical namespace is enabled for the storage account, get the POSIX ACL of a b"
-					      "lob. If the hierarchical namespace is enabled and the caller is the owner of a blob, this permission grants the ability t"
-					      "o set the owning group, POSIX permissions, and POSIX ACL of the blob. doesn't permit the caller to read user-defined meta"
-					      "data.",
-					  o : "When the hierarchical namespace is enabled, this permission enables the caller to set the owner or the owning group, or t"
-					      "o act as the owner when renaming or deleting a directory or blob within a directory that has the sticky bit set.",
-					  p : "When the hierarchical namespace is enabled, this permission allows the caller to set permissions and POSIX ACLs on direct"
-					      "ories and blobs.",
-					  i : "Set or delete the immutability policy or legal hold on a blob." }
+			Section Account_SAS_Token_Page {
+				StringParameter sp_acct_permissionTooltip {
+					IndexDomain: i_acct_perm;
+					Definition: {
+						data 
+						{ r : "Read: Valid for all signed resources types (Service, Container, and Object). Permits read permissions to the specified re"
+						      "source type.",
+						  w : "Write: Valid for all signed resources types (Service, Container, and Object). Permits write access for the specified reso"
+						      "urce type, allowing a user to create and update resources.",
+						  d : "Delete: Valid for Container and Object resource types, except for queue messages.",
+						  x : "Delete Version: Valid for Object resource type of Blob only.",
+						  y : "Permanent Delete: Valid for Object resource type of Blob only.",
+						  l : "List: Valid for Service and Container resource types only.",
+						  a : "Add: Valid for the following Object resource types only: queue messages, table entities, and append blobs.",
+						  c : "Create: Valid for Container resource types and the following Object resource types: blobs and files. Users can create new"
+						      " resources, but may not overwrite existing resources.",
+						  u : "Update: Valid for the following Object resource types only: queue messages and table entities.",
+						  p : "Process: Valid for the following Object resource type only: queue messages.",
+						  t : "Tag: Valid for the following Object resource type only: blobs. Permits blob tag operations.",
+						  f : "Filter: Valid for the following Object resource type only: blob. Permits filtering by blob tag.",
+						  i : "Set Immutability Policy: Valid for the following Object resource type only: blob. Permits set/delete immutability policy "
+						      "and legal hold on a blob." }
+					}
 				}
 			}
 		}

@@ -62,6 +62,25 @@
                 "children": []
               },
               {
+                "name": "Container SAS Token",
+                "type": "pagev2-grid",
+                "slug": "container_sas_token",
+                "children": [
+                  {
+                    "name": "Manage File System",
+                    "type": "pagev2-grid",
+                    "slug": "manage_file_system",
+                    "children": []
+                  },
+                  {
+                    "name": "Manage Access Policy",
+                    "type": "pagev2-grid",
+                    "slug": "manage_access_policy",
+                    "children": []
+                  }
+                ]
+              },
+              {
                 "name": "Account SAS Token",
                 "type": "pagev2-grid",
                 "slug": "new_sas_token",
@@ -73,12 +92,6 @@
                     "children": []
                   }
                 ]
-              },
-              {
-                "name": "Container SAS Token",
-                "type": "pagev2-grid",
-                "slug": "container_sas_token",
-                "children": []
               }
             ]
           }
@@ -155,8 +168,8 @@
         "componentName": "Grid",
         "props": {
           "gridTemplateColumns": "1fr",
-          "gridTemplateRows": "  250px 1fr 170px",
-          "gridTemplateAreas": "\"area-b\" \"area-a\" \"area-c\""
+          "gridTemplateRows": "  350px 170px 1fr ",
+          "gridTemplateAreas": "\"area-a\" \"area-b\" \"area-c\""
         },
         "items": [
           {
@@ -271,6 +284,39 @@
       "literal": "ContainerSASToken"
     }
   },
+  "layouts/custom_470637d3-f75a-46d1-bdca-ecc747ae4584": {
+    "definition": {
+      "literal": {
+        "componentName": "Grid",
+        "props": {
+          "gridTemplateColumns": "4fr 1fr",
+          "gridTemplateRows": "1fr",
+          "gridTemplateAreas": "\"area-a area-b\""
+        },
+        "items": [
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-a",
+              "name": "Area A",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-b",
+              "name": "Area B",
+              "gridAutoFlow": "row"
+            }
+          }
+        ]
+      }
+    },
+    "displayName": {
+      "literal": "Layout10 Copy"
+    }
+  },
   "layouts/custom_4b0dffcc-c1f5-4482-864a-774382277998": {
     "definition": {
       "literal": {
@@ -320,6 +366,80 @@
       "literal": "ConfiguringADLS"
     }
   },
+  "layouts/custom_548002de-7088-4a0f-b6f1-8183fe642763": {
+    "definition": {
+      "literal": {
+        "componentName": "Grid",
+        "props": {
+          "gridTemplateColumns": "1fr",
+          "gridTemplateRows": "  0.8fr 1.2fr ",
+          "gridTemplateAreas": "\"area-a\" \"area-c\""
+        },
+        "items": [
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-a",
+              "name": "Area A",
+              "gridAutoFlow": "column"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-c",
+              "name": "Area C",
+              "gridAutoFlow": "row"
+            }
+          }
+        ]
+      }
+    },
+    "displayName": {
+      "literal": "AccountSASToken Copy"
+    }
+  },
+  "layouts/custom_5906c361-648c-4656-93c1-a4b0205f40ca": {
+    "definition": {
+      "literal": {
+        "componentName": "Grid",
+        "props": {
+          "gridTemplateColumns": "1fr 1fr 1fr",
+          "gridTemplateRows": "1fr",
+          "gridTemplateAreas": "\"area-a area-b area-c\""
+        },
+        "items": [
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-a",
+              "name": "Area A",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-b",
+              "name": "Area B",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-c",
+              "name": "Area C",
+              "gridAutoFlow": "row"
+            }
+          }
+        ]
+      }
+    },
+    "displayName": {
+      "literal": "Layout1 Copy"
+    }
+  },
   "pages/container_sas_token": {
     "aimms.widget.type": {
       "literal": "pagev2-grid"
@@ -327,94 +447,24 @@
     "bindings": {
       "literal": [
         {
-          "widgetUri": "create_fileSystem",
-          "gridArea": "area-a-3",
-          "dndId": "area-a-3create_fileSystem0"
+          "widgetUri": "btn_createToken_1",
+          "gridArea": "area-c",
+          "dndId": "area-cbtn_createToken_10"
         },
         {
-          "widgetUri": "Stored Access Policies",
-          "gridArea": "Unassigned widgets",
-          "dndId": "Unassigned widgetsStored Access Policies1"
-        },
-        {
-          "widgetUri": "selected_filesystems",
-          "gridArea": "Unassigned widgets",
-          "dndId": "Unassigned widgetsselected_filesystems2"
-        },
-        {
-          "widgetUri": "btn_createToken_2",
-          "gridArea": "area-a-3",
-          "dndId": "area-a-3btn_createToken_23"
-        },
-        {
-          "widgetUri": "delete_selected_filesystems",
-          "gridArea": "area-a-3",
-          "dndId": "area-a-3delete_selected_filesystems4"
-        },
-        {
-          "widgetUri": "filesystem_name",
-          "gridArea": "area-a-2",
-          "dndId": "area-a-2filesystem_name5"
+          "widgetUri": "tab_containerInfo",
+          "gridArea": "area-c",
+          "dndId": "area-ctab_containerInfo1"
         },
         {
           "widgetUri": "tbl_permission_1",
-          "gridArea": "area-b",
-          "dndId": "area-btbl_permission_16"
-        },
-        {
-          "widgetUri": "btn_createToken_1",
-          "gridArea": "area-c",
-          "dndId": "area-cbtn_createToken_17"
-        },
-        {
-          "widgetUri": "scl_SASToken_1",
-          "gridArea": "area-c",
-          "dndId": "area-cscl_SASToken_18"
-        },
-        {
-          "widgetUri": "Access Policy to Create",
-          "gridArea": "area-d-2",
-          "dndId": "area-d-2Access Policy to Create9"
-        },
-        {
-          "widgetUri": "Create",
-          "gridArea": "area-d-3",
-          "dndId": "area-d-3Create11"
-        },
-        {
-          "widgetUri": "Update_accessPolicy",
-          "gridArea": "area-d-3",
-          "dndId": "area-d-3Update_accessPolicy12"
-        },
-        {
-          "widgetUri": "Delete_accessPolicy",
-          "gridArea": "area-d-3",
-          "dndId": "area-d-3Delete_accessPolicy13"
-        },
-        {
-          "widgetUri": "fs_text",
-          "gridArea": "area-a-1",
-          "dndId": "area-a-1fs_text14"
-        },
-        {
-          "widgetUri": "select_filesystem",
-          "gridArea": "area-a-1",
-          "dndId": "area-a-1select_filesystem15"
-        },
-        {
-          "widgetUri": "ap_text",
-          "gridArea": "area-d-1",
-          "dndId": "area-d-1ap_text16"
-        },
-        {
-          "widgetUri": "select_accessPolicy",
-          "gridArea": "area-d-1",
-          "dndId": "area-d-2select_accessPolicy10"
+          "gridArea": "area-a",
+          "dndId": "area-atbl_permission_12"
         }
       ]
     },
     "layoutId": {
-      "literal": "custom_3687d482-099b-4c25-a70a-0320c2c39633"
+      "literal": "custom_548002de-7088-4a0f-b6f1-8183fe642763"
     },
     "onload": {
       "aimms": {
@@ -431,13 +481,6 @@
           }
         },
         {
-          "uri": "scl_SASToken_1",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
           "uri": "tbl_permission_1",
           "layoutInfo": {
             "width": "2",
@@ -445,98 +488,7 @@
           }
         },
         {
-          "uri": "btn_createToken_2",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "filesystem_name",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "create_fileSystem",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "selected_filesystems",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "delete_selected_filesystems",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "Stored Access Policies",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "Access Policy to Create",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "Create",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "Update_accessPolicy",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "Delete_accessPolicy",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "select_filesystem",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "select_accessPolicy",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "fs_text",
-          "layoutInfo": {
-            "width": "2",
-            "height": "1"
-          }
-        },
-        {
-          "uri": "ap_text",
+          "uri": "tab_containerInfo",
           "layoutInfo": {
             "width": "2",
             "height": "1"
@@ -585,6 +537,182 @@
       ]
     }
   },
+  "pages/manage_access_policy": {
+    "aimms.widget.type": {
+      "literal": "pagev2-grid"
+    },
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "tbl_createAccessPolicy_1",
+          "gridArea": "area-b",
+          "dndId": "area-btbl_createAccessPolicy_18"
+        },
+        {
+          "widgetUri": "Update_accessPolicy",
+          "gridArea": "area-b",
+          "dndId": "area-bUpdate_accessPolicy9"
+        },
+        {
+          "widgetUri": "tbl_createAccessPolicy",
+          "gridArea": "area-a",
+          "dndId": "area-atbl_createAccessPolicy10"
+        },
+        {
+          "widgetUri": "Create",
+          "gridArea": "area-a",
+          "dndId": "area-aCreate11"
+        },
+        {
+          "widgetUri": "scl_deleteAccessPolicy",
+          "gridArea": "area-c",
+          "dndId": "area-cscl_deleteAccessPolicy12"
+        },
+        {
+          "widgetUri": "Delete_accessPolicy",
+          "gridArea": "area-c",
+          "dndId": "area-cDelete_accessPolicy13"
+        }
+      ]
+    },
+    "layoutId": {
+      "literal": "custom_5906c361-648c-4656-93c1-a4b0205f40ca"
+    },
+    "widgets": {
+      "literal": [
+        {
+          "uri": "Delete_accessPolicy",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Update_accessPolicy",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Create",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "tbl_createAccessPolicy",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "tbl_createAccessPolicy_1",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "scl_deleteAccessPolicy",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
+    }
+  },
+  "pages/manage_file_system": {
+    "aimms.widget.type": {
+      "literal": "pagev2-grid"
+    },
+    "bindings": {
+      "literal": [
+        {
+          "widgetUri": "create_fileSystem",
+          "gridArea": "area-b",
+          "dndId": "area-bcreate_fileSystem0"
+        },
+        {
+          "widgetUri": "delete_selected_filesystems",
+          "gridArea": "area-b",
+          "dndId": "area-bdelete_selected_filesystems1"
+        },
+        {
+          "widgetUri": "btn_createToken_2",
+          "gridArea": "area-b",
+          "dndId": "area-bbtn_createToken_22"
+        },
+        {
+          "widgetUri": "filesystem_name",
+          "gridArea": "area-a",
+          "dndId": "area-afilesystem_name4"
+        },
+        {
+          "widgetUri": "scl_selectedFileSystem",
+          "gridArea": "area-a",
+          "dndId": "area-ascl_selectedFileSystem5"
+        },
+        {
+          "widgetUri": "mtl_listFileSystem",
+          "gridArea": "area-a",
+          "dndId": "area-emtl_listFileSystem3"
+        }
+      ]
+    },
+    "layoutId": {
+      "literal": "custom_470637d3-f75a-46d1-bdca-ecc747ae4584"
+    },
+    "widgets": {
+      "literal": [
+        {
+          "uri": "create_fileSystem",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "filesystem_name",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "delete_selected_filesystems",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "btn_createToken_2",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "mtl_listFileSystem",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "scl_selectedFileSystem",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        }
+      ]
+    }
+  },
   "pages/new_sas_token": {
     "aimms.widget.type": {
       "literal": "pagev2-grid"
@@ -593,18 +721,18 @@
       "literal": [
         {
           "widgetUri": "btn_createToken",
-          "gridArea": "area-c",
-          "dndId": "area-bbtn_createToken2"
+          "gridArea": "area-b",
+          "dndId": "area-bbtn_createToken0"
         },
         {
           "widgetUri": "scl_SASToken",
-          "gridArea": "area-c",
-          "dndId": "area-cscl_SASToken0"
+          "gridArea": "area-b",
+          "dndId": "area-cscl_SASToken2"
         },
         {
           "widgetUri": "tbl_permission",
-          "gridArea": "area-b",
-          "dndId": "area-btbl_permission1"
+          "gridArea": "area-a",
+          "dndId": "area-atbl_permission1"
         }
       ]
     },
@@ -667,47 +795,21 @@
       "literal": "pagev2-grid-sidepanel"
     }
   },
-  "widgets/Access Policy to Create": {
-    "aimms.widget.type": {
-      "literal": "scalar"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "sp_accessPolicy"
-        ]
+  "widgets/Update_accessPolicy": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_updateAccessPolicy"
       }
     },
-    "contents.labels.visible": {
-      "literal": 0
+    "aimms.widget.type": {
+      "literal": "button"
     },
     "name": {
-      "literal": "Access Policy to Create"
+      "literal": "btn_updateAccessPolicy"
     },
     "title": {
-      "literal": "Access Policy to Create"
-    },
-    "views": {
-      "literal": {}
-    },
-    "views.__display_order__": {
-      "literal": [
-        "views.0"
-      ]
-    },
-    "views.0.type": {
-      "literal": "template"
-    }
-  },
-  "widgets/ap_text": {
-    "aimms.widget.type": {
-      "literal": "text"
-    },
-    "contents": {
-      "literal": "<h2>Select Access Policy</h2>"
-    },
-    "name": {
-      "literal": "ap_text"
+      "literal": "Update"
     }
   },
   "widgets/btn_createToken": {
@@ -758,7 +860,7 @@
       "literal": "btn_refreshFileSystem"
     },
     "title": {
-      "literal": "Update"
+      "literal": "Fetch"
     }
   },
   "widgets/Create": {
@@ -772,7 +874,7 @@
       "literal": "button"
     },
     "name": {
-      "literal": "Create"
+      "literal": "btn_createAccessPolicy"
     },
     "title": {
       "literal": "Create"
@@ -806,7 +908,7 @@
       "literal": "button"
     },
     "name": {
-      "literal": "Delete_accessPolicy"
+      "literal": "btn_deleteAccessPolicy"
     },
     "title": {
       "literal": "Delete"
@@ -832,6 +934,9 @@
   "widgets/filesystem_name": {
     "aimms.widget.type": {
       "literal": "scalar"
+    },
+    "compact": {
+      "literal": 1
     },
     "contents": {
       "aimms": {
@@ -865,17 +970,6 @@
       "literal": "template"
     }
   },
-  "widgets/fs_text": {
-    "aimms.widget.type": {
-      "literal": "text"
-    },
-    "contents": {
-      "literal": "<h2><b>﻿Select File System</b></h2>"
-    },
-    "name": {
-      "literal": "fs_text"
-    }
-  },
   "widgets/img_homeLogo": {
     "aimms.widget.type": {
       "literal": "image"
@@ -891,26 +985,177 @@
       "literal": "img_homeLogo"
     }
   },
-  "widgets/scl_SASToken": {
+  "widgets/txt_welcome": {
     "aimms.widget.type": {
-      "literal": "scalar"
+      "literal": "text"
     },
     "contents": {
-      "aimms": {
-        "contents": [
-          "sp_accountSASQueryString",
-          "sp_accountSASURL"
+      "literal": "<div><span style=\"background-color: inherit; font-size: 32px;\"><b>Welcome!</b></span></div><div><br></div><div><span style=\"background-color: inherit; font-size: 18px;\">You are in an AIMMS Toolkit. This application was developed by AIMMS User Support to help use a few AIMMS features.&nbsp;</span></div><div><span style=\"background-color: inherit; font-size: 18px;\">&nbsp;</span></div><div><span style=\"background-color: inherit; font-size: 18px;\">If you find bugs or points of improvement, </span><b><span style=\"background-color: inherit; font-size: 18px;\">feel free to fork this repository and commit your changes.&nbsp;This ensures our GitHub stays up-to-date for the entire community!</span></b></div><div><br></div><div><span style=\"background-color: inherit; font-size: 18px;\">You can also check our other interactive resources:</span></div><div><br></div><ul><li><span style=\"background-color: inherit; font-size: 18px;\">In the Online&nbsp;</span><a href=\"https://community.aimms.com/\" style=\"background-color: inherit;\" target=\"_blank\"><span style=\"font-size: 18px;\">Community</span></a><span style=\"background-color: inherit; font-size: 18px;\">, talk to other developers and AIMMSians about the product, modeling, use cases, and more.</span></li><li><span style=\"background-color: inherit; font-size: 18px;\">In the&nbsp;</span><a href=\"https://academy.aimms.com/\" style=\"background-color: inherit;\" target=\"_blank\"><span style=\"font-size: 18px;\">Academy</span></a><span style=\"background-color: inherit; font-size: 18px;\">, learn new skills and challenge yourself. We are busy creating new courses, so keep an eye out!</span></li></ul><div><br></div><div><span style=\"background-color: inherit; font-size: 18px;\">For questions that can't be posted on the community, contact us at&nbsp;</span><i style=\"background-color: rgb(255, 255, 204); font-size: 18px;\">support@aimms.com</i><span style=\"background-color: inherit; font-size: 18px;\">.</span></div>"
+    },
+    "name": {
+      "literal": "txt_welcome"
+    }
+  },
+  "widgets/txt_sasTokenInfo": {
+    "aimms.widget.type": {
+      "literal": "text"
+    },
+    "contents": {
+      "literal": "<div>Service, resource type and permission are configurations required when creating a new SAS Token.&nbsp;</div><div><br></div><div><a href=\"https://learn.microsoft.com/en-us/rest/api/storageservices/create-account-sas#specify-the-account-sas-parameters\" target=\"_blank\">Read more in the ADLS documentation from Azure</a>.&nbsp;</div>"
+    },
+    "name": {
+      "literal": "txt_sasTokenInfo"
+    }
+  },
+  "widgets/tbl_permission_1": {
+    "aimms.widget.type": {
+      "literal": "table"
+    },
+    "contents.__display_order__": {
+      "literal": [
+        "contents.2",
+        "contents.0",
+        "contents.9",
+        "contents.3",
+        "contents.4",
+        "contents.5",
+        "contents.6",
+        "contents.7",
+        "contents.8"
+      ]
+    },
+    "contents.0.identifier": {
+      "literal": {
+        "identifier": "ep_pol",
+        "slice": []
+      }
+    },
+    "contents.2.identifier": {
+      "literal": {
+        "identifier": "ep_fileSystem",
+        "slice": []
+      }
+    },
+    "contents.3.identifier": {
+      "literal": {
+        "identifier": "p_secondsToExpire",
+        "slice": []
+      }
+    },
+    "contents.4.identifier": {
+      "literal": {
+        "identifier": "p_daysToExpire",
+        "slice": []
+      }
+    },
+    "contents.5.identifier": {
+      "literal": {
+        "identifier": "sp_startDate",
+        "slice": []
+      }
+    },
+    "contents.6.identifier": {
+      "literal": {
+        "identifier": "sp_expiryDate",
+        "slice": []
+      }
+    },
+    "contents.7.identifier": {
+      "literal": {
+        "identifier": "sp_containerSASQueryString"
+      }
+    },
+    "contents.8.identifier": {
+      "literal": {
+        "identifier": "sp_containerSASURL"
+      }
+    },
+    "contents.8.readonly": {
+      "literal": "True"
+    },
+    "contents.9.displaydomain": {
+      "literal": "1"
+    },
+    "contents.9.identifier": {
+      "literal": {
+        "identifier": "bp_svc_permissionPossibilities",
+        "slice": [
+          {
+            "index": "i_svc_perm",
+            "type": "free",
+            "value": "i_svc_perm"
+          }
         ]
       }
     },
-    "contents.labels.visible": {
-      "literal": 1
+    "contents.9.readonly": {
+      "literal": "True"
+    },
+    "contents.numdecimals": {
+      "literal": 0
+    },
+    "contents.partition": {
+      "literal": {
+        "rowHeader": [
+          "<IDENTIFIER-SET>"
+        ],
+        "colHeader": [
+          "i_svc_perm"
+        ],
+        "aggregated": []
+      }
+    },
+    "custom.column.widths": {
+      "literal": [
+        {
+          "type": "rowHeader",
+          "width": 39.24
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "p_secondsToExpire"
+          },
+          "width": 18.54
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "<IDENTIFIER-SET>": "bp_permissionPossibilities"
+          },
+          "width": 19.16
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "i_perm": ""
+          },
+          "width": 52.8
+        },
+        {
+          "type": "colHeader",
+          "colKey": {},
+          "width": 140.96
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "i_svc_perm": ""
+          },
+          "width": 81.01
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "<IDENTIFIER-SET>",
+          "width": 37.96
+        }
+      ]
     },
     "name": {
-      "literal": "scl_SASToken"
+      "literal": "tbl_containerSASTokenInputs"
     },
     "title": {
-      "literal": "Account SAS URL"
+      "literal": "Container SAS Token"
     },
     "views": {
       "literal": {}
@@ -924,111 +1169,6 @@
       "literal": "view"
     }
   },
-  "widgets/scl_SASToken_1": {
-    "aimms.widget.type": {
-      "literal": "scalar"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "sp_containerSASQueryString",
-          "sp_containerSASURL"
-        ]
-      }
-    },
-    "contents.labels.visible": {
-      "literal": 1
-    },
-    "name": {
-      "literal": "scl_ContainerSASToken"
-    },
-    "title": {
-      "literal": "Container SAS URL"
-    },
-    "views": {
-      "literal": {}
-    },
-    "views.__display_order__": {
-      "literal": [
-        "views.0",
-        "views.1"
-      ]
-    },
-    "views.0.type": {
-      "literal": "view"
-    },
-    "views.1.type": {
-      "literal": "template"
-    }
-  },
-  "widgets/select_accessPolicy": {
-    "aimms.widget.type": {
-      "literal": "selectionbox-v2"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "ep_pol"
-        ],
-        "slices": []
-      }
-    },
-    "name": {
-      "literal": "select_accessPolicy"
-    }
-  },
-  "widgets/select_filesystem": {
-    "aimms.widget.type": {
-      "literal": "selectionbox-v2"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "ep_fileSystem"
-        ],
-        "slices": []
-      }
-    },
-    "name": {
-      "literal": "select_filesystem"
-    }
-  },
-  "widgets/selected_filesystems": {
-    "aimms.widget.type": {
-      "literal": "multiselect"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "bp_selectedFileSystems"
-        ]
-      }
-    },
-    "name": {
-      "literal": "selected_filesystems"
-    },
-    "title": {
-      "literal": "File System List"
-    }
-  },
-  "widgets/Stored Access Policies": {
-    "aimms.widget.type": {
-      "literal": "multiselect"
-    },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "bp_selectedAccessPolicy"
-        ]
-      }
-    },
-    "name": {
-      "literal": "Stored Access Policies"
-    },
-    "title": {
-      "literal": "Stored Access Policies"
-    }
-  },
   "widgets/tbl_permission": {
     "aimms.widget.type": {
       "literal": "table"
@@ -1039,6 +1179,7 @@
           "bp_acct_permissionPossibilities",
           "p_secondsToExpire",
           "p_daysToExpire",
+          "sp_startDate",
           "sp_expiryDate"
         ]
       }
@@ -1126,86 +1267,82 @@
       "literal": "template"
     }
   },
-  "widgets/tbl_permission_1": {
+  "widgets/tbl_createAccessPolicy_1": {
     "aimms.widget.type": {
       "literal": "table"
     },
-    "contents": {
-      "aimms": {
-        "contents": [
-          "bp_svc_permissionPossibilities",
-          "p_secondsToExpire",
-          "p_daysToExpire",
-          "sp_startDate",
-          "sp_expiryDate"
+    "contents.__display_order__": {
+      "literal": [
+        "contents.3",
+        "contents.1"
+      ]
+    },
+    "contents.1.displaydomain": {
+      "literal": "1"
+    },
+    "contents.1.identifier": {
+      "literal": {
+        "identifier": "bp_svc_permissionPossibilities",
+        "slice": [
+          {
+            "index": "i_svc_perm",
+            "type": "free",
+            "value": "i_svc_perm"
+          }
         ]
       }
     },
-    "contents.displaydomain": {
+    "contents.3.identifier": {
       "literal": {
-        "bp_svc_permissionpossibilities": "1"
+        "identifier": "ep_pol"
       }
-    },
-    "contents.numdecimals": {
-      "literal": 0
     },
     "contents.partition": {
       "literal": {
         "rowHeader": [
-          "<IDENTIFIER-SET>"
-        ],
-        "colHeader": [
+          "<IDENTIFIER-SET>",
           "i_svc_perm"
         ],
+        "colHeader": [],
         "aggregated": []
       }
     },
     "custom.column.widths": {
       "literal": [
         {
-          "type": "rowHeader",
-          "width": 39.24
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "p_secondsToExpire"
-          },
-          "width": 18.54
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "<IDENTIFIER-SET>": "bp_permissionPossibilities"
-          },
-          "width": 19.16
-        },
-        {
-          "type": "colHeader",
-          "colKey": {
-            "i_perm": ""
-          },
-          "width": 52.8
-        },
-        {
-          "type": "rowHeader",
-          "colKey": "<IDENTIFIER-SET>",
-          "width": 28.99
-        },
-        {
           "type": "colHeader",
           "colKey": {
             "i_svc_perm": ""
           },
-          "width": 42.08
+          "width": 27.43
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "<IDENTIFIER-SET>",
+          "width": 28.28
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "i_svc_perm",
+          "width": 25.99
+        },
+        {
+          "type": "colHeader",
+          "colKey": {},
+          "width": 32.16
         }
       ]
     },
+    "indices.__display_order__": {
+      "literal": [
+        "indices.0"
+      ]
+    },
     "name": {
-      "literal": "tbl_containerSASTokenInputs"
+      "literal": "tbl_updateAccessPolicy"
     },
     "title": {
-      "literal": "Inputs for Container SAS Token"
+      "literal": "Update Access Policy"
     },
     "views": {
       "literal": {}
@@ -1219,43 +1356,219 @@
       "literal": "view"
     }
   },
-  "widgets/txt_sasTokenInfo": {
+  "widgets/tbl_createAccessPolicy": {
     "aimms.widget.type": {
-      "literal": "text"
+      "literal": "table"
     },
-    "contents": {
-      "literal": "<div>Service, resource type and permission are configurations required when creating a new SAS Token.&nbsp;</div><div><br></div><div><a href=\"https://learn.microsoft.com/en-us/rest/api/storageservices/create-account-sas#specify-the-account-sas-parameters\" target=\"_blank\">Read more in the ADLS documentation from Azure</a>.&nbsp;</div>"
+    "contents.__display_order__": {
+      "literal": [
+        "contents.3",
+        "contents.2",
+        "contents.4"
+      ]
     },
-    "name": {
-      "literal": "txt_sasTokenInfo"
-    }
-  },
-  "widgets/txt_welcome": {
-    "aimms.widget.type": {
-      "literal": "text"
-    },
-    "contents": {
-      "literal": "<div><span style=\"background-color: inherit; font-size: 32px;\"><b>Welcome!</b></span></div><div><br></div><div><span style=\"background-color: inherit; font-size: 18px;\">You are in an AIMMS Toolkit. This application was developed by AIMMS User Support to help use a few AIMMS features.&nbsp;</span></div><div><span style=\"background-color: inherit; font-size: 18px;\">&nbsp;</span></div><div><span style=\"background-color: inherit; font-size: 18px;\">If you find bugs or points of improvement, </span><b><span style=\"background-color: inherit; font-size: 18px;\">feel free to fork this repository and commit your changes.&nbsp;This ensures our GitHub stays up-to-date for the entire community!</span></b></div><div><br></div><div><span style=\"background-color: inherit; font-size: 18px;\">You can also check our other interactive resources:</span></div><div><br></div><ul><li><span style=\"background-color: inherit; font-size: 18px;\">In the Online&nbsp;</span><a href=\"https://community.aimms.com/\" style=\"background-color: inherit;\" target=\"_blank\"><span style=\"font-size: 18px;\">Community</span></a><span style=\"background-color: inherit; font-size: 18px;\">, talk to other developers and AIMMSians about the product, modeling, use cases, and more.</span></li><li><span style=\"background-color: inherit; font-size: 18px;\">In the&nbsp;</span><a href=\"https://academy.aimms.com/\" style=\"background-color: inherit;\" target=\"_blank\"><span style=\"font-size: 18px;\">Academy</span></a><span style=\"background-color: inherit; font-size: 18px;\">, learn new skills and challenge yourself. We are busy creating new courses, so keep an eye out!</span></li></ul><div><br></div><div><span style=\"background-color: inherit; font-size: 18px;\">For questions that can't be posted on the community, contact us at&nbsp;</span><i style=\"background-color: rgb(255, 255, 204); font-size: 18px;\">support@aimms.com</i><span style=\"background-color: inherit; font-size: 18px;\">.</span></div>"
-    },
-    "name": {
-      "literal": "txt_welcome"
-    }
-  },
-  "widgets/Update_accessPolicy": {
-    "action": {
+    "contents.2.identifier": {
       "literal": {
-        "type": "procedure",
-        "value": "pr_updateAccessPolicy"
+        "identifier": "sp_accessPolicy"
       }
     },
-    "aimms.widget.type": {
-      "literal": "button"
+    "contents.3.identifier": {
+      "literal": {
+        "identifier": "ep_fileSystem"
+      }
+    },
+    "contents.4.displaydomain": {
+      "literal": "1"
+    },
+    "contents.4.identifier": {
+      "literal": {
+        "identifier": "bp_svc_inputPermissionPossibilities",
+        "slice": [
+          {
+            "index": "i_svc_perm",
+            "type": "free",
+            "value": "i_svc_perm"
+          }
+        ]
+      }
+    },
+    "contents.partition": {
+      "literal": {
+        "rowHeader": [
+          "<IDENTIFIER-SET>",
+          "i_svc_perm"
+        ],
+        "colHeader": [],
+        "aggregated": []
+      }
+    },
+    "custom.column.widths": {
+      "literal": [
+        {
+          "type": "colHeader",
+          "colKey": {
+            "i_svc_perm": ""
+          },
+          "width": 27.43
+        },
+        {
+          "type": "colHeader",
+          "colKey": {},
+          "width": 35
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "i_svc_perm",
+          "width": 27.41
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "<IDENTIFIER-SET>",
+          "width": 24.41
+        }
+      ]
+    },
+    "indices.__display_order__": {
+      "literal": [
+        "indices.0"
+      ]
     },
     "name": {
-      "literal": "Update_accessPolicy"
+      "literal": "tbl_createAccessPolicy"
     },
     "title": {
-      "literal": "Update"
+      "literal": "Create Access Policy"
+    },
+    "views": {
+      "literal": {}
+    },
+    "views.__display_order__": {
+      "literal": [
+        "views.0"
+      ]
+    },
+    "views.0.type": {
+      "literal": "view"
+    }
+  },
+  "widgets/mtl_listFileSystem": {
+    "aimms.widget.type": {
+      "literal": "multiselect"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "p_def_existingFileSystems"
+        ]
+      }
+    },
+    "name": {
+      "literal": "mtl_listFileSystem"
+    },
+    "title": {
+      "literal": "Available File Systems"
+    }
+  },
+  "widgets/scl_deleteAccessPolicy": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "ep_pol"
+        ]
+      }
+    },
+    "name": {
+      "literal": "scl_deleteAccessPolicy"
+    },
+    "title": {
+      "literal": "Delete Access Policy"
+    },
+    "views": {
+      "literal": {}
+    }
+  },
+  "widgets/scl_SASToken": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "sp_accountSASQueryString",
+          "sp_accountSASURL"
+        ]
+      }
+    },
+    "contents.labels.visible": {
+      "literal": 1
+    },
+    "name": {
+      "literal": "scl_SASToken"
+    },
+    "title": {
+      "literal": "Account SAS URL"
+    },
+    "views": {
+      "literal": {}
+    },
+    "views.__display_order__": {
+      "literal": [
+        "views.0"
+      ]
+    },
+    "views.0.type": {
+      "literal": "view"
+    }
+  },
+  "widgets/scl_selectedFileSystem": {
+    "aimms.widget.type": {
+      "literal": "selectionbox-v2"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "ep_fileSystem"
+        ],
+        "slices": []
+      }
+    },
+    "name": {
+      "literal": "scl_selectedFileSystem"
+    }
+  },
+  "widgets/tab_containerInfo": {
+    "aimms.widget.type": {
+      "literal": "tabbedpages"
+    },
+    "name": {
+      "literal": "tab_containerInfo"
+    },
+    "tabbedpages.tabs": {
+      "aimms": {
+        "contents": [
+          "sp_def_tabbedManagePages"
+        ],
+        "slices": [
+          {
+            "identifier": "sp_def_tabbedManagePages",
+            "slice": [
+              {
+                "index": "webui::indexNoOfTabs",
+                "type": "free",
+                "value": "webui::indexNoOfTabs"
+              },
+              {
+                "index": "webui::indexTabSpec",
+                "type": "free",
+                "value": "webui::indexTabSpec"
+              }
+            ]
+          }
+        ]
+      }
     }
   }
 }

@@ -4,6 +4,27 @@
     "aimms.widget.type": {
       "literal": "application"
     },
+    "browser.language": {
+      "aimms": {
+        "contents": [
+          "webui::ClientBrowserLanguage"
+        ]
+      }
+    },
+    "browser.name": {
+      "aimms": {
+        "contents": [
+          "webui::ClientBrowserName"
+        ]
+      }
+    },
+    "browser.timezone": {
+      "aimms": {
+        "contents": [
+          "webui::BrowserTimeZone"
+        ]
+      }
+    },
     "browsername": {
       "aimms": {
         "contents": [
@@ -134,7 +155,7 @@
         "componentName": "Grid",
         "props": {
           "gridTemplateColumns": "1fr",
-          "gridTemplateRows": "0.6fr 0.5fr 0.3fr",
+          "gridTemplateRows": "  250px 1fr 170px",
           "gridTemplateAreas": "\"area-b\" \"area-a\" \"area-c\""
         },
         "items": [
@@ -175,8 +196,8 @@
         "componentName": "Grid",
         "props": {
           "gridTemplateColumns": "1fr 1fr",
-          "gridTemplateRows": "0.6fr 0.5fr 0.3fr",
-          "gridTemplateAreas": "\"area-b area-b\" \"area-a-1 area-a-2\" \"area-c area-c\""
+          "gridTemplateRows": "250px 90px 80px 40px 1fr 170px",
+          "gridTemplateAreas": "\"area-b area-b\" \"area-a-1 area-d-1\" \"area-a-2 area-d-2\" \"area-a-3 area-d-3\"  \"area-none area-none\"  \"area-c area-c\""
         },
         "items": [
           {
@@ -193,6 +214,38 @@
               "gridArea": "area-a-2",
               "name": "Area A2",
               "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-a-3",
+              "name": "Area A3",
+              "gridAutoFlow": "column"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-d-1",
+              "name": "Area D1",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-d-2",
+              "name": "Area D2",
+              "gridAutoFlow": "row"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-d-3",
+              "name": "Area D3",
+              "gridAutoFlow": "column"
             }
           },
           {
@@ -267,55 +320,6 @@
       "literal": "ConfiguringADLS"
     }
   },
-  "layouts/custom_7dcf432f-0224-4912-8d4f-8249c3881e34": {
-    "definition": {
-      "literal": {
-        "componentName": "Grid",
-        "props": {
-          "gridTemplateColumns": "1fr 1fr 1fr 1fr",
-          "gridTemplateRows": "1fr 1fr",
-          "gridTemplateAreas": "\"area-a area-a area-b area-c\" \"area-d area-d area-d area-d\""
-        },
-        "items": [
-          {
-            "componentName": "WidgetArea",
-            "props": {
-              "gridArea": "area-a",
-              "name": "Area A",
-              "gridAutoFlow": "column"
-            }
-          },
-          {
-            "componentName": "WidgetArea",
-            "props": {
-              "gridArea": "area-b",
-              "name": "Area B",
-              "gridAutoFlow": "row"
-            }
-          },
-          {
-            "componentName": "WidgetArea",
-            "props": {
-              "gridArea": "area-c",
-              "name": "Area C",
-              "gridAutoFlow": "row"
-            }
-          },
-          {
-            "componentName": "WidgetArea",
-            "props": {
-              "gridArea": "area-d",
-              "name": "Area D",
-              "gridAutoFlow": "column"
-            }
-          }
-        ]
-      }
-    },
-    "displayName": {
-      "literal": "Layout8 Copy"
-    }
-  },
   "pages/container_sas_token": {
     "aimms.widget.type": {
       "literal": "pagev2-grid"
@@ -323,44 +327,89 @@
     "bindings": {
       "literal": [
         {
+          "widgetUri": "create_fileSystem",
+          "gridArea": "area-a-3",
+          "dndId": "area-a-3create_fileSystem0"
+        },
+        {
+          "widgetUri": "Stored Access Policies",
+          "gridArea": "Unassigned widgets",
+          "dndId": "Unassigned widgetsStored Access Policies1"
+        },
+        {
           "widgetUri": "selected_filesystems",
-          "gridArea": "area-a-2",
-          "dndId": "area-a-2selected_filesystems0"
+          "gridArea": "Unassigned widgets",
+          "dndId": "Unassigned widgetsselected_filesystems2"
         },
         {
           "widgetUri": "btn_createToken_2",
-          "gridArea": "area-a-2",
-          "dndId": "area-a-2btn_createToken_21"
+          "gridArea": "area-a-3",
+          "dndId": "area-a-3btn_createToken_23"
         },
         {
           "widgetUri": "delete_selected_filesystems",
+          "gridArea": "area-a-3",
+          "dndId": "area-a-3delete_selected_filesystems4"
+        },
+        {
+          "widgetUri": "filesystem_name",
           "gridArea": "area-a-2",
-          "dndId": "area-a-1delete_selected_filesystems7"
+          "dndId": "area-a-2filesystem_name5"
         },
         {
           "widgetUri": "tbl_permission_1",
           "gridArea": "area-b",
-          "dndId": "area-btbl_permission_12"
+          "dndId": "area-btbl_permission_16"
         },
         {
           "widgetUri": "btn_createToken_1",
           "gridArea": "area-c",
-          "dndId": "area-cbtn_createToken_13"
+          "dndId": "area-cbtn_createToken_17"
         },
         {
           "widgetUri": "scl_SASToken_1",
           "gridArea": "area-c",
-          "dndId": "area-cscl_SASToken_14"
+          "dndId": "area-cscl_SASToken_18"
         },
         {
-          "widgetUri": "filesystem_name",
-          "gridArea": "area-a-1",
-          "dndId": "area-a-1filesystem_name5"
+          "widgetUri": "Access Policy to Create",
+          "gridArea": "area-d-2",
+          "dndId": "area-d-2Access Policy to Create9"
         },
         {
-          "widgetUri": "create_fileSystem",
+          "widgetUri": "Create",
+          "gridArea": "area-d-3",
+          "dndId": "area-d-3Create11"
+        },
+        {
+          "widgetUri": "Update_accessPolicy",
+          "gridArea": "area-d-3",
+          "dndId": "area-d-3Update_accessPolicy12"
+        },
+        {
+          "widgetUri": "Delete_accessPolicy",
+          "gridArea": "area-d-3",
+          "dndId": "area-d-3Delete_accessPolicy13"
+        },
+        {
+          "widgetUri": "fs_text",
           "gridArea": "area-a-1",
-          "dndId": "area-a-1create_fileSystem6"
+          "dndId": "area-a-1fs_text14"
+        },
+        {
+          "widgetUri": "select_filesystem",
+          "gridArea": "area-a-1",
+          "dndId": "area-a-1select_filesystem15"
+        },
+        {
+          "widgetUri": "ap_text",
+          "gridArea": "area-d-1",
+          "dndId": "area-d-1ap_text16"
+        },
+        {
+          "widgetUri": "select_accessPolicy",
+          "gridArea": "area-d-1",
+          "dndId": "area-d-2select_accessPolicy10"
         }
       ]
     },
@@ -429,6 +478,69 @@
             "width": "2",
             "height": "1"
           }
+        },
+        {
+          "uri": "Stored Access Policies",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Access Policy to Create",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Create",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Update_accessPolicy",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "Delete_accessPolicy",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "select_filesystem",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "select_accessPolicy",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "fs_text",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "ap_text",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
         }
       ]
     }
@@ -440,19 +552,19 @@
     "bindings": {
       "literal": [
         {
-          "widgetUri": "txt_welcome",
-          "gridArea": "area-a",
-          "dndId": "area-atxt_welcome0"
+          "widgetUri": "img_homeLogo",
+          "gridArea": "area-c",
+          "dndId": "area-bimg_homeLogo0"
         },
         {
-          "widgetUri": "img_homeLogo",
-          "gridArea": "area-d",
-          "dndId": "Unassigned widgetsimg_homeLogo"
+          "widgetUri": "txt_welcome",
+          "gridArea": "area-a",
+          "dndId": "area-atxt_welcome1"
         }
       ]
     },
     "layoutId": {
-      "literal": "Layout10"
+      "literal": "Layout2"
     },
     "widgets": {
       "literal": [
@@ -498,6 +610,11 @@
     },
     "layoutId": {
       "literal": "custom_3463aa24-07f7-4678-bac6-3790e2ade568"
+    },
+    "onload": {
+      "aimms": {
+        "run": "pr_fetchFileSystems"
+      }
     },
     "widgets": {
       "literal": [
@@ -550,6 +667,49 @@
       "literal": "pagev2-grid-sidepanel"
     }
   },
+  "widgets/Access Policy to Create": {
+    "aimms.widget.type": {
+      "literal": "scalar"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "sp_accessPolicy"
+        ]
+      }
+    },
+    "contents.labels.visible": {
+      "literal": 0
+    },
+    "name": {
+      "literal": "Access Policy to Create"
+    },
+    "title": {
+      "literal": "Access Policy to Create"
+    },
+    "views": {
+      "literal": {}
+    },
+    "views.__display_order__": {
+      "literal": [
+        "views.0"
+      ]
+    },
+    "views.0.type": {
+      "literal": "template"
+    }
+  },
+  "widgets/ap_text": {
+    "aimms.widget.type": {
+      "literal": "text"
+    },
+    "contents": {
+      "literal": "<h2>Select Access Policy</h2>"
+    },
+    "name": {
+      "literal": "ap_text"
+    }
+  },
   "widgets/btn_createToken": {
     "action": {
       "literal": {
@@ -598,7 +758,24 @@
       "literal": "btn_refreshFileSystem"
     },
     "title": {
-      "literal": "Update File System List"
+      "literal": "Update"
+    }
+  },
+  "widgets/Create": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_createAccessPolicy"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "Create"
+    },
+    "title": {
+      "literal": "Create"
     }
   },
   "widgets/create_fileSystem": {
@@ -615,7 +792,24 @@
       "literal": "create_fileSystem"
     },
     "title": {
-      "literal": "Create File System"
+      "literal": "Create"
+    }
+  },
+  "widgets/Delete_accessPolicy": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_deleteAccessPolicy"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "Delete_accessPolicy"
+    },
+    "title": {
+      "literal": "Delete"
     }
   },
   "widgets/delete_selected_filesystems": {
@@ -632,7 +826,7 @@
       "literal": "delete_selected_filesystems"
     },
     "title": {
-      "literal": "Delete Selected File Systems"
+      "literal": "Delete "
     }
   },
   "widgets/filesystem_name": {
@@ -669,6 +863,17 @@
     },
     "views.1.type": {
       "literal": "template"
+    }
+  },
+  "widgets/fs_text": {
+    "aimms.widget.type": {
+      "literal": "text"
+    },
+    "contents": {
+      "literal": "<h2><b>﻿Select File System</b></h2>"
+    },
+    "name": {
+      "literal": "fs_text"
     }
   },
   "widgets/img_homeLogo": {
@@ -745,11 +950,47 @@
     },
     "views.__display_order__": {
       "literal": [
-        "views.0"
+        "views.0",
+        "views.1"
       ]
     },
     "views.0.type": {
       "literal": "view"
+    },
+    "views.1.type": {
+      "literal": "template"
+    }
+  },
+  "widgets/select_accessPolicy": {
+    "aimms.widget.type": {
+      "literal": "selectionbox-v2"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "ep_pol"
+        ],
+        "slices": []
+      }
+    },
+    "name": {
+      "literal": "select_accessPolicy"
+    }
+  },
+  "widgets/select_filesystem": {
+    "aimms.widget.type": {
+      "literal": "selectionbox-v2"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "ep_fileSystem"
+        ],
+        "slices": []
+      }
+    },
+    "name": {
+      "literal": "select_filesystem"
     }
   },
   "widgets/selected_filesystems": {
@@ -770,6 +1011,24 @@
       "literal": "File System List"
     }
   },
+  "widgets/Stored Access Policies": {
+    "aimms.widget.type": {
+      "literal": "multiselect"
+    },
+    "contents": {
+      "aimms": {
+        "contents": [
+          "bp_selectedAccessPolicy"
+        ]
+      }
+    },
+    "name": {
+      "literal": "Stored Access Policies"
+    },
+    "title": {
+      "literal": "Stored Access Policies"
+    }
+  },
   "widgets/tbl_permission": {
     "aimms.widget.type": {
       "literal": "table"
@@ -777,15 +1036,17 @@
     "contents": {
       "aimms": {
         "contents": [
-          "bp_permissionPossibilities",
+          "bp_acct_permissionPossibilities",
           "p_secondsToExpire",
-          "p_daysToExpire"
+          "p_daysToExpire",
+          "sp_expiryDate"
         ]
       }
     },
     "contents.displaydomain": {
       "literal": {
-        "bp_permissionpossibilities": "1"
+        "bp_svc_permissionpossibilities": "1",
+        "bp_acct_permissionpossibilities": "1"
       }
     },
     "contents.numdecimals": {
@@ -797,7 +1058,7 @@
           "<IDENTIFIER-SET>"
         ],
         "colHeader": [
-          "i_perm"
+          "i_svc_perm"
         ],
         "aggregated": []
       }
@@ -833,6 +1094,13 @@
             "i_perm": ""
           },
           "width": 25.97
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "i_acct_perm": ""
+          },
+          "width": 33.3
         }
       ]
     },
@@ -844,6 +1112,18 @@
     },
     "views": {
       "literal": {}
+    },
+    "views.__display_order__": {
+      "literal": [
+        "views.0",
+        "views.1"
+      ]
+    },
+    "views.0.type": {
+      "literal": "view"
+    },
+    "views.1.type": {
+      "literal": "template"
     }
   },
   "widgets/tbl_permission_1": {
@@ -853,16 +1133,17 @@
     "contents": {
       "aimms": {
         "contents": [
-          "bp_permissionPossibilities",
-          "ep_fileSystem",
+          "bp_svc_permissionPossibilities",
           "p_secondsToExpire",
-          "p_daysToExpire"
+          "p_daysToExpire",
+          "sp_startDate",
+          "sp_expiryDate"
         ]
       }
     },
     "contents.displaydomain": {
       "literal": {
-        "bp_permissionpossibilities": "1"
+        "bp_svc_permissionpossibilities": "1"
       }
     },
     "contents.numdecimals": {
@@ -874,7 +1155,7 @@
           "<IDENTIFIER-SET>"
         ],
         "colHeader": [
-          "i_perm"
+          "i_svc_perm"
         ],
         "aggregated": []
       }
@@ -910,6 +1191,13 @@
           "type": "rowHeader",
           "colKey": "<IDENTIFIER-SET>",
           "width": 28.99
+        },
+        {
+          "type": "colHeader",
+          "colKey": {
+            "i_svc_perm": ""
+          },
+          "width": 42.08
         }
       ]
     },
@@ -951,6 +1239,23 @@
     },
     "name": {
       "literal": "txt_welcome"
+    }
+  },
+  "widgets/Update_accessPolicy": {
+    "action": {
+      "literal": {
+        "type": "procedure",
+        "value": "pr_updateAccessPolicy"
+      }
+    },
+    "aimms.widget.type": {
+      "literal": "button"
+    },
+    "name": {
+      "literal": "Update_accessPolicy"
+    },
+    "title": {
+      "literal": "Update"
     }
   }
 }

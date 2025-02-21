@@ -1,25 +1,6 @@
 ## ams_version=1.0
 
 Model Main_DataLake_Tools {
-	DeclarationSection General_Info {
-		Parameter p_daysToExpire {
-			Unit: day;
-			webui::UponChangeProcedure: pr_uponChangeExpiryDays;
-		}
-		StringParameter sp_startDate;
-		ElementParameter ep_startDate {
-			Range: c_days;
-		}
-		StringParameter sp_expiryDate;
-		ElementParameter ep_expiryDate {
-			Range: c_days;
-		}
-		StringParameter sp_fileSystem;
-		ElementParameter ep_pol {
-			Range: s_storedAccessPolicies;
-			webui::UponChangeProcedure: pr_uponChangeAccessPolicy;
-		}
-	}
 	Section Calendars {
 		Calendar c_days {
 			Index: i_day;
@@ -69,8 +50,8 @@ Model Main_DataLake_Tools {
 		}
 		ElementParameter ep_fileSystem {
 			Range: s_fileSystems;
-			webui::UponChangeProcedure: pr_getAccessPolicies;
 		}
+		StringParameter sp_fileSystem;
 		Parameter p_def_existingFileSystems {
 			IndexDomain: i_file_sys;
 			Definition: 1;
@@ -79,7 +60,7 @@ Model Main_DataLake_Tools {
 		Procedure pr_fetchFileSystems {
 			Body: {
 				dex::dls::ListFileSystems(s_fileSystems);
-				empty bp_acct_permissionPossibilities, bp_svc_permissionPossibilities, p_daysToExpire, sp_startDate, sp_expiryDate, ep_fileSystem, ep_pol;
+				empty ep_fileSystem;
 			}
 		}
 		Procedure pr_createFileSystem {
@@ -87,7 +68,7 @@ Model Main_DataLake_Tools {
 				dex::dls::CreateFileSystem(StringToLower(sp_fileSystem));
 				pr_fetchFileSystems;
 				ep_fileSystem := StringToElement(s_fileSystems, sp_fileSystem);
-				empty sp_fileSystem;
+				empty sp_fileSystem, ep_fileSystem;
 			}
 		}
 		Procedure pr_deleteSelectedFileSystems {
@@ -95,7 +76,7 @@ Model Main_DataLake_Tools {
 				if (ep_fileSystem) then
 					dex::dls::DeleteFileSystem(ep_fileSystem);
 					pr_fetchFileSystems;
-					empty ep_fileSystem, ep_pol;
+					empty ep_fileSystem;
 				endif;
 			}
 		}
@@ -127,6 +108,22 @@ Model Main_DataLake_Tools {
 					    ep_inputStartDate_Create, 
 					    ep_inputExpiryDate_Create, 
 					    bp_svc_inputPermissionPossibilities_Create;
+					
+					! Update Create
+					empty Update_Access_Policy;
+					
+					! Update Delete
+					empty Delete_Access_Policy;
+					
+					! Update Token
+					empty bp_svc_accessPolicyPermissionPossibilities,
+					        ep_svc_accessPolicyStartDate,
+					        ep_svc_accessPolicyExpiryDate,
+					        ep_svc_fileSystem,
+					        ep_svc_accessPolicy,
+					        p_svc_daysToExpire,
+					        ep_svc_startDate,
+					        ep_svc_expiryDate;
 				}
 			}
 			Procedure pr_createAccessPolicy {
@@ -202,9 +199,25 @@ Model Main_DataLake_Tools {
 					pr_getAccessPolicies(ep_in_fileSystem : ep_inputFileSystem_Update);
 					
 					empty ep_inputAccessPolicy_Update, 
-					    ep_inputStartDate_Update, 
-					    ep_inputExpiryDate_Update, 
-					    bp_svc_inputPermissionPossibilities_Update;
+					        ep_inputStartDate_Update, 
+					        ep_inputExpiryDate_Update, 
+					        bp_svc_inputPermissionPossibilities_Update;
+					
+					! Update Create
+					empty Create_Access_Policy;
+					
+					! Update Delete
+					empty Delete_Access_Policy;
+					
+					! Update Token
+					empty bp_svc_accessPolicyPermissionPossibilities,
+					        ep_svc_accessPolicyStartDate,
+					        ep_svc_accessPolicyExpiryDate,
+					        ep_svc_fileSystem,
+					        ep_svc_accessPolicy,
+					        p_svc_daysToExpire,
+					        ep_svc_startDate,
+					        ep_svc_expiryDate;
 				}
 			}
 			Procedure pr_uponChangeAccessPolicy_Update {
@@ -267,6 +280,12 @@ Model Main_DataLake_Tools {
 					        actions :  s_loc_actions, 
 					        onDone  :  'webui::NoOp1');
 					
+					    empty ep_inputFileSystem_Update,
+					        ep_inputAccessPolicy_Update,
+					        ep_inputStartDate_Update,
+					        ep_inputExpiryDate_Update,
+					        bp_svc_inputPermissionPossibilities_Update;
+					
 					else 
 					
 					    webui::RequestPerformWebUIDialog(
@@ -287,7 +306,7 @@ Model Main_DataLake_Tools {
 				Range: s_fileSystems;
 				webui::UponChangeProcedure: pr_uponChangeFileSystem_Delete;
 			}
-			ElementParameter ep_inputPol_Delete {
+			ElementParameter ep_inputAccessPolicy_Delete {
 				Range: s_storedAccessPolicies;
 			}
 			Procedure pr_uponChangeFileSystem_Delete {
@@ -295,16 +314,32 @@ Model Main_DataLake_Tools {
 					
 					pr_getAccessPolicies(ep_in_fileSystem : ep_inputFileSystem_Delete);
 					
-					empty ep_inputPol_Delete;
+					empty ep_inputAccessPolicy_Delete;
+					
+					! Update Create
+					empty Create_Access_Policy;
+					
+					! Update Update
+					empty Update_Access_Policy;
+					
+					! Update Token
+					empty bp_svc_accessPolicyPermissionPossibilities,
+					        ep_svc_accessPolicyStartDate,
+					        ep_svc_accessPolicyExpiryDate,
+					        ep_svc_fileSystem,
+					        ep_svc_accessPolicy,
+					        p_svc_daysToExpire,
+					        ep_svc_startDate,
+					        ep_svc_expiryDate;
 				}
 			}
 			Procedure pr_deleteAccessPolicy {
 				Body: {
 					s_loc_actions := {'OK'};
 					
-					if (ep_inputFileSystem_Delete and ep_inputPol_Delete) then
+					if (ep_inputFileSystem_Delete and ep_inputAccessPolicy_Delete) then
 					
-						s_storedAccessPolicies -= ep_inputPol_Delete;
+						s_storedAccessPolicies -= ep_inputAccessPolicy_Delete;
 						pr_setAccessPolicies(ep_in_fileSystem :  ep_inputFileSystem_Delete);
 					
 					    empty ep_inputFileSystem_Delete;
@@ -349,20 +384,38 @@ Model Main_DataLake_Tools {
 				\"i\" (SetImmutabiltyPolicy)"
 			}
 		}
-		Parameter bp_svc_permissionPossibilities {
+		Parameter bp_svc_accessPolicyPermissionPossibilities {
 			IndexDomain: i_svc_perm;
 			Range: binary;
 			webui::TooltipIdentifier: sp_svc_permissionTooltip(i_svc_perm);
 		}
+		ElementParameter ep_svc_accessPolicyStartDate {
+			Range: c_days;
+			webui::UponChangeProcedure: pr_svc_uponChangeStartDate;
+		}
+		ElementParameter ep_svc_accessPolicyExpiryDate {
+			Range: c_days;
+			webui::UponChangeProcedure: pr_svc_uponChangeExpiryDate;
+		}
+		ElementParameter ep_svc_fileSystem {
+			Range: s_fileSystems;
+			webui::UponChangeProcedure: pr_svc_uponChangeFileSystem;
+		}
+		ElementParameter ep_svc_accessPolicy {
+			Range: s_storedAccessPolicies;
+			webui::UponChangeProcedure: pr_svc_uponChangeAccessPolicy;
+		}
 		Parameter p_svc_daysToExpire {
 			Unit: day;
-			webui::UponChangeProcedure: pr_acct_uponChangeDaysToExpire;
+			webui::UponChangeProcedure: pr_svc_uponChangeDaysToExpire;
 		}
 		ElementParameter ep_svc_startDate {
 			Range: c_days;
+			webui::UponChangeProcedure: pr_svc_uponChangeStartDate;
 		}
 		ElementParameter ep_svc_expiryDate {
 			Range: c_days;
+			webui::UponChangeProcedure: pr_svc_uponChangeExpiryDate;
 		}
 		StringParameter sp_containerSASQueryString {
 			webui::FlagsIdentifier: sp_def_readonly;
@@ -370,70 +423,154 @@ Model Main_DataLake_Tools {
 		StringParameter sp_containerSASURL;
 		Procedure pr_createContainerSASQuery {
 			Body: {
-				if sum(i_svc_perm, bp_svc_permissionPossibilities(i_svc_perm)) and ep_fileSystem then
+				if ep_svc_fileSystem
+				        and ep_svc_accessPolicy
+				        and p_svc_daysToExpire
+				        and ep_svc_expiryDate
+				        and ep_svc_expiryDate then
 				
-					if (not ep_pol) then
-						for i_svc_perm | bp_svc_permissionPossibilities(i_svc_perm) do 
-							sp_loc_permission += i_svc_perm;
-						endfor;    
-				
-						p_loc_secondsToExpire := if (p_daysToExpire) then p_daysToExpire else p_loc_secondsToExpire endif;
-				
-						if (p_loc_secondsToExpire = 0[s]) then
-							s_loc_actions := {'OK'};
-				
-							webui::RequestPerformWebUIDialog(
-								title   :  "Missing Information", 
-								message :  "Please set an expiration.", 
-								actions :  s_loc_actions, 
-								onDone  :  'webui::NoOp1');
-				
-							return;
-						endif;	
-				    endif;
+					for i_svc_perm | bp_svc_accessPolicyPermissionPossibilities(i_svc_perm) do 
+						sp_loc_permission += i_svc_perm;
+					endfor;    
 				
 				    dex::dls::GetContainerSASQueryString(
 				       	accountName		   : 'default', 
 				        queryString        :  sp_containerSASQueryString, 
-				        fileSystem         :  ep_fileSystem, 
+				        fileSystem         :  ep_svc_fileSystem, 
 				        permissions        :  sp_loc_permission, 
-				        expiry             :  p_loc_secondsToExpire,
-				        storedAccessPolicy :  ep_pol);
+				        expiry             :  p_svc_daysToExpire,
+				        storedAccessPolicy :  ep_svc_accessPolicy);
 				
-				        sp_containerSASURL :=  FormatString("https://%s.blob.core.windows.net/%e?%s", dex::dls::StorageAccount, ep_fileSystem, sp_containerSASQueryString);
+				    sp_containerSASURL :=  FormatString("https://%s.blob.core.windows.net/%e?%s", dex::dls::StorageAccount, ep_svc_fileSystem, sp_containerSASQueryString);
+				
+				    webui::RequestPerformWebUIDialog(
+				        title   :  "Container SAS Token", 
+				        message :  "Sucessfully created a new container SAS token.", 
+				        actions :  s_loc_actions, 
+				        onDone  :  'webui::NoOp1');
 				
 				else 
-				    s_loc_actions := {'OK'};
 				
-				    if not sum(i_svc_perm, bp_svc_permissionPossibilities(i_svc_perm)) and not ep_fileSystem then 
-				        webui::RequestPerformWebUIDialog(
-				            title   :  "Missing Information", 
-				            message :  "Please select at least one permission and a File System.", 
-				            actions :  s_loc_actions, 
-				            onDone  :  'webui::NoOp1');
+				    webui::RequestPerformWebUIDialog(
+				        title   :  "Missing Information", 
+				        message :  "Please input all fields.", 
+				        actions :  s_loc_actions, 
+				        onDone  :  'webui::NoOp1');
 				
-				    elseif not sum(i_svc_perm, bp_svc_permissionPossibilities(i_svc_perm)) then
-				        webui::RequestPerformWebUIDialog(
-				            title   :  "Missing Information", 
-				            message :  "Please select at least one permission.", 
-				            actions :  s_loc_actions, 
-				            onDone  :  'webui::NoOp1');
-				
-				    elseif not ep_fileSystem then
-				        webui::RequestPerformWebUIDialog(
-				            title   :  "Missing Information", 
-				            message :  "Please select a File System.", 
-				            actions :  s_loc_actions, 
-				            onDone  :  'webui::NoOp1');
-				
-				    endif;                    
 				endif;
 			}
 			StringParameter sp_loc_permission;
 			Set s_loc_actions;
-			Parameter p_loc_secondsToExpire {
-				Unit: s;
+		}
+		Procedure pr_svc_uponChangeFileSystem {
+			Body: {
+				
+				pr_getAccessPolicies(ep_in_fileSystem : ep_svc_fileSystem);
+				
+				empty ep_svc_accessPolicy, p_svc_daysToExpire, 
+				    ep_svc_startDate, ep_svc_expiryDate;
+				
+				pr_svc_uponChangeAccessPolicy;
+				
+				! Update Create
+				empty Create_Access_Policy;
+				
+				! Update Update
+				empty Update_Access_Policy;
+				
+				! Update Delete
+				empty Delete_Access_Policy;
 			}
+		}
+		Procedure pr_svc_uponChangeAccessPolicy {
+			Body: {
+				if (ep_svc_accessPolicy) then
+				
+					p_loc_permissionLength := StringLength(sp_policyPermission(ep_svc_accessPolicy));
+				
+					empty bp_svc_accessPolicyPermissionPossibilities, p_svc_daysToExpire, 
+					    ep_svc_startDate, ep_svc_expiryDate,
+					    ep_svc_accessPolicyStartDate, ep_svc_accessPolicyExpiryDate;
+				
+					sp_loc_startDate := SubString(sp_policyStart(ep_svc_accessPolicy), 1, 19) + "Z";
+					sp_loc_expiryDate := SubString(sp_policyEnd(ep_svc_accessPolicy), 1, 19) + "Z";
+				
+					ep_svc_accessPolicyStartDate := StringToElement(c_days, sp_loc_startDate, 0);
+					ep_svc_accessPolicyExpiryDate := StringToElement(c_days, sp_loc_expiryDate, 0);
+				
+					while (LoopCount <= p_loc_permissionLength) do
+						sp_loc_permission := SubString(sp_policyPermission(ep_svc_accessPolicy), LoopCount, LoopCount);
+						for (i_svc_perm | i_svc_perm = sp_loc_permission) do
+							bp_svc_accessPolicyPermissionPossibilities(i_svc_perm) := 1;
+						endfor;
+					endwhile;
+				
+				elseif not ep_svc_accessPolicy then
+				
+					empty bp_svc_accessPolicyPermissionPossibilities, 
+					    p_svc_daysToExpire,
+					    ep_svc_startDate, 
+					    ep_svc_expiryDate,
+					    ep_svc_accessPolicyStartDate,
+					    ep_svc_accessPolicyExpiryDate;
+				
+				endif;
+			}
+			Parameter p_loc_permissionLength;
+			StringParameter sp_loc_permission;
+			StringParameter sp_loc_startDate;
+			StringParameter sp_loc_expiryDate;
+		}
+		Procedure pr_svc_uponChangeDaysToExpire {
+			Body: {
+				sp_loc_startDate := SubString(dex::ExpiryDateFromNow(0[s]), 1, 17) + "00Z";
+				ep_svc_startDate := StringToElement(c_days, sp_loc_startDate, 0);
+				
+				sp_loc_expiryDate := SubString(dex::ExpiryDateFromNow(p_svc_daysToExpire), 1, 17) + "00Z";
+				ep_svc_expiryDate := StringToElement(c_days, sp_loc_expiryDate, 0);
+			}
+			StringParameter sp_loc_startDate;
+			StringParameter sp_loc_expiryDate;
+		}
+		Procedure pr_svc_uponChangeStartDate {
+			Body: {
+				sp_loc_startDateDay := SubString(ep_svc_startDate, 1, 10);
+				sp_loc_startDateHour := SubString(ep_svc_startDate, 12, 16);
+				
+				sp_loc_expiryDateDay 
+				:=  MomentToString(
+				        Format        :  "%c%y-%m-%d",
+				        unit          :  day,
+				        ReferenceDate :  sp_loc_startDateDay,
+				        Elapsed       :  p_svc_daysToExpire);
+				
+				sp_loc_expiryDateComplete := sp_loc_expiryDateDay + "T" + sp_loc_startDateHour + ":00Z";
+				ep_svc_expiryDate := StringToElement(c_days, sp_loc_expiryDateComplete, 0);
+			}
+			StringParameter sp_loc_startDateDay;
+			StringParameter sp_loc_startDateHour;
+			StringParameter sp_loc_expiryDateDay;
+			StringParameter sp_loc_expiryDateComplete;
+		}
+		Procedure pr_svc_uponChangeExpiryDate {
+			Body: {
+				sp_loc_expiryDateDay := SubString(ep_svc_expiryDate, 1, 10);
+				sp_loc_expiryDateHour := SubString(ep_svc_expiryDate, 12, 16);
+				
+				sp_loc_startDateDay 
+				:=  MomentToString(
+				        Format        :  "%c%y-%m-%d",
+				        unit          :  day,
+				        ReferenceDate :  sp_loc_expiryDateDay,
+				        Elapsed       :  -p_svc_daysToExpire);
+				
+				sp_loc_startDateComplete := sp_loc_startDateDay + "T" + sp_loc_expiryDateHour + ":00Z";
+				ep_svc_startDate := StringToElement(c_days, sp_loc_startDateComplete, 0);
+			}
+			StringParameter sp_loc_startDateDay;
+			StringParameter sp_loc_startDateComplete;
+			StringParameter sp_loc_expiryDateDay;
+			StringParameter sp_loc_expiryDateHour;
 		}
 	}
 	Section Account_SAS_Token {
@@ -468,9 +605,11 @@ Model Main_DataLake_Tools {
 		}
 		ElementParameter ep_acct_startDate {
 			Range: c_days;
+			webui::UponChangeProcedure: pr_acct_uponChangeStartDate;
 		}
 		ElementParameter ep_acct_expiryDate {
 			Range: c_days;
+			webui::UponChangeProcedure: pr_acct_uponChangeExpiryDate;
 		}
 		StringParameter sp_accountSASQueryString {
 			webui::FlagsIdentifier: sp_def_readonly;
@@ -480,47 +619,42 @@ Model Main_DataLake_Tools {
 		}
 		Procedure pr_createAccountSASQuery {
 			Body: {
-				if sum(i_acct_perm, bp_acct_permissionPossibilities(i_acct_perm)) then
+				s_loc_actions := {'OK'};
+				
+				if exists(i_acct_perm, bp_acct_permissionPossibilities(i_acct_perm))
+				        and p_acct_daysToExpire
+				        and ep_acct_startDate
+				        and ep_acct_expiryDate then
+				
 				    for i_acct_perm | bp_acct_permissionPossibilities(i_acct_perm) do 
 				        sp_loc_permission += i_acct_perm;
 				    endfor;    
 				
-					p_loc_secondsToExpire := if (p_daysToExpire) then p_daysToExpire else p_loc_secondsToExpire endif;
+				    dex::dls::GetAccountSASQueryString(
+				    	accountName :  'default',
+				        queryString :  sp_accountSASQueryString, 
+				        permissions :  sp_loc_permission, 
+				        expiry      :  p_acct_daysToExpire);
 				
-				    if (p_loc_secondsToExpire = 0[s]) then
-				        s_loc_actions := {'OK'};
+				    sp_accountSASURL :=  FormatString("https://%s.blob.core.windows.net/?%s", dex::dls::StorageAccount, sp_accountSASQueryString);
 				
-				        webui::RequestPerformWebUIDialog(
-				            title   :  "Missing Information", 
-				            message :  "Please set an expiration.", 
-				            actions :  s_loc_actions, 
-				            onDone  :  'webui::NoOp1');
-				    else
+				    webui::RequestPerformWebUIDialog(
+				        title   :  "Account SAS Token", 
+				        message :  "Sucessfully created a new account SAS token.", 
+				        actions :  s_loc_actions, 
+				        onDone  :  'webui::NoOp1');
 				
-				        dex::dls::GetAccountSASQueryString(
-				        	accountName :  'default',
-				            queryString :  sp_accountSASQueryString, 
-				            permissions :  sp_loc_permission, 
-				            expiry      :  p_loc_secondsToExpire);
-				
-				        sp_accountSASURL :=  FormatString("https://%s.blob.core.windows.net/?%s", dex::dls::StorageAccount, sp_accountSASQueryString);
-				
-				    endif;    
 				else 
-				    s_loc_actions := {'OK'};
 				
 				    webui::RequestPerformWebUIDialog(
 				        title   :  "Missing Information", 
-				        message :  "Please select at least one permission.", 
+				        message :  "Please input all fields.", 
 				        actions :  s_loc_actions, 
 				        onDone  :  'webui::NoOp1');
 				endif;
 			}
 			StringParameter sp_loc_permission;
 			Set s_loc_actions;
-			Parameter p_loc_secondsToExpire {
-				Unit: s;
-			}
 		}
 		Procedure pr_acct_uponChangeDaysToExpire {
 			Body: {
@@ -535,36 +669,49 @@ Model Main_DataLake_Tools {
 		}
 		Procedure pr_acct_uponChangeStartDate {
 			Body: {
-				sp_loc_startDate := SubString(ep_acct_startDate, 1, 10);
+				sp_loc_startDateDay := SubString(ep_acct_startDate, 1, 10);
+				sp_loc_startDateHour := SubString(ep_acct_startDate, 12, 16);
 				
-				sp_loc_expiryDate 
+				sp_loc_expiryDateDay 
 				:=  MomentToString(
-				        Format        :  "%c%y-%m-%d %H:%M",
+				        Format        :  "%c%y-%m-%d",
 				        unit          :  day,
-				        ReferenceDate :  sp_loc_startDate,
+				        ReferenceDate :  sp_loc_startDateDay,
 				        Elapsed       :  p_acct_daysToExpire);
 				
-				ep_acct_expiryDate := StringToElement(c_days, sp_loc_expiryDate + ":00Z", 0);
+				sp_loc_expiryDateComplete := sp_loc_expiryDateDay + "T" + sp_loc_startDateHour + ":00Z";
+				ep_acct_expiryDate := StringToElement(c_days, sp_loc_expiryDateComplete, 0);
 			}
-			StringParameter sp_loc_startDate;
-			StringParameter sp_loc_expiryDate;
-			StringParameter Copy_sp_loc_expiryDate;
+			StringParameter sp_loc_startDateDay;
+			StringParameter sp_loc_startDateHour;
+			StringParameter sp_loc_expiryDateDay;
+			StringParameter sp_loc_expiryDateComplete;
 		}
-		Procedure pr_acct_uponChangeExipiryDate {
+		Procedure pr_acct_uponChangeExpiryDate {
 			Body: {
-				sp_loc_startDate := SubString(dex::ExpiryDateFromNow(0[s]), 1, 17) + "00Z";
-				ep_acct_startDate := StringToElement(c_days, sp_loc_startDate, 0);
+				sp_loc_expiryDateDay := SubString(ep_acct_expiryDate, 1, 10);
+				sp_loc_expiryDateHour := SubString(ep_acct_expiryDate, 12, 16);
 				
-				sp_loc_expiryDate := SubString(dex::ExpiryDateFromNow(p_acct_daysToExpire), 1, 17) + "00Z";
-				ep_acct_expiryDate := StringToElement(c_days, sp_loc_expiryDate, 0);
+				sp_loc_startDateDay 
+				:=  MomentToString(
+				        Format        :  "%c%y-%m-%d",
+				        unit          :  day,
+				        ReferenceDate :  sp_loc_expiryDateDay,
+				        Elapsed       :  -p_acct_daysToExpire);
+				
+				sp_loc_startDateComplete := sp_loc_startDateDay + "T" + sp_loc_expiryDateHour + ":00Z";
+				ep_acct_startDate := StringToElement(c_days, sp_loc_startDateComplete, 0);
 			}
-			StringParameter sp_loc_startDate;
-			StringParameter sp_loc_expiryDate;
+			StringParameter sp_loc_startDateDay;
+			StringParameter sp_loc_startDateComplete;
+			StringParameter sp_loc_expiryDateDay;
+			StringParameter sp_loc_expiryDateHour;
 		}
 	}
 	Section Access_Policies {
 		Set s_storedAccessPolicies {
 			Index: i_pol;
+			Parameter: ep_pol;
 		}
 		StringParameter sp_policyStart {
 			IndexDomain: i_pol;
@@ -587,7 +734,7 @@ Model Main_DataLake_Tools {
 				            Expiry      :  sp_policyEnd(i_pol), 
 				            Permission  :  sp_policyPermission(i_pol));
 				
-					empty ep_pol, sp_containerSASQueryString, sp_containerSASURL;
+					empty sp_containerSASQueryString, sp_containerSASURL;
 				endif;
 			}
 			ElementParameter ep_in_fileSystem {
@@ -708,37 +855,6 @@ Model Main_DataLake_Tools {
 						  ( 1, state       ) : "active"              ,  ( 2, displayText ) : "Manage File System"  ,
 						  ( 2, pageId      ) : "manage_file_system"  ,  ( 2, state       ) : "active"               }
 					}
-				}
-				Procedure pr_uponChangeExpiryDays {
-					Body: {
-						!p_secondsToExpire := p_daysToExpire;
-						pr_acct_uponChangeDaysToExpire;
-					}
-				}
-				Procedure pr_uponChangeAccessPolicy {
-					Body: {
-						if (ep_pol) then
-						
-							permissionLength := StringLength(sp_policyPermission(ep_pol));
-							empty bp_svc_permissionPossibilities, p_daysToExpire;
-							sp_startDate := SubString(sp_policyStart(ep_pol), 1, 19) + "Z";
-							sp_expiryDate := SubString(sp_policyEnd(ep_pol), 1, 19) + "Z";
-						
-							ep_startDate := StringToElement(c_days, sp_startDate, 0);
-							ep_expiryDate := StringToElement(c_days, sp_expiryDate, 0);
-						
-							while (LoopCount <= permissionLength) do
-								permission := SubString(sp_policyPermission(ep_pol), LoopCount, LoopCount);
-								for (i_svc_perm | i_svc_perm = permission) do
-									bp_svc_permissionPossibilities(i_svc_perm) := 1;
-								endfor;
-							endwhile;
-						endif;
-						
-						empty sp_containerSASQueryString, sp_containerSASURL;
-					}
-					Parameter permissionLength;
-					StringParameter permission;
 				}
 			}
 			Section Account_SAS_Token_Page {

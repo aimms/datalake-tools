@@ -371,9 +371,9 @@
       "literal": {
         "componentName": "Grid",
         "props": {
-          "gridTemplateColumns": "1fr",
+          "gridTemplateColumns": "2fr 1fr",
           "gridTemplateRows": "  0.8fr 1.2fr ",
-          "gridTemplateAreas": "\"area-a\" \"area-c\""
+          "gridTemplateAreas": "\"area-a area-b\" \"area-c area-c\""
         },
         "items": [
           {
@@ -382,6 +382,14 @@
               "gridArea": "area-a",
               "name": "Area A",
               "gridAutoFlow": "column"
+            }
+          },
+          {
+            "componentName": "WidgetArea",
+            "props": {
+              "gridArea": "area-b",
+              "name": "Area B",
+              "gridAutoFlow": "row"
             }
           },
           {
@@ -447,6 +455,11 @@
     "bindings": {
       "literal": [
         {
+          "widgetUri": "tbl_accessPolicyInfo",
+          "gridArea": "area-b",
+          "dndId": "area-atbl_accessPolicyInfo3"
+        },
+        {
           "widgetUri": "btn_createToken_1",
           "gridArea": "area-c",
           "dndId": "area-cbtn_createToken_10"
@@ -489,6 +502,13 @@
         },
         {
           "uri": "tab_containerInfo",
+          "layoutInfo": {
+            "width": "2",
+            "height": "1"
+          }
+        },
+        {
+          "uri": "tbl_accessPolicyInfo",
           "layoutInfo": {
             "width": "2",
             "height": "1"
@@ -994,7 +1014,7 @@
       "aimms": {
         "contents": [
           "ep_inputFileSystem_Delete",
-          "ep_inputPol_Delete"
+          "ep_inputAccessPolicy_Delete"
         ]
       }
     },
@@ -1089,6 +1109,113 @@
       }
     }
   },
+  "widgets/tbl_accessPolicyInfo": {
+    "aimms.widget.type": {
+      "literal": "table"
+    },
+    "contents.__display_order__": {
+      "literal": [
+        "contents.1",
+        "contents.2",
+        "contents.0"
+      ]
+    },
+    "contents.0.displaydomain": {
+      "literal": "1"
+    },
+    "contents.0.identifier": {
+      "literal": {
+        "identifier": "bp_svc_accessPolicyPermissionPossibilities",
+        "slice": [
+          {
+            "index": "i_svc_perm",
+            "type": "free",
+            "value": "i_svc_perm"
+          }
+        ]
+      }
+    },
+    "contents.0.readonly": {
+      "literal": "True"
+    },
+    "contents.1.identifier": {
+      "literal": {
+        "identifier": "ep_svc_accessPolicyStartDate"
+      }
+    },
+    "contents.1.readonly": {
+      "literal": "True"
+    },
+    "contents.2.identifier": {
+      "literal": {
+        "identifier": "ep_svc_accessPolicyExpiryDate"
+      }
+    },
+    "contents.2.readonly": {
+      "literal": "True"
+    },
+    "contents.partition": {
+      "literal": {
+        "rowHeader": [
+          "<IDENTIFIER-SET>",
+          "i_svc_perm"
+        ],
+        "colHeader": [],
+        "aggregated": []
+      }
+    },
+    "custom.column.widths": {
+      "literal": [
+        {
+          "type": "rowHeader",
+          "colKey": "i_svc_perm",
+          "width": 27.43
+        },
+        {
+          "type": "rowHeader",
+          "colKey": "<IDENTIFIER-SET>",
+          "width": 24.55
+        },
+        {
+          "type": "colHeader",
+          "colKey": {},
+          "width": 42.82
+        }
+      ]
+    },
+    "header.visibility": {
+      "literal": "HIDE_COLUMN_HEADER"
+    },
+    "indices.__display_order__": {
+      "literal": [
+        "indices.0"
+      ]
+    },
+    "indices.0.index": {
+      "literal": "<IDENTIFIER-SET>"
+    },
+    "name": {
+      "literal": "tbl_accessPolicyInfo"
+    },
+    "title": {
+      "literal": "Selected Access Policy Info."
+    },
+    "views": {
+      "literal": {}
+    },
+    "views.__display_order__": {
+      "literal": [
+        "views.0",
+        "views.1"
+      ]
+    },
+    "views.0.type": {
+      "literal": "view"
+    },
+    "views.1.type": {
+      "literal": "template"
+    }
+  },
   "widgets/tbl_createAccessPolicy": {
     "aimms.widget.type": {
       "literal": "table"
@@ -1172,6 +1299,9 @@
           "width": 24.41
         }
       ]
+    },
+    "header.visibility": {
+      "literal": "HIDE_COLUMN_HEADER"
     },
     "indices.__display_order__": {
       "literal": [
@@ -1279,6 +1409,9 @@
           "width": 37.78
         }
       ]
+    },
+    "header.visibility": {
+      "literal": "HIDE_COLUMN_HEADER"
     },
     "indices.__display_order__": {
       "literal": [
@@ -1396,7 +1529,7 @@
         {
           "type": "rowHeader",
           "colKey": "<IDENTIFIER-SET>",
-          "width": 30.56
+          "width": 38.26
         }
       ]
     },
@@ -1430,7 +1563,6 @@
       "literal": [
         "contents.2",
         "contents.0",
-        "contents.9",
         "contents.4",
         "contents.5",
         "contents.6",
@@ -1440,39 +1572,34 @@
     },
     "contents.0.identifier": {
       "literal": {
-        "identifier": "ep_pol",
-        "slice": []
+        "identifier": "ep_svc_accessPolicy"
       }
     },
     "contents.2.identifier": {
       "literal": {
-        "identifier": "ep_fileSystem",
-        "slice": []
+        "identifier": "ep_svc_fileSystem"
       }
     },
     "contents.4.identifier": {
       "literal": {
-        "identifier": "p_daysToExpire",
-        "slice": []
+        "identifier": "p_svc_daysToExpire"
       }
     },
     "contents.5.identifier": {
       "literal": {
-        "identifier": "sp_startDate",
-        "slice": []
+        "identifier": "ep_svc_startDate"
       }
     },
     "contents.5.readonly": {
-      "literal": "True"
+      "literal": "Default"
     },
     "contents.6.identifier": {
       "literal": {
-        "identifier": "sp_expiryDate",
-        "slice": []
+        "identifier": "ep_svc_expiryDate"
       }
     },
     "contents.6.readonly": {
-      "literal": "True"
+      "literal": "Default"
     },
     "contents.7.identifier": {
       "literal": {
@@ -1485,24 +1612,6 @@
       }
     },
     "contents.8.readonly": {
-      "literal": "True"
-    },
-    "contents.9.displaydomain": {
-      "literal": "1"
-    },
-    "contents.9.identifier": {
-      "literal": {
-        "identifier": "bp_svc_permissionPossibilities",
-        "slice": [
-          {
-            "index": "i_svc_perm",
-            "type": "free",
-            "value": "i_svc_perm"
-          }
-        ]
-      }
-    },
-    "contents.9.readonly": {
       "literal": "True"
     },
     "contents.numdecimals": {
@@ -1548,11 +1657,6 @@
         },
         {
           "type": "colHeader",
-          "colKey": {},
-          "width": 140.96
-        },
-        {
-          "type": "colHeader",
           "colKey": {
             "i_svc_perm": ""
           },
@@ -1562,8 +1666,16 @@
           "type": "rowHeader",
           "colKey": "<IDENTIFIER-SET>",
           "width": 37.96
+        },
+        {
+          "type": "colHeader",
+          "colKey": {},
+          "width": 87.67
         }
       ]
+    },
+    "header.visibility": {
+      "literal": "HIDE_COLUMN_HEADER"
     },
     "name": {
       "literal": "tbl_containerSASTokenInputs"

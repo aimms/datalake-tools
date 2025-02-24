@@ -1,1 +1,3 @@
-﻿dex::dls::StorageAccount := "add_name_here" ;
+﻿dex::dls::StorageAccessKey := "add_name_here" ;
+
+dex::dls::StorageAccount := "add_name_here" ;

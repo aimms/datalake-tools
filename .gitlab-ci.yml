@@ -1,0 +1,4 @@
+include:
+  - project: 'aimms/user-support/templates/template-cicd'
+    ref: main
+    file: '.gitlab-ci-toolkit.yml'
